@@ -12,6 +12,9 @@ const inter = Inter({ subsets: ["latin"] });
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Startups Global Link",
+    icons: {
+      icon: "/favicon.svg",
+    },
   };
 }
 
