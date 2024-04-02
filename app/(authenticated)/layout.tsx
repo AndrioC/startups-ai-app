@@ -20,7 +20,6 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
 };
-
 export default async function RootLayout({
   children,
 }: {
