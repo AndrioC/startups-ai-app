@@ -33,3 +33,14 @@ export function getBadgeColorByApprovalStatus(status: string): string {
 
   return colors[status];
 }
+
+export function createSlug(name: string): string {
+  const slug = name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_");
+
+  return slug;
+}

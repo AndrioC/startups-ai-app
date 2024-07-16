@@ -14,7 +14,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Table as ShadcnTable } from "unstyled-table";
 
-import { StartupTable } from "@/app/api/startups/route";
+import { StartupTable } from "@/app/api/startup/route";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -69,7 +69,7 @@ export function StartupTableComponent({
     queryKey: ["startups", page, pageSize],
     queryFn: () =>
       axios
-        .get(`api/startups?page=${page}&pageSize=${pageSize}`)
+        .get(`api/startup?page=${page}&pageSize=${pageSize}`)
         .then((res) => res.data),
     staleTime: 60 * 1000,
     retry: 3,
@@ -92,8 +92,6 @@ export function StartupTableComponent({
     },
     [searchParams]
   );
-
-  console.log("DATA", data);
 
   return (
     <div className="min-h-screen px-32 py-10">

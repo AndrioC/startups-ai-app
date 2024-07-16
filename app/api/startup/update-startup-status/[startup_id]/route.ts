@@ -5,7 +5,7 @@ import prisma from "@/prisma/client";
 import { patchStartupSchema } from "@/schemas";
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { startup_id: string } }
 ) {
   // const session = await getServerSession(authOptions);
 
@@ -21,7 +21,7 @@ export async function PATCH(
   const { is_approved } = body;
 
   const updateStartup = await prisma.startups.update({
-    where: { id: Number(params.id) },
+    where: { id: Number(params.startup_id) },
     data: {
       is_approved,
     },

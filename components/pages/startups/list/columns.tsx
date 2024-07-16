@@ -8,7 +8,7 @@ import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
 
-import { type StartupTable } from "@/app/api/startups/route";
+import { type StartupTable } from "@/app/api/startup/route";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -167,7 +167,7 @@ const StartupActionsDropdown = ({ startup }: { startup: StartupTable }) => {
 
   const mutation = useMutation({
     mutationFn: () =>
-      axios.patch(`/api/startups/${startup.id}`, {
+      axios.patch(`/api/startup/update-startup-status/${startup.id}`, {
         is_approved: approvalValue,
       }),
 

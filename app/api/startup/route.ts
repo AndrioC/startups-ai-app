@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   const startupTable: StartupTable[] = startups.map((value) => {
     return {
       id: value.id,
-      name: value.name,
+      name: value.name!,
       short_description:
         value.short_description_en ?? value.short_description_pt ?? "-",
       value_proposal: value.value_proposal_en ?? value.value_proposal_pt ?? "-",
