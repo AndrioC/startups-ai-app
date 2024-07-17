@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { startups } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -40,12 +39,6 @@ import {
 } from "@/components/ui/table";
 
 import { startupColumns } from "./columns";
-
-export interface StartupQuery {
-  orderBy: keyof startups;
-  page: string;
-  pageSize: string;
-}
 
 interface ServerControlledTableProps {
   expertsCount?: number;

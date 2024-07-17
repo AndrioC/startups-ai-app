@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -7,7 +8,10 @@ import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
 import SideBar from "@/components/sidebar";
 
-import "@radix-ui/themes/styles.css";
+import AuthProvider from "../api/auth/Provider";
+
+import "react-toastify/dist/ReactToastify.css";
+import "../../styles/custom.css";
 import "@/app/globals.css";
 import "@/app/theme-config.css";
 
@@ -32,16 +36,19 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <main className="min-h-screen">
-          <QueryClientProvider>
-            <SideBar>
-              <Theme>{children}</Theme>
-            </SideBar>
-          </QueryClientProvider>
-        </main>
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <main className="min-h-screen">
+            <QueryClientProvider>
+              <SideBar>
+                <Theme>{children}</Theme>
+                <ToastContainer />
+              </SideBar>
+            </QueryClientProvider>
+          </main>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

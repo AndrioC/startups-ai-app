@@ -1,4 +1,3 @@
-import { AiOutlineCheckCircle } from "react-icons/ai";
 import { MdLock } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import Image from "next/image";
@@ -26,7 +25,6 @@ export default function RenewPasswordComponent() {
         />
 
         <div className="bg-[#F2FFF0] w-[520px] h-[84px] flex items-center p-4 rounded-md gap-3">
-          {/* <AiOutlineCheckCircle className="text-green-500 h-6 w-6 mr-4" /> */}
           <Image
             src={checkImg}
             alt="check-img"

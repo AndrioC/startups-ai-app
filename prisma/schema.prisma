@@ -24,6 +24,7 @@ model organizations {
   investors      investors[]
   experts        experts[]
   users_admin    users_admin[]
+  programs       programs[]
 }
 
 model vertical {
@@ -471,6 +472,10 @@ model users_admin {
 
   organizations organizations? @relation(fields: [organization_id], references: [id])
 
+  createdPrograms programs[] @relation("ProgramCreatedBy")
+  deletedPrograms programs[] @relation("ProgramDeletedBy")
+  pausedPrograms  programs[] @relation("ProgramPausedBy")
+
   @@unique([email, organization_id])
 }
 
@@ -555,4 +560,26 @@ model startup_investiments_rounds {
   startup startups @relation(fields: [startup_id], references: [id])
 
   @@index([startup_id])
+}
+
+model programs {
+  id              Int       @id @default(autoincrement())
+  organization_id Int
+  program_name    String
+  start_date      DateTime
+  end_date        DateTime
+  created_by_id   Int
+  is_deleted      Boolean   @default(false)
+  deleted_by_id   Int?
+  deleted_at      DateTime?
+  is_paused       Boolean   @default(false)
+  paused_by_id    Int?
+  paused_at       DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now())
+
+  organization organizations @relation(fields: [organization_id], references: [id])
+  created_by   users_admin   @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by   users_admin?  @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
+  paused_by    users_admin?  @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
 }

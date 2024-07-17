@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { startups } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -40,12 +39,6 @@ import {
 } from "@/components/ui/table";
 
 import { startupColumns } from "./columns";
-
-export interface StartupQuery {
-  orderBy: keyof startups;
-  page: string;
-  pageSize: string;
-}
 
 interface ServerControlledTableProps {
   startupsCount?: number;
@@ -153,7 +146,7 @@ export function StartupTableComponent({
           headerRow: ({ children }) => <TableRow>{children}</TableRow>,
           headerCell: ({ children, header }) => (
             <TableHead
-              className="whitespace-nowrap"
+              className="whitespace-nowrap bg-[#E5E7E7] text-[16px] font-semibold h-[55px]"
               onClick={() => {
                 const isSortable = header.column.getCanSort();
                 const nextSortDirection = header.column.getNextSortingOrder();

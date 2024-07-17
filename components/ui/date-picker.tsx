@@ -16,15 +16,26 @@ import { cn } from "@/lib/utils";
 interface DatePickerProps {
   onChange: (date: Date | undefined) => void;
   value: Date | undefined;
+  title?: string;
+  className?: string;
 }
 
 // DatePicker component
-export function DatePicker({ onChange, value }: DatePickerProps) {
+export function DatePicker({
+  onChange,
+  value,
+  title = "Selecione uma data",
+  className,
+}: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(value);
 
   // const localeLanguage = lang === "en" ? enUS : ptBR;
   // const formatDate = lang === "en" ? "MM/dd/yyyy" : "dd/MM/yyyy";
   // const label = lang === "en" ? "Pick a date" : "Selecione uma data";
+
+  React.useEffect(() => {
+    setDate(value);
+  }, [value]);
 
   return (
     <Popover>
@@ -32,16 +43,12 @@ export function DatePicker({ onChange, value }: DatePickerProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[300px] h-[40px] justify-start text-left font-normal text-xs lg:text-base",
+            `w-[250px] h-[40px] justify-start text-left font-normal text-xs lg:text-base ${className}`,
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, "dd/MM/yyyy")
-          ) : (
-            <span>{"Selecione uma data"}</span>
-          )}
+          <CalendarIcon className="mr-2 h-4 w-4 text-[#A7B6CD]" />
+          {date ? format(date, "dd/MM/yyyy") : <span>{title}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
