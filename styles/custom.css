@@ -1,0 +1,10 @@
+.background-image {
+  background-image: url("/page-bg.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.text-justify {
+  text-align: justify;
+}

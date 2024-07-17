@@ -2,8 +2,10 @@ import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import Layout from "../Layout";
 import QueryClientProvider from "../QueryClientProvider";
 
+import "../../styles/custom.css";
 import "@radix-ui/themes/styles.css";
 import "@/app/globals.css";
 import "@/app/theme-config.css";
@@ -28,7 +30,9 @@ export default async function RootLayout({
       <body className={inter.className}>
         <main className="min-h-screen">
           <QueryClientProvider>
-            <Theme>{children}</Theme>
+            <Theme>
+              <Layout>{children}</Layout>
+            </Theme>
           </QueryClientProvider>
         </main>
       </body>
