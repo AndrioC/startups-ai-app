@@ -17,12 +17,19 @@ export async function POST(
   const data = (await request.json()) as DataRequest;
 
   await prisma.$transaction(async (prisma) => {
-    await prisma.programs.create({
+    const program = await prisma.programs.create({
       data: {
         organization_id: Number(params.organization_id),
         program_name: data.programName,
         start_date: data.startDate,
         end_date: data.endDate,
+        created_by_id: Number(data.userId),
+      },
+    });
+
+    await prisma.kanbans.create({
+      data: {
+        program_id: program.id,
         created_by_id: Number(data.userId),
       },
     });

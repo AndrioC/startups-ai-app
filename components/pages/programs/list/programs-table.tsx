@@ -5,6 +5,7 @@ import { useState } from "react";
 import { programs } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import sha1 from "crypto-js/sha1";
 import {
   ChevronDown,
   ChevronLeft,
@@ -247,7 +248,20 @@ export function ProgramsTableComponent() {
                 )}
               </TableBody>
             ),
-            bodyRow: ({ children }) => <TableRow>{children}</TableRow>,
+            bodyRow: ({ children, row }) => (
+              <TableRow
+                className="cursor-pointer"
+                onClick={() => {
+                  router.push(
+                    `/programs/program/${sha1(
+                      row.original.id.toString()
+                    ).toString()}`
+                  );
+                }}
+              >
+                {children}
+              </TableRow>
+            ),
             bodyCell: ({ children }) => (
               <TableCell>
                 {isPending || isLoading || isRefetching ? (

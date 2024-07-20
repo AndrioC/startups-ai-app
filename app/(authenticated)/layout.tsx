@@ -12,6 +12,7 @@ import AuthProvider from "../api/auth/Provider";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/custom.css";
+import "../../styles/global.css";
 import "@/app/globals.css";
 import "@/app/theme-config.css";
 
@@ -36,7 +37,7 @@ export default async function RootLayout({
   }
 
   return (
-    <AuthProvider>
+    <AuthProvider session={session}>
       <html lang="en">
         <body className={inter.className}>
           <main className="min-h-screen">

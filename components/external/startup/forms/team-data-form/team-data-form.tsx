@@ -239,7 +239,7 @@ export default function TeamDataForm({ data }: Props) {
                 {...register("employeesQuantity")}
                 className="block pl-2 w-[270px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value=""></option>
+                <option value="">Selecione uma opção</option>
                 {sortedEmployeesQuantityData.map(
                   (option: { id: number; label: string; value: string }) => (
                     <option key={option.id} value={option.value}>

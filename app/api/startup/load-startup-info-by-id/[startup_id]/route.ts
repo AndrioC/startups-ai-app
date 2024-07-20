@@ -78,6 +78,7 @@ export async function GET(
       }))
     : [];
 
+  console.log("image", startup?.logo_img);
   const generalData: Block = {
     startupId: startup?.id,
     startupName: startup?.name,
@@ -93,8 +94,14 @@ export async function GET(
     referenceLink: startup?.reference_link,
     loadPitchDeck: `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup?.pitch_deck}`,
     loadLogo: `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup?.logo_img}`,
-    loadPitchDeckUrl: `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup?.pitch_deck}`,
-    loadLogoUrl: `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup?.logo_img}`,
+    loadPitchDeckUrl:
+      startup?.pitch_deck !== null
+        ? `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup?.pitch_deck}`
+        : undefined,
+    loadLogoUrl:
+      startup?.logo_img !== null
+        ? `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup?.logo_img}`
+        : undefined,
     startupChallenges:
       startup?.startup_challenges.map((challenge) => {
         return challenge.challenge_id.toString();

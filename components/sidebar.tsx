@@ -28,7 +28,7 @@ export default function SideBar({ children }: PropsWithChildren) {
         <div
           className={`fixed ${
             isSidebarOpen ? "w-64" : "w-20"
-          } h-screen bg-white border-r-[1px] flex flex-col justify-between transition-all ease-in-out duration-30`}
+          } h-screen bg-white border-r-[1px] flex flex-col justify-between transition-all ease-in-out duration-300`}
         >
           <div className="flex flex-col items-center space-y-4">
             <Link href="/">
@@ -56,7 +56,7 @@ export default function SideBar({ children }: PropsWithChildren) {
               ))}
             </div>
           </div>
-          <div className="flex -p-4 items-center justify-center bg-gray-100 w-full h-10">
+          <div className="flex p-4 items-center justify-center bg-gray-100 w-full h-10">
             <button onClick={toggleSidebar}>
               {isSidebarOpen ? (
                 <IoIosArrowDropleft size={21} className="text-gray-400" />
@@ -66,7 +66,9 @@ export default function SideBar({ children }: PropsWithChildren) {
             </button>
           </div>
         </div>
-        <main className={`w-full ${isSidebarOpen ? "ml-40" : "ml-20"}`}>
+        <main
+          className={`w-full ${isSidebarOpen ? "ml-64" : "ml-20"} transition-all ease-in-out duration-300`}
+        >
           {children}
         </main>
       </div>

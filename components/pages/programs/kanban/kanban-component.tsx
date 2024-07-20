@@ -1,173 +1,169 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { Dialog, Transition } from "@headlessui/react";
-import { v4 as uuidv4 } from "uuid";
+import { HiDotsHorizontal } from "react-icons/hi";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-interface Card {
-  id: string;
-  title: string;
-}
-
-interface List {
-  id: string;
-  title: string;
-  cards: Card[];
-}
+import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
+import { Button } from "@/components/ui/button";
 
 export default function KanbanComponent() {
-  const [lists, setLists] = useState<List[]>([]);
+  const { data: session } = useSession();
+  const { token } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState("");
-  const [activeListId, setActiveListId] = useState<string | null>(null);
+  const [activeKanbanId, setActiveKanbanId] = useState<number | null>(null);
 
-  const addNewList = () => {
-    if (newListTitle.trim()) {
-      const newList: List = {
-        id: uuidv4(),
-        title: newListTitle,
-        cards: [],
-      };
-      setLists([...lists, newList]);
-      setNewListTitle("");
-      setIsModalOpen(false);
-    }
+  const { data: kanbanData, refetch } = useLoadKanbanWithCards(
+    Number(session?.user?.organization_id),
+    token.toString()
+  );
+
+  const addNewList = async () => {
+    const response = await fetch(
+      `/api/kanban/${session?.user?.organization_id}/create-kanban`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          program_token: token,
+          user_id: session?.user?.id,
+          name: newListTitle,
+        }),
+      }
+    );
+
+    console.log("response: ", response);
+    setNewListTitle("");
+    setIsModalOpen(false);
+    refetch();
   };
 
-  const openCardModal = (listId: string) => {
-    setActiveListId(listId);
+  const openCardModal = (kanban_id: number) => {
+    setActiveKanbanId(kanban_id);
     setIsCardModalOpen(true);
   };
 
-  const addNewCard = () => {
-    if (newCardTitle.trim() && activeListId) {
-      const updatedLists = lists.map((list) => {
-        if (list.id === activeListId) {
-          const newCard: Card = {
-            id: uuidv4(),
-            title: newCardTitle,
-          };
-          return { ...list, cards: [...list.cards, newCard] };
-        }
-        return list;
-      });
-      setLists(updatedLists);
-      setNewCardTitle("");
-      setIsCardModalOpen(false);
-    }
+  const addNewCard = async (kanban_id: number, cardTitle: string) => {
+    await fetch(`/api/kanban/${session?.user?.organization_id}/create-card`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        kanban_id,
+        title: cardTitle,
+      }),
+    });
+
+    setNewCardTitle("");
+    setIsCardModalOpen(false);
+    refetch();
   };
 
-  const onDragEnd = (result: any) => {
-    const { source, destination } = result;
+  const onDragEnd = async (result: any) => {
+    const { source, destination, draggableId } = result;
 
     if (!destination) return;
-
-    if (source.droppableId === destination.droppableId) {
-      // Movendo dentro da mesma lista
-      const list = lists.find((list) => list.id === source.droppableId);
-      if (list) {
-        const newCards = Array.from(list.cards);
-        const [movedCard] = newCards.splice(source.index, 1);
-        newCards.splice(destination.index, 0, movedCard);
-
-        const updatedLists = lists.map((l) =>
-          l.id === list.id ? { ...l, cards: newCards } : l
-        );
-        setLists(updatedLists);
+    await axios.put(
+      `/api/kanban/${session?.user?.organization_id}/move-card-kanban`,
+      {
+        kanban_card_id: Number(draggableId),
+        old_kanban_id: Number(source?.droppableId),
+        new_kanban_id: Number(destination?.droppableId),
+        new_position: Number(destination?.index),
       }
-    } else {
-      // Movendo entre listas diferentes
-      const sourceList = lists.find((list) => list.id === source.droppableId);
-      const destinationList = lists.find(
-        (list) => list.id === destination.droppableId
-      );
+    );
 
-      if (sourceList && destinationList) {
-        const sourceCards = Array.from(sourceList.cards);
-        const [movedCard] = sourceCards.splice(source.index, 1);
-        const destinationCards = Array.from(destinationList.cards);
-        destinationCards.splice(destination.index, 0, movedCard);
-
-        const updatedLists = lists.map((l) => {
-          if (l.id === sourceList.id) {
-            return { ...l, cards: sourceCards };
-          }
-          if (l.id === destinationList.id) {
-            return { ...l, cards: destinationCards };
-          }
-          return l;
-        });
-        setLists(updatedLists);
-      }
-    }
+    refetch();
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#F5F7FA] p-5">
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md"
-        onClick={() => setIsModalOpen(true)}
-      >
-        + Adicionar nova lista
-      </button>
-
-      <div className="flex flex-wrap mt-10 gap-4">
-        <DragDropContext onDragEnd={onDragEnd}>
-          {lists.map((list) => (
-            <Droppable key={list.id} droppableId={list.id}>
-              {(provided) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="bg-[#F0F2F5] rounded-lg shadow-md w-[275px] p-4"
-                >
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-gray-700 text-[16px] font-bold">
-                      {list.title} ({list.cards.length})
-                    </h3>
-                    <button>
-                      <img
-                        src="/path/to/three-dots-icon.png"
-                        alt="Menu"
-                        className="h-5 w-5"
-                      />
-                    </button>
-                  </div>
-                  {list.cards.map((card, index) => (
-                    <Draggable
-                      key={card.id}
-                      draggableId={card.id}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center p-2"
-                        >
-                          <span className="text-gray-700 text-[15px]">
-                            {card.title}
-                          </span>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                  <button
-                    className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-                    onClick={() => openCardModal(list.id)}
+    <div className="flex bg-[#FCFCFC] p-5">
+      <div className="flex h-full">
+        <div className="flex gap-4 h-full">
+          <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragEnd}>
+            {kanbanData?.map((list, index) => (
+              <Droppable key={list.id} droppableId={list.id.toString()}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`bg-[#F0F2F5] rounded-lg shadow-md w-[300px] overflow-y-auto max-h-[900px] p-4 ${
+                      snapshot.isDraggingOver ? "bg-blue-100" : ""
+                    }`}
                   >
-                    + Adicionar Card
-                  </button>
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </DragDropContext>
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="text-gray-700 text-[16px] font-bold">
+                        {list.kanban_name} ({list.kanban_cards.length})
+                      </h3>
+                      {index > 0 && (
+                        <button>
+                          <HiDotsHorizontal />
+                        </button>
+                      )}
+                    </div>
+                    {list.kanban_cards
+                      .sort((a, b) => a.position_value - b.position_value)
+                      .map((card, index) => (
+                        <Draggable
+                          key={card.id}
+                          draggableId={card.id.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center p-2 ${
+                                snapshot.isDragging ? "bg-gray-200" : ""
+                              }`}
+                            >
+                              <span className="text-gray-700 text-[15px]">
+                                {card.title}
+                              </span>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    {provided.placeholder}
+                    <Button
+                      className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => openCardModal(list.id)}
+                    >
+                      + Adicionar Card
+                    </Button>
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </DragDropContext>
+        </div>
+
+        <div className="ml-2">
+          <Button
+            className="bg-[#F5F7FA] text-[#747D8C] px-4 py-2 rounded-lg shadow-md mb-4 hover:bg-[#eaebec]"
+            onClick={() => setIsModalOpen(true)}
+          >
+            + Adicionar nova lista
+          </Button>
+        </div>
       </div>
 
       <Transition appear show={isModalOpen} as={Fragment}>
@@ -176,7 +172,7 @@ export default function KanbanComponent() {
           className="relative z-10"
           onClose={() => setIsModalOpen(false)}
         >
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
@@ -186,11 +182,11 @@ export default function KanbanComponent() {
             leaveTo="opacity-0 scale-95"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
@@ -199,13 +195,13 @@ export default function KanbanComponent() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <DialogTitle
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
                     Adicionar nova lista
-                  </Dialog.Title>
+                  </DialogTitle>
                   <div className="mt-2">
                     <input
                       type="text"
@@ -218,14 +214,21 @@ export default function KanbanComponent() {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       onClick={addNewList}
                     >
-                      Salvar
+                      Adicionar Lista
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex justify-center ml-4 px-4 py-2 text-sm text-gray-700 font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      Cancelar
                     </button>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>
@@ -237,7 +240,7 @@ export default function KanbanComponent() {
           className="relative z-10"
           onClose={() => setIsCardModalOpen(false)}
         >
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 scale-95"
@@ -247,11 +250,11 @@ export default function KanbanComponent() {
             leaveTo="opacity-0 scale-95"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
@@ -260,11 +263,13 @@ export default function KanbanComponent() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <DialogTitle
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
-                  ></Dialog.Title>
+                  >
+                    Adicionar novo card
+                  </DialogTitle>
                   <div className="mt-2">
                     <input
                       type="text"
@@ -277,14 +282,23 @@ export default function KanbanComponent() {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600"
-                      onClick={addNewCard}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      onClick={() =>
+                        addNewCard(Number(activeKanbanId), newCardTitle)
+                      }
                     >
-                      Salvar
+                      Adicionar Card
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex justify-center ml-4 px-4 py-2 text-sm text-gray-700 font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      onClick={() => setIsCardModalOpen(false)}
+                    >
+                      Cancelar
                     </button>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>
@@ -292,3 +306,18 @@ export default function KanbanComponent() {
     </div>
   );
 }
+
+const useLoadKanbanWithCards = (organization_id: number, token: string) =>
+  useQuery<KanbanDataWithCards[]>({
+    queryKey: ["list-kanbans-with-cards-by-program-token", token],
+    queryFn: () =>
+      axios
+        .get(
+          `/api/kanban/${organization_id}/load-kanbans-by-program-token?token=${token}`
+        )
+        .then((res) => {
+          return res.data;
+        }),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!organization_id || !!token,
+  });

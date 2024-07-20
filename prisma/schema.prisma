@@ -475,6 +475,8 @@ model users_admin {
   createdPrograms programs[] @relation("ProgramCreatedBy")
   deletedPrograms programs[] @relation("ProgramDeletedBy")
   pausedPrograms  programs[] @relation("ProgramPausedBy")
+  createdKanban   kanbans[]  @relation("KanbanCreatedBy")
+  deletedKanban   kanbans[]  @relation("KanbanDeletedBy")
 
   @@unique([email, organization_id])
 }
@@ -582,4 +584,34 @@ model programs {
   created_by   users_admin   @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
   deleted_by   users_admin?  @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
   paused_by    users_admin?  @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
+  kanbans      kanbans[]
+}
+
+model kanbans {
+  id             Int       @id @default(autoincrement())
+  program_id     Int
+  created_by_id  Int
+  kanban_name    String    @default("Inscritos")
+  position_value Int       @default(0)
+  is_deleted     Boolean   @default(false)
+  deleted_by_id  Int?
+  deleted_at     DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @default(now())
+
+  program      programs       @relation(fields: [program_id], references: [id])
+  created_by   users_admin?   @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by   users_admin?   @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
+  kanban_cards kanban_cards[]
+}
+
+model kanban_cards {
+  id             Int      @id @default(autoincrement())
+  kanban_id      Int
+  title          String
+  position_value Int      @default(0)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now())
+
+  kanban kanbans @relation(fields: [kanban_id], references: [id])
 }
