@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -5,6 +6,7 @@ import { Inter } from "next/font/google";
 import Layout from "../Layout";
 import QueryClientProvider from "../QueryClientProvider";
 
+import "react-toastify/dist/ReactToastify.css";
 import "../../styles/custom.css";
 import "@radix-ui/themes/styles.css";
 import "@/app/globals.css";
@@ -33,6 +35,7 @@ export default async function RootLayout({
             <Theme>
               <Layout>{children}</Layout>
             </Theme>
+            <ToastContainer />
           </QueryClientProvider>
         </main>
       </body>

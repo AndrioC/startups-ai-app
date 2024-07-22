@@ -7,10 +7,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { z } from "zod";
 
+import { Button } from "@/components/ui/button";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { DeepTechDataSchema } from "@/lib/schemas/schema-startup";
 
-import { Button } from "../../../ui/button";
 import { SelectDataProps } from "../startup-form";
 
 interface ValueProps {

@@ -149,7 +149,7 @@ model gender {
 model startups {
   id                                           Int       @id @default(autoincrement())
   organization_id                              Int
-  name                                         String?
+  name                                         String
   vertical_id                                  Int?
   foundation_date                              DateTime?
   subscription_number                          String?
@@ -159,7 +159,7 @@ model startups {
   main_responsible_name                        String?
   main_responsible_linkedin                    String?
   contact_number                               String?
-  main_responsible_email                       String?
+  main_responsible_email                       String
   connections_only_on_origin_country           String?
   partners_quantity                            Int?
   partners_position_relation                   String?
@@ -233,23 +233,25 @@ model startups {
 
 enum UserType {
   STARTUP
-  EXPERT
+  MENTOR
   INVESTOR
 }
 
 model user {
-  id              Int      @id @default(autoincrement())
-  organization_id Int
-  startup_id      Int?
-  investor_id     Int?
-  expert_id       Int?
-  type            UserType
-  name            String
-  email           String
-  hashed_password String
-  is_blocked      Boolean  @default(false)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now())
+  id                  Int       @id @default(autoincrement())
+  organization_id     Int
+  startup_id          Int?
+  investor_id         Int?
+  expert_id           Int?
+  type                UserType
+  name                String
+  email               String
+  hashed_password     String
+  accepted_terms      Boolean   @default(false)
+  is_blocked          Boolean   @default(false)
+  accepted_terms_date DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @default(now())
 
   //relacionamentos
   organizations organizations? @relation(fields: [organization_id], references: [id])
@@ -297,31 +299,31 @@ model investors {
   id                                          Int                           @id @default(autoincrement())
   name                                        String
   organization_id                             Int
-  foundation_date                             DateTime
-  country_id                                  Int
-  state_city                                  String
-  contact_name                                String
+  foundation_date                             DateTime?
+  country_id                                  Int?
+  state_city                                  String?
+  contact_name                                String?
   contact_email                               String
-  contact_number                              String
-  website                                     String
-  linkedin                                    String
-  minimal_investment                          String
-  average_investiment                         String
-  maximum_investiment                         String
+  contact_number                              String?
+  website                                     String?
+  linkedin                                    String?
+  minimal_investment                          String?
+  average_investiment                         String?
+  maximum_investiment                         String?
   pre_requisite_team                          String?
-  only_investing_startup_origin_country       String
-  logo_img                                    String
-  mini_description_en                         String
-  mini_description_pt                         String
-  investiment_text                            String
+  only_investing_startup_origin_country       String?
+  logo_img                                    String?
+  mini_description_en                         String?
+  mini_description_pt                         String?
+  investiment_text                            String?
   example_invested_startups                   String?
-  is_patent_required                          String
+  is_patent_required                          String?
   in_case_of_deep_tech                        String?
-  main_criteria_evaluating_startup            String
-  added_values_to_startups                    String
-  expectations_investiment_return             String
+  main_criteria_evaluating_startup            String?
+  added_values_to_startups                    String?
+  expectations_investiment_return             String?
   open_to_co_invest_with_other_funds          String?
-  have_international_experience_with_startups String
+  have_international_experience_with_startups String?
   plan                                        String                        @default("free")
   is_deleted                                  Boolean                       @default(false)
   is_approved                                 Boolean                       @default(false)
@@ -389,22 +391,22 @@ model experts {
   id                                 Int                  @id @default(autoincrement())
   name                               String
   organization_id                    Int
-  gender_id                          Int
-  dob                                DateTime
-  country_id                         Int
-  state_city                         String
-  linkedin                           String
-  contact_number                     String
+  gender_id                          Int?
+  dob                                DateTime?
+  country_id                         Int?
+  state_city                         String?
+  linkedin                           String?
+  contact_number                     String?
   contact_email                      String
-  level_of_education_id              Int
-  picture_img                        String
-  occupation_id                      Int
-  company                            String
-  position_held                      String
-  experience_time_id                 Int
+  level_of_education_id              Int?
+  picture_img                        String?
+  occupation_id                      Int?
+  company                            String?
+  position_held                      String?
+  experience_time_id                 Int?
   experience_with_startups_pt        String?
   experience_with_startups_en        String?
-  participation_acceleration_program String
+  participation_acceleration_program String?
   plan                               String               @default("free")
   is_deleted                         Boolean              @default(false)
   is_approved                        Boolean              @default(false)
