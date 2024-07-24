@@ -1,5 +1,5 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
@@ -39,6 +39,8 @@ export default async function middleware(req: NextRequest) {
       new URL(`/${subdomain}${url.pathname}`, req.url)
     );
   }
+
+  const token = await getToken({ req: request });
 
   return new Response("Subdomain not allowed!", { status: 403 });
 }
