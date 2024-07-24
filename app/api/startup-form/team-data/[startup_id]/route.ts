@@ -21,6 +21,8 @@ export async function PATCH(
         main_responsible_email: data.mainResponsibleEmail,
         employees_quantity: data.employeesQuantity,
         fulltime_employees_quantity: data.fullTimeEmployeesQuantity,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
 

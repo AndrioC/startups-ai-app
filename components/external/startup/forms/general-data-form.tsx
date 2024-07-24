@@ -5,6 +5,7 @@ import { FaEdit } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import isEqual from "lodash/isEqual";
 import Image from "next/image";
 import { z } from "zod";
 
@@ -177,6 +178,7 @@ export default function GeneralDataForm({ data }: Props) {
     register,
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     defaultValues: initialData,
@@ -184,6 +186,10 @@ export default function GeneralDataForm({ data }: Props) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const currentValues = getValues();
+    if (isEqual(currentValues, initialData)) {
+      return;
+    }
     mutation.mutate(data);
   };
 

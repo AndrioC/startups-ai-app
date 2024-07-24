@@ -22,6 +22,8 @@ export async function PATCH(
         have_accounting_advice: data.haveAccountingConsultancy,
         relationships_registered_in_contract:
           data.relationshipsRegisteredInContract,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
   });

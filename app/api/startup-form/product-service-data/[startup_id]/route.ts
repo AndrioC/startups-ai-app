@@ -20,6 +20,8 @@ export async function PATCH(
         problem_that_is_solved_pt: data.problemThatIsSolved,
         competitors: data.competitors,
         competitive_differentiator_pt: data.competitiveDifferentiator,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
 

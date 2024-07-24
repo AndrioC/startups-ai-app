@@ -57,7 +57,6 @@ export default function RegisterComponent() {
           },
         }
       );
-      console.log("response: ");
 
       if (response.status === 201) {
         setIsSubmiting(false);

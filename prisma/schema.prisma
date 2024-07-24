@@ -206,10 +206,12 @@ model startups {
   current_startup_valuation                    String?
   round_start_date                             DateTime?
   round_end_date                               DateTime?
+  startup_profile                              String?
   plan                                         String    @default("free")
   is_deleted                                   Boolean   @default(false)
   is_approved                                  Boolean   @default(false)
   is_blocked                                   Boolean   @default(false)
+  was_processed                                Boolean   @default(false)
   created_at                                   DateTime  @default(now())
   updated_at                                   DateTime  @default(now())
   deleted_at                                   DateTime?
@@ -324,8 +326,10 @@ model investors {
   expectations_investiment_return             String?
   open_to_co_invest_with_other_funds          String?
   have_international_experience_with_startups String?
+  investor_profile                            String?
   plan                                        String                        @default("free")
   is_deleted                                  Boolean                       @default(false)
+  was_processed                               Boolean                       @default(false)
   is_approved                                 Boolean                       @default(false)
   is_blocked                                  Boolean                       @default(false)
   created_at                                  DateTime                      @default(now())
@@ -407,8 +411,10 @@ model experts {
   experience_with_startups_pt        String?
   experience_with_startups_en        String?
   participation_acceleration_program String?
+  expert_profile                     String?
   plan                               String               @default("free")
   is_deleted                         Boolean              @default(false)
+  was_processed                      Boolean              @default(false)
   is_approved                        Boolean              @default(false)
   is_blocked                         Boolean              @default(false)
   created_at                         DateTime             @default(now())

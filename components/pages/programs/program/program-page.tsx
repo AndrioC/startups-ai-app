@@ -12,8 +12,6 @@ export default function ProgramPageComponent() {
   const { data: session } = useSession();
   const { token } = useParams();
 
-  console.log("session", session);
-
   const { data, isLoading, error } = useLoadProgramInfo(
     Number(session?.user?.organization_id),
     token.toString()

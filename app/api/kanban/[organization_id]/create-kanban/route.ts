@@ -15,8 +15,6 @@ export async function POST(
 ) {
   const data = (await request.json()) as DataRequest;
 
-  console.log("CREATING", data);
-
   await prisma.$transaction(async (prisma) => {
     const lastKanban: kanbans[] = await prisma.$queryRaw`
       SELECT

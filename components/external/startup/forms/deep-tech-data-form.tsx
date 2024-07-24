@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import isEqual from "lodash/isEqual";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ export default function DeepTechDataForm({ data }: Props) {
 
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
@@ -68,6 +70,10 @@ export default function DeepTechDataForm({ data }: Props) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const currentValues = getValues();
+    if (isEqual(currentValues, initialData)) {
+      return;
+    }
     mutation.mutate(data);
   };
 

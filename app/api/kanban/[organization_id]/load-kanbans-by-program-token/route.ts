@@ -25,7 +25,6 @@ export async function GET(
 
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
-  console.log("token: ", token);
 
   const kanbanData: KanbanDataWithCards[] = await prisma.$queryRaw`
     SELECT
@@ -50,8 +49,6 @@ export async function GET(
     GROUP BY
         k.id;
   `;
-
-  console.log("kanbanData: ", kanbanData);
 
   return NextResponse.json(kanbanData, { status: 201 });
 }

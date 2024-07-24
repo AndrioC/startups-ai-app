@@ -15,8 +15,6 @@ export async function PUT(
 ) {
   const data = (await request.json()) as DataRequest;
 
-  console.log(data);
-
   const existingCard = await prisma.kanban_cards.findUnique({
     where: { id: data.kanban_card_id },
   });
@@ -37,8 +35,6 @@ export async function PUT(
         (card) => card.id !== data.kanban_card_id
       );
       updatedCards.splice(data.new_position, 0, existingCard!);
-
-      console.log("updatedCards: ", updatedCards);
 
       for (let i = 0; i < updatedCards.length; i++) {
         await prisma.kanban_cards.update({

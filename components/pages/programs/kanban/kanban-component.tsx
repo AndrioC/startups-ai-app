@@ -48,7 +48,6 @@ export default function KanbanComponent() {
       }
     );
 
-    console.log("response: ", response);
     setNewListTitle("");
     setIsModalOpen(false);
     refetch();

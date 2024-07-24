@@ -14,7 +14,6 @@ interface Props {
 }
 
 export default function StartupDataCard({ data }: Props) {
-  console.log("data: ", data);
   return (
     <div className="w-[300px] h-[600px] bg-[#F1F3F3] shadow-md rounded-lg text-gray-500">
       <div className="text-xl font-bold mb-4 pl-5 mt-5">DADOS DA STARTUP</div>

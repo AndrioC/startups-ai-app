@@ -45,7 +45,6 @@ export default function CreateProgramDialog() {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("data: ", data);
     mutation.mutate(data);
   };
 
@@ -183,7 +182,6 @@ export default function CreateProgramDialog() {
                       render={({ field }) => (
                         <DatePicker
                           onChange={(newValue: Date | undefined) => {
-                            console.log("here-endDate", newValue);
                             field.onChange(newValue);
                           }}
                           value={field.value}

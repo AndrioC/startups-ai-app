@@ -102,10 +102,7 @@ export const PartnerSchema = z.object({
     .string()
     .min(1, "Este campo é obrigatório!")
     .email("E-mail não é válido!"),
-  position_id: z
-    .string()
-    .min(1, "Este campo é obrigatório!")
-    .transform((value) => value.toString()),
+  position_id: z.string().min(1, "Este campo é obrigatório!"),
   is_founder: z.string().min(1, "Este campo é obrigatório!"),
   dedication_type: z.string().min(1, "Este campo é obrigatório!"),
   percentage_captable: z
@@ -151,9 +148,9 @@ export const ProductServiceDataSchema = () =>
 
 export const DeepTechDataSchema = () =>
   z.object({
-    maturityLevel: z.string().optional(),
-    hasPatent: z.string().optional(),
-    patentAndCode: z.string().optional(),
+    maturityLevel: z.string().nullable().optional(),
+    hasPatent: z.string().nullable().optional(),
+    patentAndCode: z.string().nullable().optional(),
   });
 
 export const GovernanceDataSchema = () =>

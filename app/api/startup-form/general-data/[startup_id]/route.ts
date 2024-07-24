@@ -40,6 +40,8 @@ export async function PATCH(
         value_proposal_en: data.valueProposal,
         short_description_pt: data.shortDescription,
         short_description_en: data.shortDescription,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
 

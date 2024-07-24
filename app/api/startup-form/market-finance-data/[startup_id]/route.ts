@@ -43,6 +43,8 @@ export async function PATCH(
         round_end_date: data.isThereOpenInvestmentRound
           ? data.roundEndDate
           : null,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
 

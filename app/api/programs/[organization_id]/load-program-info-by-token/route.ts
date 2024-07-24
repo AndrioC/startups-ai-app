@@ -12,7 +12,6 @@ export async function GET(
 ) {
   const session = await auth();
 
-  console.log("organization_id: ", params.organization_id);
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
 
@@ -24,8 +23,6 @@ export async function GET(
       WHERE
         encode(digest(CAST(id AS text), 'sha1'), 'hex') = ${token};
   `;
-
-  console.log("programInfoByToken: ", programInfoByToken);
 
   return NextResponse.json(
     { programInfoByToken: programInfoByToken[0] },

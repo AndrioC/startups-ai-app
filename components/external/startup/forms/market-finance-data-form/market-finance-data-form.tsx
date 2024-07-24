@@ -10,6 +10,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import isEqual from "lodash/isEqual";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ export default function MarketFinanceDataForm() {
   const {
     register,
     control,
+    getValues,
     handleSubmit,
     watch,
     formState: { errors },
@@ -45,6 +47,10 @@ export default function MarketFinanceDataForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof schemateste>) => {
+    const currentValues = getValues();
+    if (isEqual(currentValues, initialData)) {
+      return;
+    }
     mutation.mutate(data);
   };
 

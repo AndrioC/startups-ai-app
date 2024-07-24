@@ -19,6 +19,8 @@ export async function PATCH(
         maturity_level_id: Number(data.maturityLevel),
         has_patent: data.hasPatent,
         patent_and_code: data.patentAndCode,
+        was_processed: false,
+        updated_at: new Date(),
       },
     });
   });

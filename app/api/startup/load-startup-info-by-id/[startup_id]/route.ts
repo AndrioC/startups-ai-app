@@ -51,7 +51,7 @@ export async function GET(
         name: partner.name,
         phone: partner.phone,
         email: partner.email,
-        position_id: partner.position_id,
+        position_id: partner.position_id.toString(),
         is_founder: partner.is_founder,
         dedication_type: partner.dedication,
         percentage_captable: partner.captable,
@@ -78,7 +78,6 @@ export async function GET(
       }))
     : [];
 
-  console.log("image", startup?.logo_img);
   const generalData: Block = {
     startupId: startup?.id,
     startupName: startup?.name,
