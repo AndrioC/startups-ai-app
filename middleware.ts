@@ -10,8 +10,8 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
 
   const fetchUrl = hostname.includes("localhost")
-    ? "http://localhost:3000/api/subdomains"
-    : "https://startups-globallink.com/api/subdomains";
+    ? "http://sgl.localhost:3000/api/subdomains"
+    : "https://sgl.startups-globallink.com/api/subdomains";
 
   const res = await fetch(fetchUrl);
 
