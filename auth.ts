@@ -1,5 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
+import type { Adapter } from "next-auth/adapters";
 
 import authConfig from "@/auth.config";
 import { getUserById } from "@/data/user";
@@ -61,7 +62,7 @@ export const {
       return token;
     },
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as Adapter,
   session: {
     strategy: "jwt",
     maxAge: 1 * 24 * 60 * 60,
