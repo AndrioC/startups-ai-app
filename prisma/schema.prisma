@@ -13,7 +13,8 @@ datasource db {
 model organizations {
   id             Int           @id @default(autoincrement())
   name           String
-  slug           String        @default("")
+  slug           String        @unique
+  slug_admin     String        @unique
   payment_needed Boolean       @default(false)
   logo_img       String?
   created_at     DateTime      @default(now())

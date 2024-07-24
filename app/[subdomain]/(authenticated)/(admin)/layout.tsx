@@ -8,7 +8,7 @@ import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
 import SideBar from "@/components/sidebar";
 
-import AuthProvider from "../api/auth/Provider";
+import AuthProvider from "../../../api/auth/Provider";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/custom.css";

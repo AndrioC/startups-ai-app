@@ -9,7 +9,11 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const hostname = req.headers.get("host") || "";
 
-  const res = await fetch("http://localhost:3000/api/subdomains");
+  const fetchUrl = hostname.includes("localhost")
+    ? "http://localhost:3000/api/subdomains"
+    : "https://startups-globallink.com/api/subdomains";
+
+  const res = await fetch(fetchUrl);
 
   if (!res.ok) {
     return new Response("Failed to fetch subdomains", { status: 500 });
