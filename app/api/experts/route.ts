@@ -8,9 +8,9 @@ const S3_EXPERTS_IMAGES = process.env.S3_EXPERTS_LOGO_IMGS_BUCKET_NAME;
 export interface ExpertTable {
   id: number;
   name: string;
-  linkedin: string;
+  linkedin: string | null;
   picture_img_url: string;
-  company: string;
+  company: string | null;
   experience_with_startups_en: string;
   experience_with_startups_pt: string;
   is_approved: boolean;
@@ -54,11 +54,14 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(expertTable, { status: 201 });
 }
 
-function returnLinkedinWithHttps(linkedin: string) {
-  let newLink = linkedin;
-  if (!/^https?:\/\//i.test(linkedin)) {
-    newLink = "https://" + linkedin;
+function returnLinkedinWithHttps(linkedin: string | null): string | null {
+  if (!linkedin) {
+    return null;
   }
 
-  return newLink;
+  if (!/^https?:\/\//i.test(linkedin)) {
+    return `https://${linkedin}`;
+  }
+
+  return linkedin;
 }

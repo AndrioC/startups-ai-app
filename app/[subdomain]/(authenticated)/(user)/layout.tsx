@@ -4,15 +4,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { redirect } from "next/navigation";
 
+import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
 import SideBar from "@/components/sidebar";
 
-import AuthProvider from "../../../api/auth/Provider";
-
 import "react-toastify/dist/ReactToastify.css";
-import "../../styles/custom.css";
-import "../../styles/global.css";
+import "@/styles/custom.css";
+import "@/styles/global.css";
 import "@/app/globals.css";
 import "@/app/theme-config.css";
 

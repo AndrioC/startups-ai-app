@@ -193,7 +193,7 @@ const StartupActionsDropdown = ({ expert }: { expert: ExpertTable }) => {
               <div className="flex mt-2">
                 <span className="text-xs font-semibold">{expert.name}</span>
               </div>
-              <a href={expert.linkedin} target="_blank" rel="noreferrer">
+              <a href={expert.linkedin!} target="_blank" rel="noreferrer">
                 <SiLinkedin size={30} className="text-blue-500" />
               </a>
             </div>
@@ -202,7 +202,7 @@ const StartupActionsDropdown = ({ expert }: { expert: ExpertTable }) => {
             </label>
             <input
               id="company"
-              value={expert.company}
+              value={expert.company!}
               type="text"
               className="h-8 lg:h-11 px-4 border rounded-md"
               disabled
