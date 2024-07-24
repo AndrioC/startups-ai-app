@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 
 export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
@@ -10,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
 
   const fetchUrl = hostname.includes("localhost")
-    ? "http://sgl.localhost:3000/api/subdomains"
+    ? "http://localhost:3000/api/subdomains"
     : "https://sgl.startups-globallink.com/api/subdomains";
 
   const res = await fetch(fetchUrl);
@@ -39,8 +38,6 @@ export default async function middleware(req: NextRequest) {
       new URL(`/${subdomain}${url.pathname}`, req.url)
     );
   }
-
-  const token = await getToken({ req: request });
 
   return new Response("Subdomain not allowed!", { status: 403 });
 }
