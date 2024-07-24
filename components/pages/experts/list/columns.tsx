@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { SiLinkedin } from "react-icons/si";
 import { Badge, Tooltip } from "@radix-ui/themes";
