@@ -242,7 +242,7 @@ export default function RegisterComponent() {
               )}
             </div>
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out"
             >
               Já possuo conto

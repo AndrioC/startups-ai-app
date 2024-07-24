@@ -38,12 +38,12 @@ export default function ForgotPasswordComponent() {
         </div>
 
         <div className="w-[526px] flex justify-between mb-6">
-          <Link href={"/login"}>
+          <Link href={"/auth/login"}>
             <Button className="border-[#4087C2] bg-transparent border-4 text-[#4087C2] font-bold uppercase text-[20px] rounded-[30px] w-[120px] h-[50px] shadow-xl hover:bg-transparent hover:text-[#266395] transition-colors duration-300 ease-in-out">
               Voltar
             </Button>
           </Link>
-          <Link href={"/login"}>
+          <Link href={"/auth/login"}>
             <Button
               variant="blue"
               className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[120px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
