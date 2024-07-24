@@ -49,13 +49,13 @@ export default function LoginComponent() {
 
         <div className="w-[526px] flex justify-between mb-6">
           <Link
-            href="/register"
+            href="/auth/register"
             className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out"
           >
             Cadastrar
           </Link>
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out"
           >
             Esqueci minha senha
