@@ -5,9 +5,9 @@ import Link from "next/link";
 import sriLogo from "@/assets/img/logos/sri-logo.svg";
 import { Button } from "@/components/ui/button";
 
-export default function LoginComponent() {
+export function LoginComponent() {
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
+    <div className="flex flex-col items-center justify-start bg-[#F5F7FA]">
       <h1 className="text-center text-black font-semibold text-[48px]">
         Bem-vindo de volta!
       </h1>

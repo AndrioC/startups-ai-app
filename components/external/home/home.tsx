@@ -45,7 +45,7 @@ export default function HomeComponent() {
           title="YouTube Video"
         ></iframe>
 
-        <p className="mt-10 mx-[90px] text-[20px] text-justify font-normal leading-7">
+        <p className="mt-10 mx-[90px] text-[20px] text-justify font-normal leading-7 text-black">
           O InovAtiva apoia o desenvolvimento do ecossistema de empreendedorismo
           inovador no Brasil. Os programas e eventos do InovAtiva promovem
           diferentes oportunidades de aceleração de negócios inovadores, conexão
