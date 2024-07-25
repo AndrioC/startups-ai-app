@@ -7,10 +7,6 @@ export async function GET() {
     select: { slug: true, slug_admin: true },
   });
 
-  if (!subdomains) {
-    return null;
-  }
-
   const combinedSubdomains = subdomains.flatMap((s) => [s.slug, s.slug_admin]);
 
   return NextResponse.json(combinedSubdomains, { status: 201 });
