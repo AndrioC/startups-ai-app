@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { z } from "zod";
 
 import sriLogo from "@/assets/img/logos/sri-logo.svg";
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/schemas/schema-register";
 
 export default function RegisterComponent() {
+  const router = useRouter();
   const formSchema = RegisterSchema();
   const [isSubmiting, setIsSubmiting] = useState(false);
 
@@ -61,6 +62,7 @@ export default function RegisterComponent() {
       if (response.status === 201) {
         setIsSubmiting(false);
         toastSuccess();
+        router.replace("/auth/login");
         return;
       }
     } catch (error: unknown) {
@@ -105,7 +107,7 @@ export default function RegisterComponent() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] mb-5">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
       <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
         Crie sua conta agora mesmo!
       </h1>
@@ -254,7 +256,7 @@ export default function RegisterComponent() {
               type="submit"
               variant="blue"
               disabled={isSubmiting}
-              className="bg-[#4087C2] text-white mb-10 font-bold uppercase text-[20px] rounded-[30px] w-full max-w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
+              className="bg-[#4087C2] text-white mb-5 font-bold uppercase text-[20px] rounded-[30px] w-full max-w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
             >
               Cadastrar
             </Button>
