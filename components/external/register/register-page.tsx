@@ -105,29 +105,29 @@ export default function RegisterComponent() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
-      <h1 className="text-center text-black font-semibold text-[48px]">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
+      <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
         Crie sua conta agora mesmo!
       </h1>
 
-      <div className="bg-white shadow-lg rounded-lg mt-5 w-[660px] flex flex-col items-center">
+      <div className="bg-white shadow-lg rounded-lg mt-5 w-full max-w-[660px] flex flex-col items-center p-4 md:p-8">
         <Image
           src={sriLogo}
           alt="sri-logo"
           width={250}
           height={250}
-          className="mt-[40px] mb-[20px]"
+          className="mt-[20px] md:mt-[40px] mb-[20px]"
         />
 
-        <p className="text-[#4087C2] self-start ml-[70px] font-medium text-[15px] mb-1">
+        <p className="text-[#4087C2] self-start md:ml-[70px] font-medium text-[15px] mb-1">
           Digite seus dados para criar um conta de acesso.
         </p>
 
         <form
-          className="space-y-6 flex-1 flex flex-col"
+          className="space-y-6 flex-1 flex flex-col w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="relative w-[526px]">
+          <div className="relative w-full max-w-[526px] mx-auto">
             <span className="absolute left-3 top-4">
               <AiOutlineUserAdd className="h-5 w-5 text-gray-400" />
             </span>
@@ -145,7 +145,7 @@ export default function RegisterComponent() {
             )}
           </div>
 
-          <div className="relative w-[526px]">
+          <div className="relative w-full max-w-[526px] mx-auto">
             <span className="absolute left-3 top-4">
               <MdOutlineMailOutline className="h-5 w-5 text-gray-400" />
             </span>
@@ -163,7 +163,7 @@ export default function RegisterComponent() {
             )}
           </div>
 
-          <div className="relative w-[526px]">
+          <div className="relative w-full max-w-[526px] mx-auto">
             <span className="absolute left-3 top-4">
               <MdLock className="h-5 w-5 text-gray-400" />
             </span>
@@ -181,7 +181,7 @@ export default function RegisterComponent() {
             )}
           </div>
 
-          <div className="relative w-[526px]">
+          <div className="relative w-full max-w-[526px] mx-auto">
             <span className="absolute left-3 top-4">
               <MdLock className="h-5 w-5 text-gray-400" />
             </span>
@@ -199,7 +199,7 @@ export default function RegisterComponent() {
             )}
           </div>
 
-          <div className="relative w-[526px]">
+          <div className="relative w-full max-w-[526px] mx-auto">
             <span className="absolute left-3 top-4">
               <FaUserCog className="h-5 w-5 text-gray-400" />
             </span>
@@ -222,7 +222,7 @@ export default function RegisterComponent() {
             )}
           </div>
 
-          <div className="w-[526px] flex justify-between">
+          <div className="w-full max-w-[526px] flex justify-between mx-auto">
             <div>
               <label className="flex items-center">
                 <input
@@ -245,16 +245,16 @@ export default function RegisterComponent() {
               href="/auth/login"
               className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out"
             >
-              Já possuo conto
+              Já possuo conta
             </Link>
           </div>
 
-          <div className="flex justify-end mt-auto">
+          <div className="flex justify-end mt-auto w-full max-w-[526px] mx-auto">
             <Button
               type="submit"
               variant="blue"
               disabled={isSubmiting}
-              className="bg-[#4087C2] text-white mb-10 font-bold uppercase text-[20px] rounded-[30px] w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
+              className="bg-[#4087C2] text-white mb-10 font-bold uppercase text-[20px] rounded-[30px] w-full max-w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
             >
               Cadastrar
             </Button>
