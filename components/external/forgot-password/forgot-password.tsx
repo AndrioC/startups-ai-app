@@ -7,26 +7,26 @@ import { Button } from "@/components/ui/button";
 
 export default function ForgotPasswordComponent() {
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
-      <h1 className="text-center text-black font-semibold text-[48px]">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
+      <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px] mt-10">
         Redefinição de senha.
       </h1>
 
-      <div className="bg-white shadow-lg rounded-lg mt-10 w-[660px] h-[640px] flex flex-col items-center">
+      <div className="bg-white shadow-lg rounded-lg mt-10 w-full max-w-[660px] h-auto md:h-[640px] flex flex-col items-center p-4 md:p-8">
         <Image
           src={sriLogo}
           alt="sri-logo"
           width={250}
           height={250}
-          className="mt-[40px] mb-[20px]"
+          className="mt-[20px] md:mt-[40px] mb-[20px]"
         />
 
-        <p className="text-[#4087C2] w-[500px] self-start ml-[70px] font-medium text-[15px] mb-1 mt-10">
+        <p className="text-[#4087C2] w-full max-w-[500px] self-start md:ml-[40px] font-medium text-[15px] mb-1 mt-10">
           Digite seu email de login que enviaremos as instruções para você
           redefinir sua senha.
         </p>
 
-        <div className="relative w-[526px] mb-6">
+        <div className="relative w-full max-w-[526px] mb-6">
           <span className="absolute left-3 top-4">
             <MdOutlineMailOutline className="h-5 w-5 text-gray-400" />
           </span>
@@ -37,16 +37,16 @@ export default function ForgotPasswordComponent() {
           />
         </div>
 
-        <div className="w-[526px] flex justify-between mb-6">
+        <div className="w-full max-w-[526px] flex justify-between mb-6">
           <Link href={"/auth/login"}>
-            <Button className="border-[#4087C2] bg-transparent border-4 text-[#4087C2] font-bold uppercase text-[20px] rounded-[30px] w-[120px] h-[50px] shadow-xl hover:bg-transparent hover:text-[#266395] transition-colors duration-300 ease-in-out">
+            <Button className="border-[#4087C2] bg-transparent border-2 md:border-4 text-[#4087C2] font-bold uppercase text-[16px] md:text-[20px] rounded-[30px] w-full max-w-[120px] h-[50px] shadow-xl hover:bg-transparent hover:text-[#266395] transition-colors duration-300 ease-in-out">
               Voltar
             </Button>
           </Link>
           <Link href={"/auth/login"}>
             <Button
               variant="blue"
-              className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[120px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
+              className="bg-[#4087C2] text-white font-bold uppercase text-[16px] md:text-[20px] rounded-[30px] w-full max-w-[120px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
             >
               Enviar
             </Button>

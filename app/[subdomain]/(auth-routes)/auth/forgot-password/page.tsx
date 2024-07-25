@@ -2,5 +2,5 @@ import ForgotPasswordComponent from "@/components/external/forgot-password/forgo
 import RenewPasswordComponent from "@/components/external/renew-password/renew-password";
 
 export default function ForgoPasswordPage() {
-  return <RenewPasswordComponent />;
+  return <ForgotPasswordComponent />;
 }
