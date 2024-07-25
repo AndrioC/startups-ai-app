@@ -7,25 +7,25 @@ import { Button } from "@/components/ui/button";
 
 export function LoginComponent() {
   return (
-    <div className="flex flex-col items-center justify-start bg-[#F5F7FA]">
-      <h1 className="text-center text-black font-semibold text-[48px]">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
+      <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px] mt-10">
         Bem-vindo de volta!
       </h1>
 
-      <div className="bg-white shadow-lg rounded-lg mt-10 w-[660px] h-[640px] flex flex-col items-center">
+      <div className="bg-white shadow-lg rounded-lg mt-10 w-full max-w-[660px] h-auto md:h-[640px] flex flex-col items-center p-4 md:p-8">
         <Image
           src={sriLogo}
           alt="sri-logo"
           width={250}
           height={250}
-          className="mt-[40px] mb-[20px]"
+          className="mt-[20px] md:mt-[40px] mb-[20px]"
         />
 
-        <p className="text-[#4087C2] self-start ml-[70px] font-medium text-[15px] mb-1 mt-10">
+        <p className="text-[#4087C2] self-start md:ml-[70px] font-medium text-[15px] mb-1 mt-10">
           Digite seu usuário e senha para acessar o sistema.
         </p>
 
-        <div className="relative w-[526px] mb-6">
+        <div className="relative w-full max-w-[526px] mb-6">
           <span className="absolute left-3 top-4">
             <MdOutlineMailOutline className="h-5 w-5 text-gray-400" />
           </span>
@@ -36,7 +36,7 @@ export function LoginComponent() {
           />
         </div>
 
-        <div className="relative w-[526px] mb-1">
+        <div className="relative w-full max-w-[526px] mb-1">
           <span className="absolute left-3 top-4">
             <MdLock className="h-5 w-5 text-gray-400" />
           </span>
@@ -47,7 +47,7 @@ export function LoginComponent() {
           />
         </div>
 
-        <div className="w-[526px] flex justify-between mb-6">
+        <div className="w-full max-w-[526px] flex justify-between mb-6">
           <Link
             href="/auth/register"
             className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out"
@@ -64,7 +64,7 @@ export function LoginComponent() {
 
         <Button
           variant="blue"
-          className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
+          className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out mt-4 md:mt-auto"
         >
           Entrar
         </Button>
