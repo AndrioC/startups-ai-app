@@ -1,3 +1,5 @@
+"use client";
+
 import { MdOutlineMailOutline } from "react-icons/md";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,11 +10,11 @@ import { Button } from "@/components/ui/button";
 export default function ForgotPasswordComponent() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
-      <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px] mt-10">
+      <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
         Redefinição de senha.
       </h1>
 
-      <div className="bg-white shadow-lg rounded-lg mt-10 w-full max-w-[660px] h-auto md:h-[640px] flex flex-col items-center p-4 md:p-8">
+      <div className="bg-white shadow-lg rounded-lg mt-5 w-full max-w-[660px] h-auto md:h-[640px] flex flex-col items-center p-4 md:p-8">
         <Image
           src={sriLogo}
           alt="sri-logo"

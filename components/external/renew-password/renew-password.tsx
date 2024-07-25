@@ -1,3 +1,5 @@
+"use client";
+
 import { MdLock } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import Image from "next/image";

@@ -105,21 +105,21 @@ export default function RegisterComponent() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] mb-5">
       <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
         Crie sua conta agora mesmo!
       </h1>
 
-      <div className="bg-white shadow-lg rounded-lg mt-5 w-full max-w-[660px] flex flex-col items-center p-4 md:p-8">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-[660px] flex flex-col items-center md:p-8">
         <Image
           src={sriLogo}
           alt="sri-logo"
           width={250}
           height={250}
-          className="mt-[20px] md:mt-[40px] mb-[20px]"
+          className="mt-[20px] md:mt-[10px] mb-5"
         />
 
-        <p className="text-[#4087C2] self-start md:ml-[70px] font-medium text-[15px] mb-1">
+        <p className="text-[#4087C2] self-start md:ml-[40px] font-medium text-[15px] mb-1">
           Digite seus dados para criar um conta de acesso.
         </p>
 
