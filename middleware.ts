@@ -39,5 +39,51 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  return new Response("Subdomain not allowed!", { status: 403 });
+  const htmlResponse = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Subdomain Not Found</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background-color: #f0f0f0;
+        }
+        .container {
+          text-align: center;
+          padding: 20px;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+          color: #d32f2f;
+        }
+        p {
+          color: #333;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Subdomain Not Found</h1>
+        <p>The subdomain you are trying to access does not exist.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return new Response(htmlResponse, {
+    status: 404,
+    headers: {
+      "Content-Type": "text/html",
+    },
+  });
 }
