@@ -62,12 +62,28 @@ export default async function middleware(req: NextRequest) {
           background: white;
           border-radius: 8px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          max-width: 90%;
+          margin: 0 auto;
         }
         h1 {
           color: #d32f2f;
+          font-size: 2rem;
+          margin-bottom: 10px;
         }
         p {
           color: #333;
+          font-size: 1.2rem;
+        }
+        @media (max-width: 600px) {
+          .container {
+            padding: 10px;
+          }
+          h1 {
+            font-size: 1.5rem;
+          }
+          p {
+            font-size: 1rem;
+          }
         }
       </style>
     </head>
