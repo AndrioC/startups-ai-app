@@ -18,27 +18,15 @@ export default async function middleware(req: NextRequest) {
     return new Response("Failed to fetch subdomains", { status: 500 });
   }
 
-  const data: { slug: string; slug_admin: string }[] = await res.json();
+  const data: string[] = await res.json();
 
   const allowedDomains = ["localhost:3000", "startups-globallink.com"];
-
-  type SubdomainObject = { subdomain: string };
-  const combinedSubDomains: SubdomainObject[] = data.reduce<SubdomainObject[]>(
-    (acc, d) => {
-      acc.push({ subdomain: d.slug });
-      acc.push({ subdomain: d.slug_admin });
-      return acc;
-    },
-    []
-  );
 
   const subdomain = hostname.split(".")[0];
 
   const isAllowedDomain = allowedDomains.includes(hostname);
 
-  const isAllowedSubDomain = combinedSubDomains.some(
-    (sd) => sd.subdomain === subdomain
-  );
+  const isAllowedSubDomain = data.includes(subdomain);
 
   if (isAllowedDomain) {
     return NextResponse.next();

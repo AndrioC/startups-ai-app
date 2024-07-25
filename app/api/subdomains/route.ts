@@ -6,5 +6,12 @@ export async function GET() {
   const subdomains = await prisma.organizations.findMany({
     select: { slug: true, slug_admin: true },
   });
-  return NextResponse.json(subdomains, { status: 201 });
+
+  if (!subdomains) {
+    return null;
+  }
+
+  const combinedSubdomains = subdomains.flatMap((s) => [s.slug, s.slug_admin]);
+
+  return NextResponse.json(combinedSubdomains, { status: 201 });
 }
