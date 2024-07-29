@@ -67,7 +67,6 @@ export default function RegisterComponent() {
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        console.log("axios error: ", error.response.data.error);
         toastWarning(error.response.data.error);
       } else {
         toastWarning("An unexpected error occurred.");

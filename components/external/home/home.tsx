@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import investorCardImage from "@/assets/img/investor-card-image.svg";
 import sriLogo from "@/assets/img/logos/sri-logo.svg";
@@ -15,9 +16,11 @@ export default function HomeComponent() {
       <header className="flex items-center justify-between bg-white h-[80px] px-4 md:px-10">
         <div className="flex items-center justify-between w-full py-4 md:py-16">
           <Image src={sriLogo} alt="sr-ligo" width={275} height={80} />
-          <Button className="bg-[#383838] bg-opacity-78 text-white rounded-full w-[120px] h-[40px] text-[16px] md:text-[20px] font-bold md:mr-16 uppercase shadow-xl hover:bg-[#282727] hover:text-white transition-colors duration-300 ease-in-out">
-            Entrar
-          </Button>
+          <Link href={"/auth/login"}>
+            <Button className="bg-[#383838] bg-opacity-78 text-white rounded-full w-[120px] h-[40px] text-[16px] md:text-[20px] font-bold md:mr-16 uppercase shadow-xl hover:bg-[#282727] hover:text-white transition-colors duration-300 ease-in-out">
+              Entrar
+            </Button>
+          </Link>
         </div>
       </header>
       <section>

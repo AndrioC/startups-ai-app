@@ -3,7 +3,7 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { getUserByEmail } from "@/data/user";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/lib/schemas/schema";
 
 export default {
   providers: [
@@ -12,9 +12,9 @@ export default {
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
+          const { email, password, slug } = validatedFields.data;
 
-          const user = await getUserByEmail(email);
+          const user = await getUserByEmail(email, slug);
           if (!user || !user.hashed_password) return null;
 
           const passwordsMatch = await bcryptjs.compare(
@@ -28,6 +28,7 @@ export default {
               name: user.name,
               email: user.email,
               organization_id: user.organization_id,
+              type: user.type,
             };
         }
 

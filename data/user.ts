@@ -1,10 +1,26 @@
-import prisma from "../prisma/client";
+import { UserType } from "@prisma/client";
 
-export const getUserByEmail = async (email: string) => {
+import prisma from "@/prisma/client";
+
+export const getUserByEmail = async (email: string, slug: string) => {
   try {
-    const user = await prisma.users_admin.findFirst({
-      where: { email },
+    const type = slug.includes("admin");
+    console.log("type: ", type);
+    const whereOrganization = type ? { slug_admin: slug } : { slug };
+    console.log("whereOrganization: ", whereOrganization);
+    const organization = await prisma.organizations.findFirst({
+      where: whereOrganization,
     });
+
+    const whereUser = type
+      ? { email, organization_id: organization?.id, type: UserType.ADMIN }
+      : { email, organization_id: organization?.id };
+    console.log("whereUser: ", whereUser);
+
+    const user = await prisma.user.findFirst({
+      where: whereUser,
+    });
+
     return user;
   } catch {
     return null;
@@ -13,7 +29,7 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: number) => {
   try {
-    const user = await prisma.users_admin.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({ where: { id } });
     return user;
   } catch {
     return null;

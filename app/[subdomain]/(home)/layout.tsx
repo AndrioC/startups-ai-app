@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
 
-import { auth } from "@/auth";
-
+import "react-toastify/dist/ReactToastify.css";
+import "@/styles/custom.css";
+import "@/styles/global.css";
 import "@/app/globals.css";
+import "@/app/theme-config.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,19 +23,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  if (session) {
-    redirect("/home");
-  }
-
   return (
-    <SessionProvider session={session}>
-      <html lang="en">
-        <body className={inter.className}>
-          <main className="min-h-screen">{children}</main>
-        </body>
-      </html>
-    </SessionProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <main>{children}</main>
+      </body>
+    </html>
   );
 }

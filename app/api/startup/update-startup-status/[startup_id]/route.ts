@@ -1,8 +1,8 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
+import { patchStartupSchema } from "@/lib/schemas/schema";
 import prisma from "@/prisma/client";
-import { patchStartupSchema } from "@/schemas";
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { startup_id: string } }

@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
 };
+
 export default async function RootLayout({
   children,
 }: {
@@ -39,14 +40,14 @@ export default async function RootLayout({
     <AuthProvider session={session}>
       <html lang="en">
         <body className={inter.className}>
-          <main className="min-h-screen">
+          <SideBar>
             <QueryClientProvider>
-              <SideBar>
-                <Theme>{children}</Theme>
-                <ToastContainer />
-              </SideBar>
+              <Theme>
+                <main className="min-h-screen">{children}</main>
+              </Theme>
+              <ToastContainer />
             </QueryClientProvider>
-          </main>
+          </SideBar>
         </body>
       </html>
     </AuthProvider>

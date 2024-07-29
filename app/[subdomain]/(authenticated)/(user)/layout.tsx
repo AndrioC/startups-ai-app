@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
-import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
 import "@/styles/custom.css";
@@ -41,10 +40,8 @@ export default async function RootLayout({
         <body className={inter.className}>
           <main className="min-h-screen">
             <QueryClientProvider>
-              <SideBar>
-                <Theme>{children}</Theme>
-                <ToastContainer />
-              </SideBar>
+              <Theme>{children}</Theme>
+              <ToastContainer />
             </QueryClientProvider>
           </main>
         </body>

@@ -19,7 +19,7 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      await prisma.users_admin.update({
+      await prisma.user.update({
         where: { id: Number(user.id) },
         data: { email_verified: new Date() },
       });
@@ -45,6 +45,7 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email!;
         session.user.organization_id = token.organization_id!;
+        session.user.type = token.type!;
       }
 
       return session;
@@ -59,6 +60,7 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.organization_id = existingUser.organization_id;
+      token.type = existingUser.type;
       return token;
     },
   },

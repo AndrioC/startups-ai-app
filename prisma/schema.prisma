@@ -11,20 +11,19 @@ datasource db {
 }
 
 model organizations {
-  id             Int           @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   name           String
-  slug           String?       @unique
-  slug_admin     String?       @unique
-  payment_needed Boolean       @default(false)
+  slug           String?     @unique
+  slug_admin     String?     @unique
+  payment_needed Boolean     @default(false)
   logo_img       String?
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @default(now())
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @default(now())
   user           user[]
   startups       startups[]
   ebooks         ebooks[]
   investors      investors[]
   experts        experts[]
-  users_admin    users_admin[]
   programs       programs[]
 }
 
@@ -238,6 +237,7 @@ enum UserType {
   STARTUP
   MENTOR
   INVESTOR
+  ADMIN
 }
 
 model user {
@@ -255,12 +255,18 @@ model user {
   accepted_terms_date DateTime?
   created_at          DateTime  @default(now())
   updated_at          DateTime  @default(now())
+  email_verified      DateTime?
 
   //relacionamentos
-  organizations organizations? @relation(fields: [organization_id], references: [id])
-  startups      startups?      @relation(fields: [startup_id], references: [id])
-  investors     investors?     @relation(fields: [investor_id], references: [id])
-  experts       experts?       @relation(fields: [expert_id], references: [id])
+  organizations   organizations? @relation(fields: [organization_id], references: [id])
+  startups        startups?      @relation(fields: [startup_id], references: [id])
+  investors       investors?     @relation(fields: [investor_id], references: [id])
+  experts         experts?       @relation(fields: [expert_id], references: [id])
+  createdPrograms programs[]     @relation("ProgramCreatedBy")
+  deletedPrograms programs[]     @relation("ProgramDeletedBy")
+  pausedPrograms  programs[]     @relation("ProgramPausedBy")
+  createdKanban   kanbans[]      @relation("KanbanCreatedBy")
+  deletedKanban   kanbans[]      @relation("KanbanDeletedBy")
 
   @@unique([email, organization_id])
 }
@@ -468,28 +474,6 @@ model experts_vertical {
   @@unique([expert_id, vertical_id])
 }
 
-model users_admin {
-  id              Int       @id @default(autoincrement())
-  organization_id Int
-  name            String
-  email           String
-  email_verified  DateTime?
-  hashed_password String
-  is_blocked      Boolean   @default(false)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @default(now())
-
-  organizations organizations? @relation(fields: [organization_id], references: [id])
-
-  createdPrograms programs[] @relation("ProgramCreatedBy")
-  deletedPrograms programs[] @relation("ProgramDeletedBy")
-  pausedPrograms  programs[] @relation("ProgramPausedBy")
-  createdKanban   kanbans[]  @relation("KanbanCreatedBy")
-  deletedKanban   kanbans[]  @relation("KanbanDeletedBy")
-
-  @@unique([email, organization_id])
-}
-
 model verification_token {
   id      String   @id @default(cuid())
   email   String
@@ -590,9 +574,9 @@ model programs {
   updated_at      DateTime  @default(now())
 
   organization organizations @relation(fields: [organization_id], references: [id])
-  created_by   users_admin   @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
-  deleted_by   users_admin?  @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
-  paused_by    users_admin?  @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
+  created_by   user          @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by   user?         @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
+  paused_by    user?         @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
   kanbans      kanbans[]
 }
 
@@ -609,8 +593,8 @@ model kanbans {
   updated_at     DateTime  @default(now())
 
   program      programs       @relation(fields: [program_id], references: [id])
-  created_by   users_admin?   @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
-  deleted_by   users_admin?   @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
+  created_by   user?          @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by   user?          @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
   kanban_cards kanban_cards[]
 }
 
