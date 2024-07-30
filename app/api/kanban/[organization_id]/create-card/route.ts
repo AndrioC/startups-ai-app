@@ -5,6 +5,7 @@ import prisma from "@/prisma/client";
 
 interface DataRequest {
   kanban_id: number;
+  startup_id: number;
   title: string;
 }
 
@@ -27,8 +28,8 @@ export async function POST(
     const position = lastKanbanCard ? lastKanbanCard.position_value + 1 : 0;
     await prisma.kanban_cards.create({
       data: {
-        title: data.title,
         kanban_id: Number(data.kanban_id),
+        startup_id: Number(data.startup_id),
         position_value: position,
       },
     });

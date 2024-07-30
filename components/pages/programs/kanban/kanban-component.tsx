@@ -134,7 +134,7 @@ export default function KanbanComponent() {
                                 }`}
                               >
                                 <span className="text-gray-700 text-[15px]">
-                                  {card.title}
+                                  {card.startup.name}
                                 </span>
                               </div>
                             )}

@@ -231,6 +231,7 @@ model startups {
   startup_objectives          startup_objectives[]
   startup_partner             startup_partner[]
   startup_investiments_rounds startup_investiments_rounds[]
+  kanban_cards                kanban_cards[]
 }
 
 enum UserType {
@@ -601,10 +602,11 @@ model kanbans {
 model kanban_cards {
   id             Int      @id @default(autoincrement())
   kanban_id      Int
-  title          String
+  startup_id     Int
   position_value Int      @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @default(now())
 
-  kanban kanbans @relation(fields: [kanban_id], references: [id])
+  kanban  kanbans  @relation(fields: [kanban_id], references: [id])
+  startup startups @relation(fields: [startup_id], references: [id])
 }
