@@ -33,20 +33,17 @@ export default function KanbanComponent() {
   );
 
   const addNewList = async () => {
-    const response = await fetch(
-      `/api/kanban/${session?.user?.organization_id}/create-kanban`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          program_token: token,
-          user_id: session?.user?.id,
-          name: newListTitle,
-        }),
-      }
-    );
+    await fetch(`/api/kanban/${session?.user?.organization_id}/create-kanban`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        program_token: token,
+        user_id: session?.user?.id,
+        name: newListTitle,
+      }),
+    });
 
     setNewListTitle("");
     setIsModalOpen(false);
@@ -93,76 +90,78 @@ export default function KanbanComponent() {
   };
 
   return (
-    <div className="flex bg-[#FCFCFC] p-5">
-      <div className="flex h-full">
+    <div className="flex bg-[#FCFCFC] p-5 min-h-screen">
+      <div className="flex h-full overflow-x-auto custom-scrollbar">
         <div className="flex gap-4 h-full">
           <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragEnd}>
-            {kanbanData?.map((list, index) => (
-              <Droppable key={list.id} droppableId={list.id.toString()}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`bg-[#F0F2F5] rounded-lg shadow-md w-[300px] overflow-y-auto max-h-[900px] p-4 ${
-                      snapshot.isDraggingOver ? "bg-blue-100" : ""
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-gray-700 text-[16px] font-bold">
-                        {list.kanban_name} ({list.kanban_cards.length})
-                      </h3>
-                      {index > 0 && (
-                        <button>
-                          <HiDotsHorizontal />
-                        </button>
-                      )}
-                    </div>
-                    {list.kanban_cards
-                      .sort((a, b) => a.position_value - b.position_value)
-                      .map((card, index) => (
-                        <Draggable
-                          key={card.id}
-                          draggableId={card.id.toString()}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center p-2 ${
-                                snapshot.isDragging ? "bg-gray-200" : ""
-                              }`}
-                            >
-                              <span className="text-gray-700 text-[15px]">
-                                {card.title}
-                              </span>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    {provided.placeholder}
-                    <Button
-                      className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-                      onClick={() => openCardModal(list.id)}
+            {kanbanData
+              ?.sort((a, b) => a.kanban_position - b.kanban_position)
+              .map((list, index) => (
+                <Droppable key={list.id} droppableId={list.id.toString()}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`bg-[#F0F2F5] rounded-lg shadow-md w-[300px] max-h-[900px] p-4 ${
+                        snapshot.isDraggingOver ? "bg-blue-100" : ""
+                      }`}
                     >
-                      + Adicionar Card
-                    </Button>
-                  </div>
-                )}
-              </Droppable>
-            ))}
+                      <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-gray-700 text-[16px] font-bold">
+                          {list.kanban_name} ({list.kanban_cards.length})
+                        </h3>
+                        {index > 0 && (
+                          <button>
+                            <HiDotsHorizontal />
+                          </button>
+                        )}
+                      </div>
+                      {list.kanban_cards
+                        .sort((a, b) => a.position_value - b.position_value)
+                        .map((card, index) => (
+                          <Draggable
+                            key={card.id}
+                            draggableId={card.id.toString()}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center p-2 ${
+                                  snapshot.isDragging ? "bg-gray-200" : ""
+                                }`}
+                              >
+                                <span className="text-gray-700 text-[15px]">
+                                  {card.title}
+                                </span>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                      {provided.placeholder}
+                      <Button
+                        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+                        onClick={() => openCardModal(list.id)}
+                      >
+                        + Adicionar Card
+                      </Button>
+                    </div>
+                  )}
+                </Droppable>
+              ))}
           </DragDropContext>
         </div>
+      </div>
 
-        <div className="ml-2">
-          <Button
-            className="bg-[#F5F7FA] text-[#747D8C] px-4 py-2 rounded-lg shadow-md mb-4 hover:bg-[#eaebec]"
-            onClick={() => setIsModalOpen(true)}
-          >
-            + Adicionar nova lista
-          </Button>
-        </div>
+      <div className="ml-2">
+        <Button
+          className="bg-[#F5F7FA] text-[#747D8C] px-4 py-2 rounded-lg shadow-md mb-4 hover:bg-[#eaebec]"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Adicionar nova lista
+        </Button>
       </div>
 
       <Transition appear show={isModalOpen} as={Fragment}>
@@ -183,7 +182,7 @@ export default function KanbanComponent() {
             <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 overflow-y-auto custom-scrollbar">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <TransitionChild
                 as={Fragment}
@@ -251,7 +250,7 @@ export default function KanbanComponent() {
             <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 overflow-y-auto custom-scrollbar">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <TransitionChild
                 as={Fragment}

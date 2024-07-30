@@ -4,7 +4,11 @@ import { BsPeople } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
-import { IoBusinessOutline, IoWalletOutline } from "react-icons/io5";
+import {
+  IoBusinessOutline,
+  IoRocketOutline,
+  IoWalletOutline,
+} from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import Image from "next/image";
 import Link from "next/link";
@@ -95,7 +99,7 @@ const menus = [
     id: 3,
     title: "Startups",
     href: "/management/startups",
-    icon: <RxDashboard />,
+    icon: <IoRocketOutline />,
     strokeWidth: 0.5,
   },
   {

@@ -9,10 +9,7 @@ import { auth } from "@/auth";
 import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
-import "@/styles/custom.css";
-import "@/styles/global.css";
 import "@/app/globals.css";
-import "@/app/theme-config.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

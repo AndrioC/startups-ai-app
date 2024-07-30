@@ -82,7 +82,7 @@ export default function HeaderProgramPage({
           <MdInsertLink className="h-8 w-8 mr-1 text-[#2292EA]" />
           Copiar link para cadastro
         </Button>
-        <div className="h-full">
+        <div className="h-full w-[1300px] flex-wrap">
           {tabContents.filter((tab) => tab.key === activeTab)}
         </div>
       </div>

@@ -43,7 +43,7 @@ import {
 } from "@/components/ui/table";
 import { FormProgramProvider } from "@/contexts/FormProgramContext";
 
-import CreateProgramDialog from "../create-program-dialog";
+import FormProgramDialog from "../form-program-dialog";
 
 import { programColumns } from "./columns";
 import HeaderProgramsFilter from "./header-programs-filter";
@@ -84,6 +84,10 @@ export function ProgramsTableComponent() {
   const pageCount = Math.ceil(data?.programsCount! / Number(pageSize));
 
   const [isPending, startTransition] = React.useTransition();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<ProgramTable | null>(
+    null
+  );
 
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
@@ -113,7 +117,16 @@ export function ProgramsTableComponent() {
           <h1 className="text-center text-black font-semibold text-[24px]">
             PROGRAMAS
           </h1>
-          <CreateProgramDialog />
+          <Button
+            onClick={() => {
+              setIsDialogOpen(true);
+              setSelectedProgram(null);
+            }}
+            variant="blue"
+            className="bg-[#2292EA] text-white font-semibold uppercase text-[18px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
+          >
+            + Novo
+          </Button>
         </div>
         <HeaderProgramsFilter
           setProgramName={setProgramName}
@@ -134,15 +147,6 @@ export function ProgramsTableComponent() {
                 <div className="w-full p-1">
                   <div className="flex items-center gap-2 py-4">
                     <div className="ml-auto flex items-center space-x-2">
-                      {/* <Button
-                      variant="destructive"
-                      disabled={
-                        !tableInstance.getSelectedRowModel().rows.length ||
-                        isPending
-                      }
-                    >
-                      Delete
-                    </Button> */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" className="ml-auto">
@@ -253,7 +257,7 @@ export function ProgramsTableComponent() {
                 className="cursor-pointer"
                 onClick={() => {
                   router.push(
-                    `/programs/program/${sha1(
+                    `programs/program/${sha1(
                       row.original.id.toString()
                     ).toString()}`
                   );
@@ -412,6 +416,7 @@ export function ProgramsTableComponent() {
             },
           }}
         />
+        <FormProgramDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
       </div>
     </FormProgramProvider>
   );

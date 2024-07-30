@@ -1,10 +1,7 @@
-import { programs } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 
+import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-
-import { auth } from "../../../../../auth";
 
 export interface KanbanDataWithCards {
   id: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,22 +11,31 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
 
+import { ProgramTable } from "@/app/api/programs/[organization_id]/list/route";
+import Spinner from "@/components/spinner";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Separator } from "@/components/ui/separator";
 import { useFormProgramData } from "@/contexts/FormProgramContext";
 import { ProgramSchema } from "@/lib/schemas/schema-programs";
 
-import Spinner from "../../spinner";
-import { DatePicker } from "../../ui/date-picker";
-
 import "@/styles/styles.css";
 
-export default function CreateProgramDialog() {
+interface Props {
+  program?: ProgramTable;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function FormProgramDialog({
+  program,
+  isOpen,
+  setIsOpen,
+}: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const formSchema = ProgramSchema();
-  const [isOpen, setIsOpen] = useState(false);
   const { refetch } = useFormProgramData();
 
   const {
@@ -37,46 +46,63 @@ export default function CreateProgramDialog() {
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
-      programName: "",
-      startDate: undefined,
-      endDate: undefined,
+      programName: program?.programName || "",
+      startDate: program?.startDate ? new Date(program.startDate) : undefined,
+      endDate: program?.endDate ? new Date(program.endDate) : undefined,
     },
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (program) {
+      reset({
+        programName: program.programName,
+        startDate: program.startDate ? new Date(program.startDate) : undefined,
+        endDate: program.endDate ? new Date(program.endDate) : undefined,
+      });
+    }
+  }, [program, reset]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     mutation.mutate(data);
   };
 
   const toastSuccess = () => {
-    toast.success("Programa criado com sucesso!", {
-      autoClose: 2000,
-      position: "top-center",
-    });
+    toast.success(
+      program
+        ? "Programa atualizado com sucesso!"
+        : "Programa criado com sucesso!",
+      {
+        autoClose: 2000,
+        position: "top-center",
+      }
+    );
   };
 
   const toastError = () => {
-    toast.error("Erro ao criar o programa!", {
-      autoClose: 2000,
-      position: "top-center",
-    });
+    toast.error(
+      program ? "Erro ao atualizar o programa!" : "Erro ao criar o programa!",
+      {
+        autoClose: 2000,
+        position: "top-center",
+      }
+    );
   };
 
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
       try {
         setIsSubmiting(true);
-        const response = await axios.post(
-          `/api/programs/${session?.user?.organization_id}/create`,
-          JSON.stringify({ ...data, userId: session?.user?.id }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios({
+          method: program ? "PATCH" : "POST",
+          url: `/api/programs/${session?.user?.organization_id}/${program ? `update-program?programId=${program.id}` : "create"}`,
+          data: JSON.stringify({ ...data, userId: session?.user?.id }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-        if (response.status === 201) {
+        if (response.status === 200 || response.status === 201) {
           setIsSubmiting(false);
           toastSuccess();
           refetch();
@@ -105,14 +131,6 @@ export default function CreateProgramDialog() {
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger asChild>
-        <Button
-          variant="blue"
-          className="bg-[#2292EA] text-white font-semibold uppercase text-[18px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
-        >
-          + Novo
-        </Button>
-      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content
@@ -123,7 +141,7 @@ export default function CreateProgramDialog() {
         >
           <Spinner isLoading={isSubmiting}>
             <Dialog.Title className="DialogTitle uppercase font-bold p-[25px]">
-              Novo programa
+              {program ? "Editar programa" : "Novo programa"}
             </Dialog.Title>
             <Separator />
             <form onSubmit={handleSubmit(onSubmit)}>
