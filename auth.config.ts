@@ -29,6 +29,11 @@ export default {
               email: user.email,
               organization_id: user.organization_id,
               type: user.type,
+
+              isAdmin: user.type === "ADMIN",
+              isInvestor: user.type === "INVESTOR",
+              isMentor: user.type === "MENTOR",
+              isStartup: user.type === "STARTUP",
             };
         }
 

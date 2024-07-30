@@ -46,6 +46,11 @@ export const {
         session.user.email = token.email!;
         session.user.organization_id = token.organization_id!;
         session.user.type = token.type!;
+
+        session.user.isAdmin = token.type === "ADMIN";
+        session.user.isInvestor = token.type === "INVESTOR";
+        session.user.isMentor = token.type === "MENTOR";
+        session.user.isStartup = token.type === "STARTUP";
       }
 
       return session;
@@ -61,6 +66,11 @@ export const {
       token.email = existingUser.email;
       token.organization_id = existingUser.organization_id;
       token.type = existingUser.type;
+
+      token.isAdmin = token.type === "ADMIN";
+      token.isInvestor = token.type === "INVESTOR";
+      token.isMentor = token.type === "MENTOR";
+      token.isStartup = token.type === "STARTUP";
       return token;
     },
   },

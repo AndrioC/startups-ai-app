@@ -2,12 +2,10 @@ import { ToastContainer } from "react-toastify";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
-import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
 import "@/styles/custom.css";
@@ -24,7 +22,6 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
 };
-
 export default async function RootLayout({
   children,
 }: {
@@ -32,22 +29,16 @@ export default async function RootLayout({
 }) {
   const session = await auth();
 
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   return (
     <AuthProvider session={session}>
       <html lang="en">
         <body className={inter.className}>
-          <SideBar>
+          <main className="min-h-screen">
             <QueryClientProvider>
-              <Theme>
-                <main className="min-h-screen">{children}</main>
-              </Theme>
+              <Theme>{children}</Theme>
               <ToastContainer />
             </QueryClientProvider>
-          </SideBar>
+          </main>
         </body>
       </html>
     </AuthProvider>

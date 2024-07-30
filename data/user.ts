@@ -5,9 +5,7 @@ import prisma from "@/prisma/client";
 export const getUserByEmail = async (email: string, slug: string) => {
   try {
     const type = slug.includes("admin");
-    console.log("type: ", type);
     const whereOrganization = type ? { slug_admin: slug } : { slug };
-    console.log("whereOrganization: ", whereOrganization);
     const organization = await prisma.organizations.findFirst({
       where: whereOrganization,
     });
@@ -15,7 +13,6 @@ export const getUserByEmail = async (email: string, slug: string) => {
     const whereUser = type
       ? { email, organization_id: organization?.id, type: UserType.ADMIN }
       : { email, organization_id: organization?.id };
-    console.log("whereUser: ", whereUser);
 
     const user = await prisma.user.findFirst({
       where: whereUser,

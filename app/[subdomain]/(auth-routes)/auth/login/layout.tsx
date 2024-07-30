@@ -1,8 +1,4 @@
 import { ToastContainer } from "react-toastify";
-import { redirect } from "next/navigation";
-
-import { pageRedirect } from "@/actions/login";
-import { auth } from "@/auth";
 
 import "react-toastify/dist/ReactToastify.css";
 import "@/styles/custom.css";
@@ -20,13 +16,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  if (session?.user?.type) {
-    const redirectPath = pageRedirect(session?.user?.type!);
-    redirect(redirectPath);
-  }
-
   return (
     <html lang="en">
       <body>

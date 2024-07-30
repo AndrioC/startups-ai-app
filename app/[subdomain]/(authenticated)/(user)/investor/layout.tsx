@@ -2,7 +2,6 @@ import { ToastContainer } from "react-toastify";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
@@ -29,10 +28,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-
-  if (!session) {
-    redirect("/auth/login");
-  }
 
   return (
     <AuthProvider session={session}>
