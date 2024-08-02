@@ -95,7 +95,9 @@ export default function FormProgramDialog({
         setIsSubmiting(true);
         const response = await axios({
           method: program ? "PATCH" : "POST",
-          url: `/api/programs/${session?.user?.organization_id}/${program ? `update-program?programId=${program.id}` : "create"}`,
+          url: `/api/programs/${session?.user?.organization_id}/${
+            program ? `update-program?programId=${program.id}` : "create"
+          }`,
           data: JSON.stringify({ ...data, userId: session?.user?.id }),
           headers: {
             "Content-Type": "application/json",
@@ -132,96 +134,96 @@ export default function FormProgramDialog({
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="DialogOverlay" />
+        <Dialog.Overlay className="fixed inset-0 bg-black/30" />
         <Dialog.Content
-          className="DialogContent bg-red-200"
+          className="fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-xl translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg p-6 shadow-lg focus:outline-none"
           onInteractOutside={(e) => {
             e.preventDefault();
           }}
         >
           <Spinner isLoading={isSubmiting}>
-            <Dialog.Title className="DialogTitle uppercase font-bold p-[25px]">
+            <Dialog.Title className="text-lg font-bold uppercase mb-4">
               {program ? "Editar programa" : "Novo programa"}
             </Dialog.Title>
             <Separator />
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-4 p-[25px]">
-                <div>
-                  <label htmlFor="programName" className="flex items-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="programName"
+                  className="flex items-center space-x-1"
+                >
+                  <span className="text-red-500">*</span>
+                  <span className="text-gray-500">Nome do programa</span>
+                </label>
+                <input
+                  id="programName"
+                  type="text"
+                  className="w-full h-[40px] border border-gray-200 rounded px-2 text-[#747D8C] mt-1"
+                  {...register("programName")}
+                />
+                {errors.programName?.message && (
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.programName.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <div className="flex-1">
+                  <label
+                    htmlFor="startDate"
+                    className="flex items-center space-x-1"
+                  >
                     <span className="text-red-500">*</span>
-                    <span className="text-gray-500">Nome do programa</span>
+                    <span className="text-gray-500">Início do Programa</span>
                   </label>
-                  <input
-                    id="programName"
-                    type="text"
-                    className="w-full h-[40px] border-[1px] border-gray-200 rounded-[6px] px-2 text-[#747D8C]"
-                    {...register("programName")}
-                  />
-                  {errors.programName?.message && (
-                    <p className="mt-2 text-sm text-red-400">
-                      {errors.programName.message}
-                    </p>
-                  )}
-                </div>
-                <div className="flex space-x-4 justify-between">
-                  <div>
-                    <label htmlFor="startDate" className="flex items-center">
-                      <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Início do Programa</span>
-                    </label>
-                    <Controller
-                      control={control}
-                      name="startDate"
-                      render={({ field }) => {
-                        return (
-                          <DatePicker
-                            onChange={(newValue: Date | undefined) => {
-                              field.onChange(newValue);
-                            }}
-                            value={field.value}
-                          />
-                        );
-                      }}
-                    />
-                    {errors?.startDate && (
-                      <p className="mt-2 text-sm text-red-500">
-                        {errors?.startDate?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="endDate" className="flex items-center">
-                      <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Final do Programa</span>
-                    </label>
-                    <Controller
-                      control={control}
-                      name="endDate"
-                      render={({ field }) => (
+                  <Controller
+                    control={control}
+                    name="startDate"
+                    render={({ field }) => {
+                      return (
                         <DatePicker
                           onChange={(newValue: Date | undefined) => {
                             field.onChange(newValue);
                           }}
                           value={field.value}
                         />
-                      )}
-                    />
-                    {errors?.endDate && (
-                      <p className="mt-2 text-sm text-red-500">
-                        {errors?.endDate?.message}
-                      </p>
+                      );
+                    }}
+                  />
+                  {errors?.startDate && (
+                    <p className="mt-2 text-sm text-red-500">
+                      {errors?.startDate?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <label
+                    htmlFor="endDate"
+                    className="flex items-center space-x-1"
+                  >
+                    <span className="text-red-500">*</span>
+                    <span className="text-gray-500">Final do Programa</span>
+                  </label>
+                  <Controller
+                    control={control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <DatePicker
+                        onChange={(newValue: Date | undefined) => {
+                          field.onChange(newValue);
+                        }}
+                        value={field.value}
+                      />
                     )}
-                  </div>
+                  />
+                  {errors?.endDate && (
+                    <p className="mt-2 text-sm text-red-500">
+                      {errors?.endDate?.message}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: 25,
-                  justifyContent: "flex-end",
-                }}
-                className="p-[25px]"
-              >
+              <div className="flex justify-end">
                 <Button
                   type="submit"
                   disabled={isSubmiting}
@@ -234,7 +236,7 @@ export default function FormProgramDialog({
             </form>
           </Spinner>
           <Dialog.Close asChild>
-            <button className="IconButton mt-1 mr-1" aria-label="Close">
+            <button className="absolute top-3 right-3" aria-label="Close">
               <Cross2Icon className="w-6 h-6 text-black" />
             </button>
           </Dialog.Close>

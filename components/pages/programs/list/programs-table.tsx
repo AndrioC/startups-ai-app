@@ -85,9 +85,6 @@ export function ProgramsTableComponent() {
 
   const [isPending, startTransition] = React.useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<ProgramTable | null>(
-    null
-  );
 
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
@@ -112,18 +109,17 @@ export function ProgramsTableComponent() {
       refetch={refetch}
       isRefetching={isRefetching}
     >
-      <div className="min-h-screen px-32 py-10">
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-center text-black font-semibold text-[24px]">
+      <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-10">
+          <h1 className="text-center text-black font-semibold text-xl sm:text-2xl mb-4 sm:mb-0">
             PROGRAMAS
           </h1>
           <Button
             onClick={() => {
               setIsDialogOpen(true);
-              setSelectedProgram(null);
             }}
             variant="blue"
-            className="bg-[#2292EA] text-white font-semibold uppercase text-[18px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
+            className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
           >
             + Novo
           </Button>
@@ -153,7 +149,7 @@ export function ProgramsTableComponent() {
                             Columns <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="w-[200px]">
                           {tableInstance
                             .getAllColumns()
                             .filter((column) => column.getCanHide())
@@ -175,7 +171,7 @@ export function ProgramsTableComponent() {
                       </DropdownMenu>
                     </div>
                   </div>
-                  <div className="rounded-md border">
+                  <div className="rounded-md border overflow-x-auto">
                     <Table>{children}</Table>
                   </div>
                 </div>
@@ -185,7 +181,7 @@ export function ProgramsTableComponent() {
             headerRow: ({ children }) => <TableRow>{children}</TableRow>,
             headerCell: ({ children, header }) => (
               <TableHead
-                className="whitespace-nowrap bg-[#E5E7E7] text-[16px] font-semibold h-[55px]"
+                className="whitespace-nowrap bg-[#E5E7E7] text-sm sm:text-base font-semibold h-[55px]"
                 onClick={() => {
                   const isSortable = header.column.getCanSort();
                   const nextSortDirection = header.column.getNextSortingOrder();
@@ -267,7 +263,7 @@ export function ProgramsTableComponent() {
               </TableRow>
             ),
             bodyCell: ({ children }) => (
-              <TableCell>
+              <TableCell className="py-2 px-3 text-sm">
                 {isPending || isLoading || isRefetching ? (
                   <Skeleton className="h-6 w-20" />
                 ) : (
@@ -277,8 +273,8 @@ export function ProgramsTableComponent() {
             ),
             paginationBar: ({ tableInstance }) => {
               return (
-                <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row">
-                  <div className="flex-1 text-sm font-medium">
+                <div className="flex flex-col items-center gap-4 py-4 sm:flex-row">
+                  <div className="flex-1 text-sm font-medium text-center sm:text-left">
                     {tableInstance.getFilteredSelectedRowModel().rows.length} of{" "}
                     {pageSize} row(s) selected.
                   </div>

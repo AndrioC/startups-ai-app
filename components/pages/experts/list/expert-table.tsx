@@ -62,7 +62,7 @@ export function ExpertTableComponent({
     queryKey: ["experts", page, pageSize],
     queryFn: () =>
       axios
-        .get(`api/experts?page=${page}&pageSize=${pageSize}`)
+        .get(`/api/experts?page=${page}&pageSize=${pageSize}`)
         .then((res) => res.data),
     staleTime: 60 * 1000,
     retry: 3,

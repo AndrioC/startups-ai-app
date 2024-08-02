@@ -62,7 +62,7 @@ export function StartupTableComponent({
     queryKey: ["startups", page, pageSize],
     queryFn: () =>
       axios
-        .get(`api/startup?page=${page}&pageSize=${pageSize}`)
+        .get(`/api/startup?page=${page}&pageSize=${pageSize}`)
         .then((res) => res.data),
     staleTime: 60 * 1000,
     retry: 3,
