@@ -605,6 +605,13 @@ export default function AddRulesComponent({
     );
   };
 
+  const hasAvailableKanbans = () => {
+    return kanbanData.some(
+      (kanban) =>
+        kanban.kanban_position !== 0 && !listHasRules(kanban.kanban_id)
+    );
+  };
+
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
@@ -641,25 +648,28 @@ export default function AddRulesComponent({
                       value={selectedKanbanId}
                       onChange={(e) => {
                         const newValue = Number(e.target.value);
-                        if (!isNaN(newValue) && !listHasRules(newValue)) {
+                        if (
+                          !isNaN(newValue) &&
+                          (!selectedKanban || !listHasRules(newValue))
+                        ) {
                           setSelectedKanbanId(newValue);
-                        } else {
-                          setSelectedKanbanId(0);
                         }
                       }}
                       className="w-[400px] block py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none pr-10"
                     >
-                      <option value="">Selecione uma lista</option>
+                      <option value="0">Selecione uma lista</option>
                       {kanbanData
                         .filter((kanban) => kanban.kanban_position !== 0)
                         .map((kanban) => (
                           <option
                             key={kanban.kanban_id}
                             value={kanban.kanban_id}
-                            disabled={listHasRules(kanban.kanban_id)}
+                            disabled={
+                              !selectedKanban && listHasRules(kanban.kanban_id)
+                            }
                           >
                             {kanban.kanban_name}
-                            {listHasRules(kanban.kanban_id)
+                            {!selectedKanban && listHasRules(kanban.kanban_id)
                               ? " (Já tem regras)"
                               : ""}
                           </option>
@@ -824,7 +834,11 @@ export default function AddRulesComponent({
                   onClick={addRule}
                   variant="ghost"
                   className="flex items-center text-[#747D8C] w-[165px]"
-                  disabled={getAvailableRules(-1).length === 0}
+                  disabled={
+                    !selectedKanban &&
+                    (!hasAvailableKanbans() ||
+                      getAvailableRules(-1).length === 0)
+                  }
                 >
                   + Adicionar outra regra
                 </Button>
@@ -833,7 +847,11 @@ export default function AddRulesComponent({
                 <Button
                   type="submit"
                   variant="blue"
-                  disabled={isLoading}
+                  disabled={
+                    isLoading ||
+                    (!selectedKanban &&
+                      (!hasAvailableKanbans() || selectedKanbanId === 0))
+                  }
                   className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
                 >
                   Salvar
