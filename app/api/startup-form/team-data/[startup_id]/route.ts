@@ -32,7 +32,7 @@ export async function PATCH(
       where: { startup_id: Number(params.startup_id) },
     });
 
-    const partnersData = data.partners.map((value) => ({
+    const partnersData = data?.partners?.map((value) => ({
       startup_id: Number(params.startup_id),
       position_id: Number(value.position_id),
       name: value.name,
@@ -48,9 +48,11 @@ export async function PATCH(
       is_partners_formation_complementary: value.is_formation_complementary,
     }));
 
-    await prisma.startup_partner.createMany({
-      data: partnersData,
-    });
+    if (partnersData) {
+      await prisma.startup_partner.createMany({
+        data: partnersData,
+      });
+    }
   });
 
   await updateStartupFilledPercentage(Number(params.startup_id));
