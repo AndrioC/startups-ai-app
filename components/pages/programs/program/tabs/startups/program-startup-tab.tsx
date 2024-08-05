@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { RefreshCw } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -8,28 +9,63 @@ import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kan
 import { SelectDataProps } from "@/components/external/startup/startup-form";
 import KanbanComponent from "@/components/pages/programs/kanban/kanban-component";
 import Spinner from "@/components/spinner";
+import { Button } from "@/components/ui/button";
 
 export default function ProgramStartupTab() {
   const { token } = useParams();
   const { data: session } = useSession();
   const {
     data: kanbanData,
-    refetch,
-    isLoading,
+    refetch: refetchKanban,
+    isLoading: isLoadingKanban,
+    isRefetching: isRefetchingKanban,
   } = useLoadKanbanWithCards(
     Number(session?.user?.organization_id),
-    token.toString()
+    token?.toString()
   );
 
-  const { data: selectData } = useSelectData();
+  const {
+    data: selectData,
+    refetch: refetchSelectData,
+    isLoading: isLoadingSelectData,
+    isRefetching: isRefetchingSelectData,
+  } = useSelectData();
+
   const rules = createRules(selectData!);
+
+  const isLoading = isLoadingKanban || isLoadingSelectData;
+  const isRefetching = isRefetchingKanban || isRefetchingSelectData;
+
+  const handleRefresh = () => {
+    refetchKanban();
+    refetchSelectData();
+  };
 
   if (!kanbanData || isLoading || !rules || !selectData) {
     return <Spinner isLoading={true}>{""}</Spinner>;
   }
 
   return (
-    <KanbanComponent refetch={refetch} kanbanData={kanbanData} rules={rules} />
+    <Spinner isLoading={isRefetching}>
+      <div className="flex justify-end mb-4">
+        <Button
+          onClick={handleRefresh}
+          variant="outline"
+          size="sm"
+          disabled={isRefetching}
+        >
+          <RefreshCw
+            className={`w-4 h-4 mr-2 ${isRefetching ? "animate-spin" : ""}`}
+          />
+          {isRefetching ? "Recarregando..." : "Recarregar"}
+        </Button>
+      </div>
+      <KanbanComponent
+        refetch={refetchKanban}
+        kanbanData={kanbanData}
+        rules={rules}
+      />
+    </Spinner>
   );
 }
 
