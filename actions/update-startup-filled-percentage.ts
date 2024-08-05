@@ -1,42 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-
 import prisma from "@/prisma/client";
 
 interface Block {
   [key: string]: any;
-}
-
-interface ComparationType {
-  key: "equal" | "greater_than" | "less_than";
-  label_pt: string;
-  label_en: string;
-}
-
-interface Option {
-  value: string;
-  label_pt: string;
-  label_en: string;
-}
-
-interface Rule {
-  key: string;
-  kanban_id: number;
-  rule: string;
-  comparation_type: ComparationType[];
-  field_type:
-    | "multiple_select"
-    | "single_select"
-    | "datepicker"
-    | "numeric_input";
-  options?: Option[];
-}
-
-export interface ProgramData {
-  program_id: number;
-  name: string;
-  startDate: Date;
-  endDate: Date;
-  rules: Rule[];
 }
 
 const STARTUPS_LOGO_BUCKET = process.env
@@ -44,30 +9,11 @@ const STARTUPS_LOGO_BUCKET = process.env
 const STARTUPS_PITCH_BUCKET = process.env
   .S3_STARTUP_PITCH_DECK_FILES_BUCKET_NAME as string;
 
-export interface StartupTable {
-  id: number;
-  name: string;
-  vertical: string;
-  country: string;
-  business_model: string;
-  business_model_code: string;
-  operation_stage: string;
-  country_flag: string;
-  status: string;
-  short_description: string;
-  value_proposal: string;
-  problem_that_is_solved: string;
-  competitive_differentiator: string;
-  last_twelve_months_revenue: string;
-  is_approved: boolean;
-}
-
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: { startup_id: string } }
-) {
+export async function updateStartupFilledPercentage(
+  startup_id: number
+): Promise<void> {
   const startup = await prisma.startups.findUnique({
-    where: { id: Number(params.startup_id) },
+    where: { id: startup_id },
     include: {
       startup_challenges: true,
       startup_objectives: true,
@@ -88,23 +34,6 @@ export async function GET(
       },
     },
   });
-
-  const partners = startup?.startup_partner
-    ? startup?.startup_partner.map((partner) => ({
-        name: partner.name,
-        phone: partner.phone,
-        email: partner.email,
-        position_id: partner.position_id.toString(),
-        is_founder: partner.is_founder,
-        dedication_type: partner.dedication,
-        percentage_captable: partner.captable,
-        is_first_business: partner.is_first_business,
-        linkedin_lattes: partner.linkedin_lattes,
-        has_experience_or_formation:
-          partner.has_experience_or_formation_at_startup_field,
-        is_formation_complementary: partner.is_partners_formation_complementary,
-      }))
-    : [];
 
   const investments = startup?.startup_investiments_rounds
     ? startup?.startup_investiments_rounds.map((startup_investment) => ({
@@ -164,7 +93,6 @@ export async function GET(
     mainResponsibleEmail: startup?.main_responsible_email,
     employeesQuantity: startup?.employees_quantity,
     fullTimeEmployeesQuantity: startup?.fulltime_employees_quantity,
-    partners,
   };
 
   const productService: Block = {
@@ -176,12 +104,6 @@ export async function GET(
     problemThatIsSolved: startup?.problem_that_is_solved_pt,
     competitors: startup?.competitors,
     competitiveDifferentiator: startup?.competitive_differentiator_pt,
-  };
-
-  const deepTech: Block = {
-    maturityLevel: startup?.maturity_level_id,
-    hasPatent: startup?.has_patent,
-    patentAndCode: startup?.patent_and_code,
   };
 
   const governance: Block = {
@@ -215,137 +137,51 @@ export async function GET(
     generalData,
     team,
     productService,
-    deepTech,
     governance,
     marketFinance,
   };
 
-  const blocksToCalculate = [
-    "generalData",
-    "team",
-    "productService",
-    "governance",
-    "marketFinance",
-  ];
-
-  const filledPercentages: { [key: string]: number } = blocksToCalculate.reduce(
-    (acc: { [key: string]: number }, blockName: string) => {
-      acc[blockName] = calculateFilledPercentage(blocks[blockName]);
+  const { totalPercentage, count } = Object.values(blocks).reduce(
+    (acc, block) => {
+      acc.totalPercentage += calculateFilledPercentage(block);
+      acc.count += 1;
       return acc;
     },
-    {}
+    { totalPercentage: 0, count: 0 }
   );
 
-  const programIds =
-    startup?.kanban_cards.map((card) => card.kanban.program.id) || [];
+  const averageFilledPercentage = totalPercentage / count;
 
-  const rules = await prisma.rule.findMany({
-    where: {
-      program_id: {
-        in: programIds,
-      },
-    },
-    include: {
-      program: true,
+  await prisma.startups.update({
+    where: { id: startup_id },
+    data: {
+      profile_filled_percentage: averageFilledPercentage,
     },
   });
-
-  const programsMap = new Map<number, ProgramData>();
-
-  rules.forEach((rule) => {
-    const program = rule.program;
-
-    if (!programsMap.has(program.id)) {
-      programsMap.set(program.id, {
-        program_id: program.id,
-        name: program.program_name,
-        startDate: program.start_date,
-        endDate: program.end_date,
-        rules: [],
-      });
-    }
-
-    const programData = programsMap.get(program.id)!;
-
-    programData.rules.push({
-      key: rule.key,
-      kanban_id: rule.kanban_id,
-      rule: rule.rule,
-      comparation_type: safeJsonParse<ComparationType[]>(
-        rule.comparation_type as string
-      ),
-      field_type: rule.field_type as Rule["field_type"],
-      options: rule.options
-        ? safeJsonParse<Option[]>(rule.options as string)
-        : undefined,
-    });
-  });
-
-  const programsData: ProgramData[] = Array.from(programsMap.values());
-
-  return NextResponse.json(
-    { blocks, filledPercentages, programsData },
-    { status: 201 }
-  );
 }
 
 function calculateFilledPercentage(block: Block): number {
-  if (
-    "payingCustomersQuantity" in block &&
-    "activeCustomersQuantity" in block
-  ) {
+  const isMarketFinance =
+    "payingCustomersQuantity" in block && "activeCustomersQuantity" in block;
+
+  if (isMarketFinance) {
     const relevantFields = [
       "payingCustomersQuantity",
       "activeCustomersQuantity",
     ];
     const filledFields = relevantFields.filter(
       (field) =>
+        block[field] !== "" &&
         block[field] !== undefined &&
-        block[field] !== null &&
-        block[field] !== ""
-    ).length;
-    return (filledFields / relevantFields.length) * 100;
-  } else if (
-    "mainResponsibleName" in block &&
-    "contactNumber" in block &&
-    "mainResponsibleEmail" in block &&
-    "employeesQuantity" in block &&
-    "fullTimeEmployeesQuantity" in block
-  ) {
-    const relevantFields = [
-      "mainResponsibleName",
-      "contactNumber",
-      "mainResponsibleEmail",
-      "employeesQuantity",
-      "fullTimeEmployeesQuantity",
-    ];
-    const filledFields = relevantFields.filter(
-      (field) =>
-        block[field] !== undefined &&
-        block[field] !== null &&
-        block[field] !== ""
+        block[field] !== null
     ).length;
     return (filledFields / relevantFields.length) * 100;
   }
 
   const totalFields = Object.keys(block).length;
-  const filledFields = Object.values(block).filter((value) => {
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-    return value !== undefined && value !== null && value !== "";
-  }).length;
-  return (filledFields / totalFields) * 100;
-}
+  const filledFields = Object.values(block).filter(
+    (value) => value !== "" && value !== undefined && value !== null
+  ).length;
 
-function safeJsonParse<T>(value: string | T): T {
-  if (typeof value === "string") {
-    try {
-      return JSON.parse(value);
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      return value as unknown as T;
-    }
-  }
-  return value;
+  return (filledFields / totalFields) * 100;
 }

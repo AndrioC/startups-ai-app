@@ -70,6 +70,13 @@ export async function updateStartupKanban(startupId: number) {
     throw new Error("Startup not found");
   }
 
+  if (
+    startup.profile_filled_percentage === null ||
+    startup.profile_filled_percentage !== 100
+  ) {
+    return;
+  }
+
   const programIds =
     startup?.kanban_cards.map((card) => card.kanban.program.id) || [];
 

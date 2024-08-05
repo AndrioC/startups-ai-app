@@ -207,6 +207,7 @@ model startups {
   round_start_date                             DateTime?
   round_end_date                               DateTime?
   startup_profile                              String?
+  profile_filled_percentage                    Float?
   plan                                         String    @default("free")
   is_deleted                                   Boolean   @default(false)
   is_approved                                  Boolean   @default(false)

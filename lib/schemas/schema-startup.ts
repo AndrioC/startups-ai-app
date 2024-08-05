@@ -128,9 +128,7 @@ export const TeamDataSchema = () =>
     fullTimeEmployeesQuantity: z.coerce
       .number()
       .min(1, "Este campo é obrigatório!"),
-    partners: z
-      .array(PartnerSchema)
-      .min(1, "Deve haver pelo menos um parceiro!"),
+    partners: z.array(PartnerSchema).optional(),
   });
 
 export const ProductServiceDataSchema = () =>

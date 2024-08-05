@@ -114,13 +114,32 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center p-2 ${
+                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center justify-between p-2 ${
                                   snapshot.isDragging ? "bg-gray-200" : ""
                                 }`}
                               >
                                 <span className="text-gray-700 text-[15px]">
                                   {card.startup.name}
                                 </span>
+                                {typeof card.startup
+                                  .profile_filled_percentage === "number" && (
+                                  <span
+                                    className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                                      card.startup.profile_filled_percentage <
+                                      50
+                                        ? "bg-red-100 text-red-800"
+                                        : card.startup
+                                              .profile_filled_percentage < 100
+                                          ? "bg-yellow-100 text-yellow-800"
+                                          : "bg-green-100 text-green-800"
+                                    }`}
+                                  >
+                                    {Math.round(
+                                      card.startup.profile_filled_percentage
+                                    )}
+                                    %
+                                  </span>
+                                )}
                               </div>
                             )}
                           </Draggable>

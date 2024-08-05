@@ -48,6 +48,7 @@ interface RawKanbanData {
     startup: {
       id: number;
       name: string;
+      profile_filled_percentage: number;
     };
   }[];
   rules: RawRule[];
@@ -64,6 +65,7 @@ export interface KanbanDataWithCards {
     startup: {
       id: number;
       name: string;
+      profile_filled_percentage: number;
     };
   }[];
   rules: ProcessedRule[];
@@ -98,7 +100,8 @@ export async function GET(
                     'position_value', kc.position_value,
                     'startup', json_build_object(
                         'id', s.id,
-                        'name', COALESCE(NULLIF(s.name, ''), '-')
+                        'name', COALESCE(NULLIF(s.name, ''), '-'),
+                        'profile_filled_percentage', s.profile_filled_percentage
                     )
                 )
             ) FILTER (WHERE kc.id IS NOT NULL), '[]'

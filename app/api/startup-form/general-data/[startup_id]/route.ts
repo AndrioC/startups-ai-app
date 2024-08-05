@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { updateStartupFilledPercentage } from "@/actions/update-startup-filled-percentage";
 import { updateStartupKanban } from "@/actions/update-startup-kanban";
 import { uploadFileToS3 } from "@/actions/upload-s3";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
@@ -107,6 +108,7 @@ export async function PATCH(
     });
   }
 
+  await updateStartupFilledPercentage(Number(params.startup_id));
   await updateStartupKanban(Number(params.startup_id));
 
   try {

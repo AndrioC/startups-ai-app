@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { updateStartupFilledPercentage } from "@/actions/update-startup-filled-percentage";
+import { updateStartupKanban } from "@/actions/update-startup-kanban";
 import { TeamDataSchema } from "@/lib/schemas/schema-startup";
 import prisma from "@/prisma/client";
 
@@ -50,6 +52,9 @@ export async function PATCH(
       data: partnersData,
     });
   });
+
+  await updateStartupFilledPercentage(Number(params.startup_id));
+  await updateStartupKanban(Number(params.startup_id));
 
   try {
     return NextResponse.json({}, { status: 201 });
