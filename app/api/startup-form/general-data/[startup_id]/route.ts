@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { updateStartupKanban } from "@/actions/update-startup-kanban";
 import { uploadFileToS3 } from "@/actions/upload-s3";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 import prisma from "@/prisma/client";
@@ -105,6 +106,8 @@ export async function PATCH(
       },
     });
   }
+
+  await updateStartupKanban(Number(params.startup_id));
 
   try {
     return NextResponse.json({}, { status: 201 });

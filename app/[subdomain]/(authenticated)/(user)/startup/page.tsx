@@ -2,6 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import globalLinkOpenLogo from "@/assets/img/logos/sri-logo.svg";
 import HeaderExternalStartupComponent from "@/components/external/startup/header";
@@ -12,7 +13,11 @@ import StatusRegisterCard from "@/components/external/startup/status-register-ca
 import { FormStartupProvider } from "@/contexts/FormStartupContext";
 
 export default function StartupPage() {
-  const { data, refetch, isRefetching, isLoading } = useInitialData(182);
+  const { data: session } = useSession();
+
+  const { data, refetch, isRefetching, isLoading } = useInitialData(
+    Number(session?.user?.actor_id)
+  );
 
   if (isLoading)
     return (
@@ -49,7 +54,9 @@ export default function StartupPage() {
               ...data.blocks.marketFinance,
             }}
             refetch={refetch}
+            actorId={Number(session?.user?.actor_id)}
             isRefetching={isRefetching}
+            programsData={data.programasData}
           >
             <StartupForm />
           </FormStartupProvider>

@@ -10,6 +10,7 @@ declare module "next-auth" {
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
+    actor_id?: number | null;
   }
 
   interface User {
@@ -19,6 +20,7 @@ declare module "next-auth" {
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
+    actor_id?: number | null;
   }
 }
 
@@ -30,5 +32,6 @@ declare module "next-auth/jwt" {
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
+    actor_id?: number | null;
   }
 }

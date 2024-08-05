@@ -1,6 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import { QueryObserverResult, UseQueryResult } from "@tanstack/react-query";
 
+import { ProgramData } from "../app/api/startup/load-startup-info-by-id/[startup_id]/route";
+
 interface Partner {
   name: string;
   phone: string;
@@ -92,7 +94,9 @@ interface FormStartupDataContext {
   setPitchDeckFile: React.Dispatch<React.SetStateAction<string | undefined>>;
   logoFile: string | undefined;
   setLogoFile: React.Dispatch<React.SetStateAction<string | undefined>>;
+  actorId: number;
   refetch: UseQueryResult["refetch"];
+  programsData: ProgramData[];
   isRefetching: boolean;
 }
 
@@ -186,7 +190,9 @@ const FormContext = createContext<FormStartupDataContext>({
   setPitchDeckFile: () => {},
   logoFile: "",
   setLogoFile: () => {},
+  actorId: 0,
   refetch: () => Promise.resolve({} as QueryObserverResult<unknown, Error>),
+  programsData: [],
   initialData: initialFormStartupData,
   isRefetching: false,
 });
@@ -194,14 +200,18 @@ const FormContext = createContext<FormStartupDataContext>({
 interface Props {
   children: React.ReactNode;
   initialData: FormStartupData;
+  actorId: number;
   refetch: UseQueryResult["refetch"];
+  programsData: ProgramData[];
   isRefetching: boolean;
 }
 
 export function FormStartupProvider({
   children,
   initialData,
+  actorId,
   refetch,
+  programsData,
   isRefetching,
 }: Props) {
   const [pitchDeckFile, setPitchDeckFile] = useState<string | undefined>(
@@ -219,7 +229,9 @@ export function FormStartupProvider({
         setPitchDeckFile,
         logoFile,
         setLogoFile,
+        actorId,
         refetch,
+        programsData,
         isRefetching,
       }}
     >

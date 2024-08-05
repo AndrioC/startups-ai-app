@@ -8,14 +8,13 @@ import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { z } from "zod";
 
+import { Button } from "@/components/ui/button";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { GovernanceDataSchema } from "@/lib/schemas/schema-startup";
-
-import { Button } from "../../../ui/button";
 export default function GovernanceDataForm() {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
-  const { initialData, refetch } = useFormStartupDataState();
+  const { initialData, refetch, actorId } = useFormStartupDataState();
   const formSchema = GovernanceDataSchema();
 
   const {
@@ -52,7 +51,7 @@ export default function GovernanceDataForm() {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/governance-data/${182}`,
+          `/api/startup-form/governance-data/${actorId}`,
           JSON.stringify(data),
           {
             headers: {
@@ -73,7 +72,7 @@ export default function GovernanceDataForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

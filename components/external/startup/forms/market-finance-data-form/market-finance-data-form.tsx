@@ -22,7 +22,7 @@ import InvestmentsContainer from "./investments-container";
 export default function MarketFinanceDataForm() {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
-  const { initialData, refetch } = useFormStartupDataState();
+  const { initialData, refetch, actorId } = useFormStartupDataState();
 
   const schemateste = FinanceAndMarketDataSchema();
 
@@ -59,7 +59,7 @@ export default function MarketFinanceDataForm() {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/market-finance-data/${182}`,
+          `/api/startup-form/market-finance-data/${actorId}`,
           JSON.stringify(data),
           {
             headers: {
@@ -79,7 +79,7 @@ export default function MarketFinanceDataForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

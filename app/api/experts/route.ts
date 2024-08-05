@@ -7,7 +7,7 @@ const S3_EXPERTS_IMAGES = process.env.S3_EXPERTS_LOGO_IMGS_BUCKET_NAME;
 
 export interface ExpertTable {
   id: number;
-  name: string;
+  name: string | null;
   linkedin: string | null;
   picture_img_url: string;
   company: string | null;
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const expertTable: ExpertTable[] = experts.map((value) => {
     return {
       id: value.id,
-      name: value.name,
+      name: value.name || null,
       linkedin: returnLinkedinWithHttps(value.linkedin),
       picture_img_url: `https://${S3_EXPERTS_IMAGES}.s3.amazonaws.com/${value.picture_img}`,
       company: value.company,

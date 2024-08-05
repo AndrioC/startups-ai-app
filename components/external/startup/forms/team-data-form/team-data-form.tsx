@@ -32,7 +32,7 @@ interface Props {
 export default function TeamDataForm({ data }: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
-  const { initialData, refetch } = useFormStartupDataState();
+  const { initialData, refetch, actorId } = useFormStartupDataState();
   const formSchema = TeamDataSchema();
 
   const {
@@ -129,7 +129,7 @@ export default function TeamDataForm({ data }: Props) {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/team-data/${182}`,
+          `/api/startup-form/team-data/${actorId}`,
           JSON.stringify(data),
           {
             headers: {
@@ -150,7 +150,7 @@ export default function TeamDataForm({ data }: Props) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

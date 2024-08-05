@@ -29,7 +29,6 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
 
-      //Prevent sign in without email verification
       const existingUser = await getUserById(Number(user.id));
 
       if (!existingUser?.email_verified) return false;
@@ -51,6 +50,8 @@ export const {
         session.user.isInvestor = token.type === "INVESTOR";
         session.user.isMentor = token.type === "MENTOR";
         session.user.isStartup = token.type === "STARTUP";
+
+        session.user.actor_id = token.actor_id;
       }
 
       return session;
@@ -67,10 +68,31 @@ export const {
       token.organization_id = existingUser.organization_id;
       token.type = existingUser.type;
 
-      token.isAdmin = token.type === "ADMIN";
-      token.isInvestor = token.type === "INVESTOR";
-      token.isMentor = token.type === "MENTOR";
-      token.isStartup = token.type === "STARTUP";
+      token.isAdmin = existingUser.type === "ADMIN";
+      token.isInvestor = existingUser.type === "INVESTOR";
+      token.isMentor = existingUser.type === "MENTOR";
+      token.isStartup = existingUser.type === "STARTUP";
+
+      switch (existingUser.type) {
+        case "STARTUP":
+          token.actor_id = existingUser.startup_id
+            ? Number(existingUser.startup_id)
+            : null;
+          break;
+        case "INVESTOR":
+          token.actor_id = existingUser.investor_id
+            ? Number(existingUser.investor_id)
+            : null;
+          break;
+        case "MENTOR":
+          token.actor_id = existingUser.expert_id
+            ? Number(existingUser.expert_id)
+            : null;
+          break;
+        default:
+          token.actor_id = null;
+      }
+
       return token;
     },
   },

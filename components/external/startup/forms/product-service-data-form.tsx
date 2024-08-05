@@ -26,7 +26,7 @@ export default function ProductServiceDataForm({ data }: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
 
-  const { initialData, refetch } = useFormStartupDataState();
+  const { initialData, refetch, actorId } = useFormStartupDataState();
   const formSchema = ProductServiceDataSchema();
 
   const {
@@ -107,7 +107,7 @@ export default function ProductServiceDataForm({ data }: Props) {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/product-service-data/${182}`,
+          `/api/startup-form/product-service-data/${actorId}`,
           JSON.stringify(data),
           {
             headers: {
@@ -128,7 +128,7 @@ export default function ProductServiceDataForm({ data }: Props) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

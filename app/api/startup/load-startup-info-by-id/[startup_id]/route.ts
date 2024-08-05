@@ -6,6 +6,39 @@ interface Block {
   [key: string]: any;
 }
 
+interface ComparationType {
+  key: "equal" | "greater_than" | "less_than";
+  label_pt: string;
+  label_en: string;
+}
+
+interface Option {
+  value: string;
+  label_pt: string;
+  label_en: string;
+}
+
+interface Rule {
+  key: string;
+  kanban_id: number;
+  rule: string;
+  comparation_type: ComparationType[];
+  field_type:
+    | "multiple_select"
+    | "single_select"
+    | "datepicker"
+    | "numeric_input";
+  options?: Option[];
+}
+
+export interface ProgramData {
+  program_id: number;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  rules: Rule[];
+}
+
 const STARTUPS_LOGO_BUCKET = process.env
   .S3_STARTUP_LOGO_IMGS_BUCKET_NAME as string;
 const STARTUPS_PITCH_BUCKET = process.env
@@ -43,6 +76,16 @@ export async function GET(
       startup_investiments_rounds: true,
       business_model: true,
       vertical: true,
+      kanban_cards: {
+        include: {
+          kanban: {
+            include: {
+              program: true,
+              rule: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -184,7 +227,57 @@ export async function GET(
     return acc;
   }, {});
 
-  return NextResponse.json({ blocks, filledPercentages }, { status: 201 });
+  const programIds =
+    startup?.kanban_cards.map((card) => card.kanban.program.id) || [];
+
+  const rules = await prisma.rule.findMany({
+    where: {
+      program_id: {
+        in: programIds,
+      },
+    },
+    include: {
+      program: true,
+    },
+  });
+
+  const programsMap = new Map<number, ProgramData>();
+
+  rules.forEach((rule) => {
+    const program = rule.program;
+
+    if (!programsMap.has(program.id)) {
+      programsMap.set(program.id, {
+        program_id: program.id,
+        name: program.program_name,
+        startDate: program.start_date,
+        endDate: program.end_date,
+        rules: [],
+      });
+    }
+
+    const programData = programsMap.get(program.id)!;
+
+    programData.rules.push({
+      key: rule.key,
+      kanban_id: rule.kanban_id,
+      rule: rule.rule,
+      comparation_type: safeJsonParse<ComparationType[]>(
+        rule.comparation_type as string
+      ),
+      field_type: rule.field_type as Rule["field_type"],
+      options: rule.options
+        ? safeJsonParse<Option[]>(rule.options as string)
+        : undefined,
+    });
+  });
+
+  const programsData: ProgramData[] = Array.from(programsMap.values());
+
+  return NextResponse.json(
+    { blocks, filledPercentages, programsData },
+    { status: 201 }
+  );
 }
 
 function calculateFilledPercentage(block: Block): number {
@@ -196,4 +289,16 @@ function calculateFilledPercentage(block: Block): number {
     return value !== undefined && value !== null && value !== "";
   }).length;
   return (filledFields / totalFields) * 100;
+}
+
+function safeJsonParse<T>(value: string | T): T {
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return value as unknown as T;
+    }
+  }
+  return value;
 }

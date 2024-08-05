@@ -25,7 +25,7 @@ interface Props {
 export default function DeepTechDataForm({ data }: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
-  const { initialData, refetch } = useFormStartupDataState();
+  const { initialData, refetch, actorId } = useFormStartupDataState();
   const formSchema = DeepTechDataSchema();
 
   const {
@@ -82,7 +82,7 @@ export default function DeepTechDataForm({ data }: Props) {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/deep-tech-data/${182}`,
+          `/api/startup-form/deep-tech-data/${actorId}`,
           JSON.stringify(data),
           {
             headers: {
@@ -103,7 +103,7 @@ export default function DeepTechDataForm({ data }: Props) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

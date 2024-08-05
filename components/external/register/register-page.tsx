@@ -11,6 +11,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 
 import sriLogo from "@/assets/img/logos/sri-logo.svg";
@@ -19,10 +20,14 @@ import { RegisterSchema } from "@/lib/schemas/schema-register";
 
 export default function RegisterComponent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const formSchema = RegisterSchema();
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const { subdomain } = useParams();
+
+  const token = searchParams.get("token");
 
   const {
     register,
@@ -50,7 +55,7 @@ export default function RegisterComponent() {
     try {
       setIsSubmiting(true);
       const response = await axios.post(
-        `/api/register-user/${subdomain}`,
+        `/api/register-user/${subdomain}/?token=${token}`,
         JSON.stringify(data),
         {
           headers: {

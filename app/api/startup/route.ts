@@ -27,10 +27,6 @@ export async function GET(request: NextRequest) {
   const page = Number(url.searchParams.get("page"));
   const pageSize = Number(url.searchParams.get("pageSize"));
 
-  console.log("page", page);
-
-  console.log("pageSize", pageSize);
-
   const startups = await prisma.startups.findMany({
     orderBy: [{ is_approved: "asc" }, { name: "asc" }],
     skip: (page - 1) * pageSize,

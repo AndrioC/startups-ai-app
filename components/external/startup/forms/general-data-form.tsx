@@ -40,7 +40,7 @@ export default function GeneralDataForm({ data }: Props) {
     return name.slice(0, maxLength) + "...";
   };
 
-  const { initialData, pitchDeckFile, logoFile, refetch } =
+  const { initialData, pitchDeckFile, logoFile, refetch, actorId } =
     useFormStartupDataState();
   const formSchema = GeneralDataSchema();
 
@@ -202,7 +202,7 @@ export default function GeneralDataForm({ data }: Props) {
       try {
         setIsSubmiting(true);
         const response = await axios.patch(
-          `/api/startup-form/general-data/${182}`,
+          `/api/startup-form/general-data/${actorId}`,
           sendFormData,
           {
             headers: {
@@ -223,7 +223,7 @@ export default function GeneralDataForm({ data }: Props) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["startup-initial-data", 182],
+        queryKey: ["startup-initial-data", actorId],
       });
     },
   });

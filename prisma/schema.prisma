@@ -149,7 +149,7 @@ model gender {
 model startups {
   id                                           Int       @id @default(autoincrement())
   organization_id                              Int
-  name                                         String
+  name                                         String?
   vertical_id                                  Int?
   foundation_date                              DateTime?
   subscription_number                          String?
@@ -307,7 +307,7 @@ model startup_objectives {
 
 model investors {
   id                                          Int                           @id @default(autoincrement())
-  name                                        String
+  name                                        String?
   organization_id                             Int
   foundation_date                             DateTime?
   country_id                                  Int?
@@ -401,7 +401,7 @@ model investor_maturity_level {
 
 model experts {
   id                                 Int                  @id @default(autoincrement())
-  name                               String
+  name                               String?
   organization_id                    Int
   gender_id                          Int?
   dob                                DateTime?
@@ -579,6 +579,7 @@ model programs {
   deleted_by   user?         @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
   paused_by    user?         @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
   kanbans      kanbans[]
+  rule         rule[]
 }
 
 model kanbans {
@@ -597,6 +598,7 @@ model kanbans {
   created_by   user?          @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
   deleted_by   user?          @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
   kanban_cards kanban_cards[]
+  rule         rule[]
 }
 
 model kanban_cards {
@@ -609,4 +611,18 @@ model kanban_cards {
 
   kanban  kanbans  @relation(fields: [kanban_id], references: [id])
   startup startups @relation(fields: [startup_id], references: [id])
+}
+
+model rule {
+  id               Int    @id @default(autoincrement())
+  key              String
+  rule             String
+  comparation_type Json
+  field_type       String
+  options          Json?
+  program_id       Int
+  kanban_id        Int
+
+  program programs @relation(fields: [program_id], references: [id])
+  kanban  kanbans  @relation(fields: [kanban_id], references: [id])
 }

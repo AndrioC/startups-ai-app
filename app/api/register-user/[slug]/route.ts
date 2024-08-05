@@ -16,6 +16,8 @@ export async function POST(
   { params }: { params: { slug: string } }
 ) {
   const data = (await request.json()) as DataRequest;
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token");
   if (!params.slug) {
     return NextResponse.json({ error: "Slug not found!" }, { status: 404 });
   }
@@ -48,12 +50,41 @@ export async function POST(
     if (data.registerUserType === UserType.STARTUP) {
       const startup = await prisma.startups.create({
         data: {
-          name: data.registerName,
           main_responsible_email: data.registerEmail,
           organization_id: organization.id,
         },
       });
       createdInfoId = startup.id;
+
+      //checa se o programa existe
+      if (token) {
+        const programExists = await prisma.$queryRaw<
+          { exists: boolean }[]
+        >`SELECT EXISTS (
+            SELECT 1 FROM programs 
+            WHERE encode(digest(CAST(id AS text), 'sha1'), 'hex') = ${token}
+          ) AS exists`;
+
+        if (programExists[0]?.exists) {
+          const oldestKanban = await prisma.$queryRaw<
+            { id: number }[]
+          >`SELECT id FROM kanbans WHERE encode(digest(CAST(program_id AS text), 'sha1'), 'hex') = ${token} AND is_deleted = false ORDER BY created_at ASC LIMIT 1`;
+
+          if (oldestKanban.length > 0) {
+            await prisma.kanban_cards.create({
+              data: {
+                kanban_id: oldestKanban[0].id,
+                startup_id: startup.id,
+                position_value: 0,
+              },
+            });
+          } else {
+            console.error("No kanban id found for program token:", token);
+          }
+        } else {
+          console.error("Invalid program token:", token);
+        }
+      }
     }
 
     if (data.registerUserType === UserType.INVESTOR) {

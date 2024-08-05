@@ -1,5 +1,5 @@
-// Import necessary dependencies and components
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -20,7 +20,6 @@ interface DatePickerProps {
   className?: string;
 }
 
-// DatePicker component
 export function DatePicker({
   onChange,
   value,
@@ -28,17 +27,19 @@ export function DatePicker({
   className,
 }: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(value);
-
-  // const localeLanguage = lang === "en" ? enUS : ptBR;
-  // const formatDate = lang === "en" ? "MM/dd/yyyy" : "dd/MM/yyyy";
-  // const label = lang === "en" ? "Pick a date" : "Selecione uma data";
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     setDate(value);
   }, [value]);
 
+  const CalendarPortal = ({ children }: { children: React.ReactNode }) => {
+    if (typeof window === "undefined") return null;
+    return createPortal(children, document.body);
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -51,21 +52,35 @@ export function DatePicker({
           {date ? format(date, "dd/MM/yyyy") : <span>{title}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date || undefined}
-          onSelect={(newDate: Date | undefined) => {
-            if (newDate !== undefined) {
-              newDate?.setHours(0, 0, 0, 0);
-              setDate(newDate);
-              onChange(newDate);
-            }
-          }}
-          initialFocus
-          locale={ptBR}
-        />
-      </PopoverContent>
+      {open && (
+        <CalendarPortal>
+          <PopoverContent
+            className="w-auto p-0"
+            style={{
+              position: "fixed",
+              zIndex: 9999,
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <Calendar
+              mode="single"
+              selected={date || undefined}
+              onSelect={(newDate: Date | undefined) => {
+                if (newDate !== undefined) {
+                  newDate?.setHours(0, 0, 0, 0);
+                  setDate(newDate);
+                  onChange(newDate);
+                  setOpen(false);
+                }
+              }}
+              initialFocus
+              locale={ptBR}
+            />
+          </PopoverContent>
+        </CalendarPortal>
+      )}
     </Popover>
   );
 }
