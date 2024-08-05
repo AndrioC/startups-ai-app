@@ -18,12 +18,15 @@ import sriLogo from "@/assets/img/logos/sri-logo.svg";
 import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/schemas/schema-register";
 
+import TermsOfUseDialog from "./terms";
+
 export default function RegisterComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const formSchema = RegisterSchema();
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
 
   const { subdomain } = useParams();
 
@@ -32,6 +35,7 @@ export default function RegisterComponent() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,6 +113,10 @@ export default function RegisterComponent() {
 
     return 0;
   });
+
+  const handleAgreeTerms = () => {
+    setValue("registerUserTerms", true);
+  };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
@@ -237,8 +245,18 @@ export default function RegisterComponent() {
                   type="checkbox"
                   className="appearance-none w-5 h-5 mr-2 border-2 border-blue-500 rounded checked:bg-blue-500 checked:border-0 cursor-pointer bg-white transition-colors duration-300 ease-in-out"
                 />
-                <span className="text-[#A0AEC0] font-medium text-[15px] hover:text-[#7b8a9d] transition-colors duration-300 ease-in-out">
-                  <Link href={"/terms"}>Termos de uso</Link>
+                <span className="text-[#A0AEC0] font-medium text-[15px]">
+                  Eu aceito os{" "}
+                  <span
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsTermsDialogOpen(true);
+                    }}
+                    className="text-blue-500 cursor-pointer hover:underline"
+                  >
+                    termos de uso
+                  </span>
                 </span>
               </label>
               {errors.registerUserTerms?.message && (
@@ -265,6 +283,11 @@ export default function RegisterComponent() {
               Cadastrar
             </Button>
           </div>
+          <TermsOfUseDialog
+            isOpen={isTermsDialogOpen}
+            setIsOpen={setIsTermsDialogOpen}
+            onAgree={handleAgreeTerms}
+          />
         </form>
       </div>
     </div>
