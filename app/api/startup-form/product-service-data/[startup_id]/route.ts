@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { updateProfileUpdated } from "@/actions/update-profile-updated";
 import { updateStartupFilledPercentage } from "@/actions/update-startup-filled-percentage";
 import { updateStartupKanban } from "@/actions/update-startup-kanban";
 import { ProductServiceDataSchema } from "@/lib/schemas/schema-startup";
@@ -43,6 +44,7 @@ export async function PATCH(
 
   await updateStartupFilledPercentage(Number(params.startup_id));
   await updateStartupKanban(Number(params.startup_id));
+  await updateProfileUpdated(Number(params.startup_id));
 
   try {
     return NextResponse.json({}, { status: 201 });

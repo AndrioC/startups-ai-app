@@ -109,7 +109,7 @@ const MultiValue: React.FC<MultiValueProps> = (props) => {
 interface Props {
   rules: Rule[];
   kanbanData: KanbanDataWithCards[];
-  selectedKanban: KanbanDataWithCards | null;
+  selectedKanban: KanbanDataWithCards;
   refetch: () => void;
 }
 
@@ -123,7 +123,7 @@ export default function AddRulesComponent({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedKanbanId, setSelectedKanbanId] = useState<number | "">(
-    selectedKanban?.kanban_id || ""
+    selectedKanban?.rules.length > 0 ? selectedKanban.kanban_id : ""
   );
 
   const formSchema = KanbanProgramRulesSchema();
@@ -140,7 +140,7 @@ export default function AddRulesComponent({
         value: q.options ? q.options.map((opt) => opt.value) : "",
       }));
       return {
-        kanban_id: selectedKanban.kanban_id,
+        kanban_id: selectedKanban.rules[0].move_to_kanban_id,
         program_id: selectedKanban.program_id,
         rules: existingRules,
       };
@@ -173,8 +173,6 @@ export default function AddRulesComponent({
         ...watchedRules,
         { key: "", rule: "", comparationType: "", value: "" },
       ]);
-    } else {
-      console.log("Todas as perguntas já foram selecionadas");
     }
   };
 
@@ -189,7 +187,7 @@ export default function AddRulesComponent({
     setIsLoading(true);
     const transformedData = {
       ...data,
-      kanban_id: selectedKanbanId,
+      kanban_id: selectedKanban.kanban_id,
       rules: data.rules.map((rule: any) => {
         const ruleDefinition = rules.find((r) => r.key === rule.key);
 
@@ -243,83 +241,8 @@ export default function AddRulesComponent({
           },
           body: JSON.stringify({
             program_id: data.program_id,
-            kanban_id: selectedKanbanId,
-            rules: transformedData.rules,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setIsLoading(false);
-        refetch();
-        setIsModalOpen(false);
-      } else {
-        console.error("Erro ao salvar perguntas");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar perguntas:", error);
-    }
-  };
-
-  const updateRules = async (data: any) => {
-    setIsLoading(true);
-    const transformedData = {
-      ...data,
-      kanban_id: selectedKanbanId,
-      rules: data.rules.map((rule: any) => {
-        const ruleDefinition = rules.find((r) => r.key === rule.key);
-
-        const baseRule = {
-          ...rule,
-          field_type: ruleDefinition?.field_type,
-        };
-
-        if (
-          ruleDefinition?.field_type === "multiple_select" ||
-          ruleDefinition?.field_type === "single_select"
-        ) {
-          return {
-            ...baseRule,
-            value: Array.isArray(rule.value)
-              ? rule.value.map((v: string) => ({
-                  value: v,
-                  label_pt:
-                    ruleDefinition.options?.find((opt) => opt.value === v)
-                      ?.label_pt || v,
-                  label_en:
-                    ruleDefinition.options?.find((opt) => opt.value === v)
-                      ?.label_en || v,
-                }))
-              : [
-                  {
-                    value: rule.value,
-                    label_pt:
-                      ruleDefinition.options?.find(
-                        (opt) => opt.value === rule.value
-                      )?.label_pt || rule.value,
-                    label_en:
-                      ruleDefinition.options?.find(
-                        (opt) => opt.value === rule.value
-                      )?.label_en || rule.value,
-                  },
-                ],
-          };
-        }
-        return baseRule;
-      }),
-    };
-
-    try {
-      const response = await fetch(
-        `/api/programs/${session?.user?.organization_id}/update-rule`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            program_id: data.program_id,
-            kanban_id: selectedKanbanId,
+            kanban_id: selectedKanban?.kanban_id,
+            move_to_kanban_id: selectedKanbanId,
             rules: transformedData.rules,
           }),
         }
@@ -338,11 +261,6 @@ export default function AddRulesComponent({
   };
 
   const onSubmit = async (data: any) => {
-    if (selectedKanban && selectedKanban.rules.length > 0) {
-      await updateRules(data);
-      return;
-    }
-
     await saveQuestions(data);
   };
 
@@ -606,34 +524,40 @@ export default function AddRulesComponent({
   };
 
   const hasAvailableKanbans = () => {
-    return kanbanData.some(
-      (kanban) =>
-        kanban.kanban_position !== 0 && !listHasRules(kanban.kanban_id)
+    return kanbanData.some((kanban) => !listHasRules(kanban.kanban_id));
+  };
+
+  const isKanbanDisabled = (
+    kanban: KanbanDataWithCards,
+    selectedKanbanId: number | "",
+    rulesExist: boolean
+  ) => {
+    if (rulesExist && selectedKanban?.kanban_id === kanban.kanban_id) {
+      return false;
+    }
+    return (
+      selectedKanbanId === kanban.kanban_id ||
+      kanban.kanban_position <= selectedKanban?.kanban_position! ||
+      kanbanData.some((k) =>
+        k.rules.some((rule) => rule.move_to_kanban_id === kanban.kanban_id)
+      )
     );
   };
 
+  const isFormDisabled = selectedKanbanId === "";
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
-        {selectedKanban ? (
-          <Button variant="ghost">
-            <HiDotsHorizontal className="text-gray-400" />
-          </Button>
-        ) : (
-          <Button
-            variant="blue"
-            className="bg-[#F5F7FA] w-[160px] text-[#747D8C] px-4 py-2 rounded-lg shadow-md mb-4 hover:bg-[#eaebec]"
-          >
-            + Adicionar Regras
-          </Button>
-        )}
+        <Button variant="ghost">
+          <HiDotsHorizontal className="text-gray-400" />
+        </Button>
       </DialogTrigger>
 
       <DialogContent className="fixed top-1/2 left-1/2 w-[1200px] max-w-[95vw] max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg focus:outline-none overflow-y-auto custom-scrollbar">
         <Spinner isLoading={isLoading}>
           <div className="h-full">
             <DialogTitle className="text-2xl font-bold uppercase mb-4">
-              {selectedKanban ? "Editar Regras" : "Adicionar Regras"}
+              Adicionar Regras
             </DialogTitle>
             <Separator className="w-[calc(100%+48px)] -mx-6" />
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -648,32 +572,31 @@ export default function AddRulesComponent({
                       value={selectedKanbanId}
                       onChange={(e) => {
                         const newValue = Number(e.target.value);
-                        if (
-                          !isNaN(newValue) &&
-                          (!selectedKanban || !listHasRules(newValue))
-                        ) {
+                        if (!isNaN(newValue)) {
                           setSelectedKanbanId(newValue);
                         }
                       }}
                       className="w-[400px] block py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none pr-10"
                     >
-                      <option value="0">Selecione uma lista</option>
-                      {kanbanData
-                        .filter((kanban) => kanban.kanban_position !== 0)
-                        .map((kanban) => (
+                      <option value="">Selecione uma lista</option>
+                      {kanbanData.map((kanban) => {
+                        const hasRules = listHasRules(kanban.kanban_id);
+                        const isDisabled = isKanbanDisabled(
+                          kanban,
+                          selectedKanbanId,
+                          hasRules
+                        );
+
+                        return (
                           <option
                             key={kanban.kanban_id}
                             value={kanban.kanban_id}
-                            disabled={
-                              !selectedKanban && listHasRules(kanban.kanban_id)
-                            }
+                            disabled={isDisabled}
                           >
                             {kanban.kanban_name}
-                            {!selectedKanban && listHasRules(kanban.kanban_id)
-                              ? " (Já tem regras)"
-                              : ""}
                           </option>
-                        ))}
+                        );
+                      })}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
                       <svg
@@ -835,9 +758,10 @@ export default function AddRulesComponent({
                   variant="ghost"
                   className="flex items-center text-[#747D8C] w-[165px]"
                   disabled={
-                    !selectedKanban &&
-                    (!hasAvailableKanbans() ||
-                      getAvailableRules(-1).length === 0)
+                    isFormDisabled ||
+                    (!selectedKanban &&
+                      (!hasAvailableKanbans() ||
+                        getAvailableRules(-1).length === 0))
                   }
                 >
                   + Adicionar outra regra
@@ -847,11 +771,7 @@ export default function AddRulesComponent({
                 <Button
                   type="submit"
                   variant="blue"
-                  disabled={
-                    isLoading ||
-                    (!selectedKanban &&
-                      (!hasAvailableKanbans() || selectedKanbanId === 0))
-                  }
+                  disabled={isLoading || isFormDisabled}
                   className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
                 >
                   Salvar

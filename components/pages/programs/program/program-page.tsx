@@ -12,7 +12,7 @@ export default function ProgramPageComponent() {
   const { data: session } = useSession();
   const { token } = useParams();
 
-  const { data, isLoading, error } = useLoadProgramInfo(
+  const { data, error } = useLoadProgramInfo(
     Number(session?.user?.organization_id),
     token.toString()
   );
@@ -47,13 +47,6 @@ export default function ProgramPageComponent() {
       start_date={formatedStartDate}
       end_date={formatedEndDate}
     />
-    // <Spinner isLoading={isLoading}>
-    //   <HeaderProgramPage
-    //     title={data?.programInfoByToken.program_name!}
-    //     start_date={formatedStartDate}
-    //     end_date={formatedEndDate}
-    //   />
-    // </Spinner>
   );
 }
 

@@ -15,6 +15,7 @@ interface Option {
 interface Rule {
   key: string;
   kanban_id: number;
+  move_to_kanban_id: number;
   rule: string;
   comparation_type: ComparationType[];
   field_type:
@@ -72,7 +73,8 @@ export async function updateStartupKanban(startupId: number) {
 
   if (
     startup.profile_filled_percentage === null ||
-    startup.profile_filled_percentage !== 100
+    startup.profile_filled_percentage !== 100 ||
+    startup.fully_completed_profile === true
   ) {
     return;
   }
@@ -118,6 +120,7 @@ export async function updateStartupKanban(startupId: number) {
     programData.rules.push({
       key: rule.key,
       kanban_id: rule.kanban_id,
+      move_to_kanban_id: rule.move_to_kanban_id,
       rule: rule.rule,
       comparation_type: safeJsonParse<ComparationType[]>(
         rule.comparation_type as string
@@ -161,45 +164,81 @@ export async function updateStartupKanban(startupId: number) {
 
   const programsData: ProgramData[] = Array.from(programsMap.values());
 
-  await Promise.all(
-    programsData.flatMap(async (program) =>
-      Promise.all(
-        program.rules.map(async (rule) => {
-          const startupValue =
-            startupData[rule.key as keyof typeof startupData];
-          let passes = false;
+  async function applyProgramRulesRecursively(
+    program: ProgramData,
+    startupId: number,
+    cardId: number,
+    currentKanbanId: number,
+    depth: number = 0
+  ) {
+    const MAX_DEPTH = 10;
 
-          passes = rule.comparation_type.some((comparison) =>
-            checkRule(
-              comparison.key,
-              startupValue,
-              rule.rule,
-              rule.options,
-              rule.field_type
-            )
-          );
+    if (depth >= MAX_DEPTH) {
+      console.warn(
+        `Atingida a profundidade máxima para o card ${cardId} no programa ${program.program_id}`
+      );
+      return;
+    }
 
-          if (passes) {
-            const existingCard = await prisma.kanban_cards.findFirst({
-              where: {
-                startup_id: startupId,
-                kanban: {
-                  program_id: program.program_id,
-                },
-              },
-            });
+    for (const rule of program.rules) {
+      if (rule.kanban_id !== currentKanbanId) continue;
 
-            if (existingCard) {
-              await prisma.kanban_cards.update({
-                where: { id: existingCard.id },
-                data: { kanban_id: rule.kanban_id },
-              });
-            }
-          }
-        })
-      )
-    )
-  );
+      const startupValue = startupData[rule.key as keyof typeof startupData];
+      const passes = rule.comparation_type.some((comparison) =>
+        checkRule(
+          comparison.key,
+          startupValue,
+          rule.rule,
+          rule.options,
+          rule.field_type
+        )
+      );
+
+      if (passes && rule.move_to_kanban_id !== currentKanbanId) {
+        await prisma.kanban_cards.update({
+          where: { id: cardId },
+          data: { kanban_id: rule.move_to_kanban_id },
+        });
+        await applyProgramRulesRecursively(
+          program,
+          startupId,
+          cardId,
+          rule.move_to_kanban_id,
+          depth + 1
+        );
+        break;
+      }
+    }
+  }
+
+  async function processProgram(program: ProgramData, startupId: number) {
+    const existingCard = await prisma.kanban_cards.findFirst({
+      where: {
+        startup_id: startupId,
+        kanban: {
+          program_id: program.program_id,
+        },
+      },
+    });
+
+    if (existingCard) {
+      await applyProgramRulesRecursively(
+        program,
+        startupId,
+        existingCard.id,
+        existingCard.kanban_id
+      );
+    }
+  }
+
+  for (const program of programsData) {
+    await processProgram(program, startupId);
+  }
+
+  await prisma.startups.update({
+    where: { id: startupId },
+    data: { fully_completed_profile: true },
+  });
 }
 
 function checkRule(

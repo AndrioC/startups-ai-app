@@ -228,9 +228,14 @@ export async function GET(
     "marketFinance",
   ];
 
+  const fieldsToCalculate = getFieldsToCalculate();
+
   const filledPercentages: { [key: string]: number } = blocksToCalculate.reduce(
     (acc: { [key: string]: number }, blockName: string) => {
-      acc[blockName] = calculateFilledPercentage(blocks[blockName]);
+      acc[blockName] = calculateFilledPercentage(
+        blocks[blockName],
+        fieldsToCalculate[blockName]
+      );
       return acc;
     },
     {}
@@ -289,52 +294,19 @@ export async function GET(
   );
 }
 
-function calculateFilledPercentage(block: Block): number {
-  if (
-    "payingCustomersQuantity" in block &&
-    "activeCustomersQuantity" in block
-  ) {
-    const relevantFields = [
-      "payingCustomersQuantity",
-      "activeCustomersQuantity",
-    ];
-    const filledFields = relevantFields.filter(
-      (field) =>
-        block[field] !== undefined &&
-        block[field] !== null &&
-        block[field] !== ""
-    ).length;
-    return (filledFields / relevantFields.length) * 100;
-  } else if (
-    "mainResponsibleName" in block &&
-    "contactNumber" in block &&
-    "mainResponsibleEmail" in block &&
-    "employeesQuantity" in block &&
-    "fullTimeEmployeesQuantity" in block
-  ) {
-    const relevantFields = [
-      "mainResponsibleName",
-      "contactNumber",
-      "mainResponsibleEmail",
-      "employeesQuantity",
-      "fullTimeEmployeesQuantity",
-    ];
-    const filledFields = relevantFields.filter(
-      (field) =>
-        block[field] !== undefined &&
-        block[field] !== null &&
-        block[field] !== ""
-    ).length;
-    return (filledFields / relevantFields.length) * 100;
-  }
-
-  const totalFields = Object.keys(block).length;
-  const filledFields = Object.values(block).filter((value) => {
+function calculateFilledPercentage(
+  block: Block,
+  relevantFields: string[] = []
+): number {
+  const totalFields = relevantFields.length;
+  const filledFields = relevantFields.filter((field) => {
+    const value = block[field];
     if (Array.isArray(value)) {
       return value.length > 0;
     }
     return value !== undefined && value !== null && value !== "";
   }).length;
+
   return (filledFields / totalFields) * 100;
 }
 
@@ -348,4 +320,49 @@ function safeJsonParse<T>(value: string | T): T {
     }
   }
   return value;
+}
+
+function getFieldsToCalculate(): { [key: string]: string[] } {
+  return {
+    generalData: [
+      "startupName",
+      "country",
+      "vertical",
+      "stateAndCity",
+      "operationalStage",
+      "businessModel",
+      "subscriptionNumber",
+      "loadPitchDeckUrl",
+      "loadLogoUrl",
+      "foundationDate",
+      "referenceLink",
+      "startupChallenges",
+      "startupObjectives",
+      "connectionsOnlyOnStartupCountryOrigin",
+      "valueProposal",
+      "shortDescription",
+    ],
+    team: [
+      "mainResponsibleName",
+      "contactNumber",
+      "mainResponsibleEmail",
+      "employeesQuantity",
+      "fullTimeEmployeesQuantity",
+    ],
+    productService: [
+      "startupProductService",
+      "quantityOdsGoals",
+      "problemThatIsSolved",
+      "competitors",
+      "competitiveDifferentiator",
+    ],
+    governance: [
+      "isStartupOfficiallyRegistered",
+      "isTherePartnersAgreementSigned",
+      "haveLegalAdvice",
+      "haveAccountingConsultancy",
+      "relationshipsRegisteredInContract",
+    ],
+    marketFinance: ["payingCustomersQuantity", "activeCustomersQuantity"],
+  };
 }

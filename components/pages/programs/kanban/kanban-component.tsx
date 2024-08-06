@@ -10,6 +10,7 @@ import {
 } from "@headlessui/react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import axios from "axios";
+import { AlertCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -17,7 +18,15 @@ import { Rule } from "@/actions/rules";
 import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
 import { Button } from "@/components/ui/button";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../../ui/tooltip";
+
 import AddRulesComponent from "./add-rules-component";
+import ProfileUpdatedInfo from "./profile-updated-info";
 
 interface Props {
   kanbanData: KanbanDataWithCards[];
@@ -25,11 +34,20 @@ interface Props {
   refetch: () => void;
 }
 
+interface Startup {
+  id: number;
+  name: string;
+  profile_filled_percentage: number;
+  profile_updated: boolean;
+}
+
 export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { token } = useParams();
   const [newListTitle, setNewListTitle] = useState("");
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedStartup, setSelectedStartup] = useState<Startup | null>(null);
 
   const { data: session } = useSession();
 
@@ -75,7 +93,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
           <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragEnd}>
             {kanbanData
               ?.sort((a, b) => a.kanban_position - b.kanban_position)
-              .map((list, index) => (
+              .map((list) => (
                 <Droppable
                   key={list.kanban_id}
                   droppableId={list.kanban_id.toString()}
@@ -92,14 +110,12 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                         <h3 className="text-gray-400 text-[16px] font-bold">
                           {list.kanban_name} - {list.kanban_cards.length}
                         </h3>
-                        {index > 0 && (
-                          <AddRulesComponent
-                            rules={rules}
-                            kanbanData={kanbanData}
-                            selectedKanban={list}
-                            refetch={refetch}
-                          />
-                        )}
+                        <AddRulesComponent
+                          rules={rules}
+                          kanbanData={kanbanData}
+                          selectedKanban={list}
+                          refetch={refetch}
+                        />
                       </div>
                       {list.kanban_cards
                         .sort((a, b) => a.position_value - b.position_value)
@@ -114,32 +130,64 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center justify-between p-2 ${
+                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center justify-between ${
                                   snapshot.isDragging ? "bg-gray-200" : ""
                                 }`}
                               >
-                                <span className="text-gray-700 text-[15px]">
-                                  {card.startup.name}
-                                </span>
-                                {typeof card.startup
-                                  .profile_filled_percentage === "number" && (
-                                  <span
-                                    className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                                      card.startup.profile_filled_percentage <
-                                      50
-                                        ? "bg-red-100 text-red-800"
-                                        : card.startup
-                                              .profile_filled_percentage < 100
-                                          ? "bg-yellow-100 text-yellow-800"
-                                          : "bg-green-100 text-green-800"
-                                    }`}
-                                  >
-                                    {Math.round(
-                                      card.startup.profile_filled_percentage
+                                <div
+                                  className="rounded-l-md w-2 h-full"
+                                  style={{ backgroundColor: list.kanban_color }}
+                                ></div>
+                                <div className="flex flex-col w-full p-2">
+                                  <div className="flex justify-between items-start mb-2">
+                                    <span className="text-gray-700 text-[15px] font-semibold">
+                                      {card.startup.name}
+                                    </span>
+                                    {typeof card.startup
+                                      .profile_filled_percentage ===
+                                      "number" && (
+                                      <span
+                                        className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                                          card.startup
+                                            .profile_filled_percentage < 50
+                                            ? "bg-red-100 text-red-800"
+                                            : card.startup
+                                                  .profile_filled_percentage <
+                                                100
+                                              ? "bg-yellow-100 text-yellow-800"
+                                              : "bg-green-100 text-green-800"
+                                        }`}
+                                      >
+                                        {Math.round(
+                                          card.startup.profile_filled_percentage
+                                        )}
+                                        %
+                                      </span>
                                     )}
-                                    %
-                                  </span>
-                                )}
+                                  </div>
+                                  <div className="flex justify-end">
+                                    {card.startup.profile_updated && (
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger>
+                                            <AlertCircle
+                                              className="h-5 w-5 text-red-500 cursor-pointer"
+                                              onClick={() => {
+                                                setSelectedStartup(
+                                                  card.startup as Startup
+                                                );
+                                                setIsUpdateModalOpen(true);
+                                              }}
+                                            />
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            <p>Informações atualizadas</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </Draggable>
@@ -150,6 +198,12 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                 </Droppable>
               ))}
           </DragDropContext>
+          <ProfileUpdatedInfo
+            isOpen={isUpdateModalOpen}
+            setIsOpen={setIsUpdateModalOpen}
+            selectedStartup={selectedStartup}
+            refetch={refetch}
+          />
         </div>
       </div>
 
@@ -160,12 +214,6 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
         >
           + Adicionar nova lista
         </Button>
-        <AddRulesComponent
-          rules={rules}
-          kanbanData={kanbanData!}
-          selectedKanban={null}
-          refetch={refetch}
-        />
       </div>
 
       <Transition appear show={isModalOpen} as={Fragment}>

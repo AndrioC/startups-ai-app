@@ -5,6 +5,7 @@ import prisma from "@/prisma/client";
 interface DataRequest {
   program_id: number;
   kanban_id: number;
+  move_to_kanban_id: number;
   rules: {
     key: string;
     rule: string;
@@ -22,6 +23,11 @@ export async function POST(
     const data = (await request.json()) as DataRequest;
 
     await prisma.$transaction(async (tx) => {
+      await tx.rule.deleteMany({
+        where: {
+          kanban_id: data.kanban_id,
+        },
+      });
       for (const rule of data.rules) {
         await tx.rule.create({
           data: {
@@ -32,6 +38,7 @@ export async function POST(
             field_type: rule.field_type,
             program_id: data.program_id,
             kanban_id: data.kanban_id,
+            move_to_kanban_id: data.move_to_kanban_id,
           },
         });
       }
@@ -42,7 +49,7 @@ export async function POST(
       { status: 201 }
     );
   } catch (error) {
-    console.log("Erro ao criar regra: ", error);
-    return NextResponse.json({ error: "Erro ao criar regra" }, { status: 500 });
+    console.log("error creating rule: ", error);
+    return NextResponse.json(error, { status: 500 });
   }
 }

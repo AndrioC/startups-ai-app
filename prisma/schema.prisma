@@ -207,7 +207,9 @@ model startups {
   round_start_date                             DateTime?
   round_end_date                               DateTime?
   startup_profile                              String?
-  profile_filled_percentage                    Float?
+  fully_completed_profile                      Boolean   @default(false)
+  profile_filled_percentage                    Float?    @default(0.0)
+  profile_updated                              Boolean   @default(false)
   plan                                         String    @default("free")
   is_deleted                                   Boolean   @default(false)
   is_approved                                  Boolean   @default(false)
@@ -590,16 +592,18 @@ model kanbans {
   kanban_name    String    @default("Inscritos")
   position_value Int       @default(0)
   is_deleted     Boolean   @default(false)
+  color          String
   deleted_by_id  Int?
   deleted_at     DateTime?
   created_at     DateTime  @default(now())
   updated_at     DateTime  @default(now())
 
-  program      programs       @relation(fields: [program_id], references: [id])
-  created_by   user?          @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
-  deleted_by   user?          @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
-  kanban_cards kanban_cards[]
-  rule         rule[]
+  program       programs       @relation(fields: [program_id], references: [id])
+  created_by    user?          @relation("KanbanCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by    user?          @relation("KanbanDeletedBy", fields: [deleted_by_id], references: [id])
+  kanban_cards  kanban_cards[]
+  rule          rule[]
+  movedToKanban rule[]         @relation("MoveToKanbanId")
 }
 
 model kanban_cards {
@@ -615,15 +619,17 @@ model kanban_cards {
 }
 
 model rule {
-  id               Int    @id @default(autoincrement())
-  key              String
-  rule             String
-  comparation_type Json
-  field_type       String
-  options          Json?
-  program_id       Int
-  kanban_id        Int
+  id                Int    @id @default(autoincrement())
+  key               String
+  rule              String
+  comparation_type  Json
+  field_type        String
+  options           Json?
+  program_id        Int
+  kanban_id         Int
+  move_to_kanban_id Int
 
-  program programs @relation(fields: [program_id], references: [id])
-  kanban  kanbans  @relation(fields: [kanban_id], references: [id])
+  program        programs @relation(fields: [program_id], references: [id])
+  kanban         kanbans  @relation(fields: [kanban_id], references: [id])
+  moveToKanbanId kanbans  @relation("MoveToKanbanId", fields: [move_to_kanban_id], references: [id])
 }

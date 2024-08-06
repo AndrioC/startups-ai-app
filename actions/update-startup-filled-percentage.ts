@@ -141,16 +141,25 @@ export async function updateStartupFilledPercentage(
     marketFinance,
   };
 
-  const { totalPercentage, count } = Object.values(blocks).reduce(
-    (acc, block) => {
-      acc.totalPercentage += calculateFilledPercentage(block);
-      acc.count += 1;
-      return acc;
-    },
-    { totalPercentage: 0, count: 0 }
+  const fieldsToCalculate = getFieldsToCalculate();
+
+  const filledPercentages = Object.entries(blocks).reduce<{
+    [key: string]: number;
+  }>((acc, [blockName, block]) => {
+    acc[blockName] = calculateFilledPercentage(
+      block,
+      fieldsToCalculate[blockName]
+    );
+    return acc;
+  }, {});
+
+  const totalBlocks = Object.keys(filledPercentages).length;
+  const totalPercentage = Object.values(filledPercentages).reduce(
+    (sum, val) => sum + val,
+    0
   );
 
-  const averageFilledPercentage = totalPercentage / count;
+  const averageFilledPercentage = totalPercentage / totalBlocks;
 
   await prisma.startups.update({
     where: { id: startup_id },
@@ -160,28 +169,63 @@ export async function updateStartupFilledPercentage(
   });
 }
 
-function calculateFilledPercentage(block: Block): number {
-  const isMarketFinance =
-    "payingCustomersQuantity" in block && "activeCustomersQuantity" in block;
-
-  if (isMarketFinance) {
-    const relevantFields = [
-      "payingCustomersQuantity",
-      "activeCustomersQuantity",
-    ];
-    const filledFields = relevantFields.filter(
-      (field) =>
-        block[field] !== "" &&
-        block[field] !== undefined &&
-        block[field] !== null
-    ).length;
-    return (filledFields / relevantFields.length) * 100;
-  }
-
-  const totalFields = Object.keys(block).length;
-  const filledFields = Object.values(block).filter(
-    (value) => value !== "" && value !== undefined && value !== null
-  ).length;
+function calculateFilledPercentage(
+  block: Block,
+  relevantFields: string[]
+): number {
+  const totalFields = relevantFields.length;
+  const filledFields = relevantFields.filter((field) => {
+    const value = block[field];
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return value !== undefined && value !== null && value !== "";
+  }).length;
 
   return (filledFields / totalFields) * 100;
+}
+
+function getFieldsToCalculate(): { [key: string]: string[] } {
+  return {
+    generalData: [
+      "startupName",
+      "country",
+      "vertical",
+      "stateAndCity",
+      "operationalStage",
+      "businessModel",
+      "subscriptionNumber",
+      "loadPitchDeckUrl",
+      "loadLogoUrl",
+      "foundationDate",
+      "referenceLink",
+      "startupChallenges",
+      "startupObjectives",
+      "connectionsOnlyOnStartupCountryOrigin",
+      "valueProposal",
+      "shortDescription",
+    ],
+    team: [
+      "mainResponsibleName",
+      "contactNumber",
+      "mainResponsibleEmail",
+      "employeesQuantity",
+      "fullTimeEmployeesQuantity",
+    ],
+    productService: [
+      "startupProductService",
+      "quantityOdsGoals",
+      "problemThatIsSolved",
+      "competitors",
+      "competitiveDifferentiator",
+    ],
+    governance: [
+      "isStartupOfficiallyRegistered",
+      "isTherePartnersAgreementSigned",
+      "haveLegalAdvice",
+      "haveAccountingConsultancy",
+      "relationshipsRegisteredInContract",
+    ],
+    marketFinance: ["payingCustomersQuantity", "activeCustomersQuantity"],
+  };
 }

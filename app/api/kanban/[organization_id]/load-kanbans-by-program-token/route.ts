@@ -24,6 +24,7 @@ interface RawRule {
   options: string;
   program_id: number;
   kanban_id: number;
+  move_to_kanban_id: number;
 }
 
 interface ProcessedRule {
@@ -35,6 +36,7 @@ interface ProcessedRule {
   options: Option[] | null;
   program_id: number;
   kanban_id: number;
+  move_to_kanban_id: number;
 }
 
 interface RawKanbanData {
@@ -42,6 +44,7 @@ interface RawKanbanData {
   program_id: number;
   kanban_name: string;
   kanban_position: number;
+  kanban_color: string;
   kanban_cards: {
     id: number;
     position_value: number;
@@ -49,6 +52,7 @@ interface RawKanbanData {
       id: number;
       name: string;
       profile_filled_percentage: number;
+      profile_updated: boolean;
     };
   }[];
   rules: RawRule[];
@@ -59,6 +63,7 @@ export interface KanbanDataWithCards {
   program_id: number;
   kanban_name: string;
   kanban_position: number;
+  kanban_color: string;
   kanban_cards: {
     id: number;
     position_value: number;
@@ -66,6 +71,7 @@ export interface KanbanDataWithCards {
       id: number;
       name: string;
       profile_filled_percentage: number;
+      profile_updated: boolean;
     };
   }[];
   rules: ProcessedRule[];
@@ -93,18 +99,20 @@ export async function GET(
         k.program_id,
         k.kanban_name,
         k.position_value AS kanban_position,
+        k.color AS kanban_color,
         COALESCE(
-            json_agg(
-                json_build_object(
-                    'id', kc.id,
-                    'position_value', kc.position_value,
-                    'startup', json_build_object(
-                        'id', s.id,
-                        'name', COALESCE(NULLIF(s.name, ''), '-'),
-                        'profile_filled_percentage', s.profile_filled_percentage
-                    )
-                )
-            ) FILTER (WHERE kc.id IS NOT NULL), '[]'
+          json_agg(
+            json_build_object(
+              'id', kc.id,
+              'position_value', kc.position_value,
+              'startup', json_build_object(
+                  'id', s.id,
+                  'name', s.name,
+                  'profile_filled_percentage', s.profile_filled_percentage,
+                  'profile_updated', s.profile_updated
+              )
+            )
+          ) FILTER (WHERE kc.id IS NOT NULL AND s.name IS NOT NULL AND s.name != ''), '[]'
         ) AS kanban_cards,
         COALESCE(
             (SELECT 
@@ -117,7 +125,8 @@ export async function GET(
                         'field_type', q.field_type,
                         'options', q.options,
                         'program_id', q.program_id,
-                        'kanban_id', q.kanban_id
+                        'kanban_id', q.kanban_id,
+                        'move_to_kanban_id', q.move_to_kanban_id
                     )
                 )
             FROM rule q

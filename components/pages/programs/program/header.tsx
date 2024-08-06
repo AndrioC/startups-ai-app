@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { MdInsertLink } from "react-icons/md";
+import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +25,8 @@ export default function HeaderProgramPage({
   const router = useRouter();
   const tabQuery = searchParams.get("tab");
 
+  const { token } = useParams();
+
   const defaultTab = "startups";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery);
   const initialTab = isValidTab ? tabQuery : defaultTab;
@@ -34,6 +37,23 @@ export default function HeaderProgramPage({
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", id);
     router.push(`?${params.toString()}`);
+  };
+
+  const handleCopyLink = async () => {
+    const link = `${window.location.origin}/auth/register?token=${token}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      toast.success("Link copiado para a área de transferência!", {
+        autoClose: 3000,
+        position: "top-center",
+      });
+    } catch (err) {
+      console.error("Falha ao copiar o link", err);
+      toast.error("Erro ao copiar o link!", {
+        autoClose: 3000,
+        position: "top-center",
+      });
+    }
   };
 
   const tabContents = [
@@ -78,11 +98,14 @@ export default function HeaderProgramPage({
       </div>
       <div className="bg-gray-300 mb-4"></div>
       <div className="p-5">
-        <Button className="flex items-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-[13px] rounded-[30px] w-[250px] h-[30px] hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out">
+        <Button
+          onClick={handleCopyLink}
+          className="flex items-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-[13px] rounded-[30px] w-[250px] h-[30px] hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out"
+        >
           <MdInsertLink className="h-8 w-8 mr-1 text-[#2292EA]" />
           Copiar link para cadastro
         </Button>
-        <div className="h-full w-[1300px] flex-wrap">
+        <div className="h-screen w-[1300px] flex-wrap">
           {tabContents.filter((tab) => tab.key === activeTab)}
         </div>
       </div>

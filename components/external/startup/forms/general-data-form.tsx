@@ -211,7 +211,7 @@ export default function GeneralDataForm({ data }: Props) {
           }
         );
 
-        if (response.data.status === 201) {
+        if (response.status === 201) {
           setIsSubmiting(false);
           refetch();
           return;
