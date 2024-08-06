@@ -7,17 +7,29 @@ export const GeneralDataSchema = () =>
     startupName: z.string().min(1, "Este campo é obrigatório!"),
     country: z.string().min(1, "Este campo é obrigatório!"),
     vertical: z.string().min(1, "Este campo é obrigatório!"),
-    stateAndCity: z.string().min(3, "Este campo é obrigatório!"),
+    stateAndCity: z
+      .string()
+      .min(3, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
     operationalStage: z.string().min(1, "Este campo é obrigatório!"),
     businessModel: z.string().min(1, "Este campo é obrigatório!"),
-    subscriptionNumber: z.string().min(3, "Este campo é obrigatório!"),
+    subscriptionNumber: z
+      .string()
+      .min(3, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
     foundationDate: z.preprocess(
       (val: any) => (val ? new Date(val) : val),
       z.date({
         required_error: "Este campo é obrigatório!",
       })
     ),
-    referenceLink: z.string().min(5, "Este campo é obrigatório!"),
+    referenceLink: z
+      .string()
+      .min(3, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
     loadPitchDeck: z
       .custom<File | undefined | string>(
         (v) => v instanceof File || typeof v === "string" || v === undefined,
@@ -90,9 +102,19 @@ export const GeneralDataSchema = () =>
     }),
     connectionsOnlyOnStartupCountryOrigin: z
       .string()
-      .min(1, "Este campo é obrigatório!"),
-    valueProposal: z.string().min(10, "Este campo é obrigatório!"),
-    shortDescription: z.string().min(10, "Este campo é obrigatório!"),
+      .min(3, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
+    valueProposal: z
+      .string()
+      .min(10, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
+    shortDescription: z
+      .string()
+      .min(10, "Este campo é obrigatório!")
+      .nullable()
+      .transform((v) => v ?? ""),
   });
 
 export const PartnerSchema = z.object({
