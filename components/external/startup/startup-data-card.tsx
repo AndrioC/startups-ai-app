@@ -18,13 +18,14 @@ export default function StartupDataCard({ data }: Props) {
     <div className="w-[300px] h-[600px] bg-[#F1F3F3] shadow-md rounded-lg text-gray-500">
       <div className="text-xl font-bold mb-4 pl-5 mt-5">DADOS DA STARTUP</div>
       <div className="flex justify-between pl-5 pr-5 mb-5 w-[270px] gap-2">
-        <Image
-          src={data.loadLogoUrl || placeholder}
-          alt="Clica Reserva"
-          width={130}
-          height={130}
-          style={{ width: "auto", height: "auto", maxWidth: "100%" }}
-        />
+        <div className="logo-container">
+          <Image
+            src={data.loadLogoUrl || placeholder}
+            alt="Startup Logo"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
         <Image src={brazilFlag} alt="Brazil Flag" className="w-8 h-8" />
       </div>
       <ul className="space-y-3 mb-4 font-medium pl-5 mt-3">

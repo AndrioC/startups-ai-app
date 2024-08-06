@@ -15,7 +15,10 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 
+import ImageCropDialog from "../image-crop-dialog";
 import { SelectDataProps } from "../startup-form";
+
+import "react-image-crop/dist/ReactCrop.css";
 
 interface ValueProps {
   id: number;
@@ -28,6 +31,9 @@ interface Props {
 export default function GeneralDataForm({ data }: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
+
   const [localLogoFile, setLocalLogoFile] = useState<File | undefined>(
     undefined
   );
@@ -43,6 +49,8 @@ export default function GeneralDataForm({ data }: Props) {
   const { initialData, pitchDeckFile, logoFile, refetch, actorId } =
     useFormStartupDataState();
   const formSchema = GeneralDataSchema();
+
+  console.log("initialData: ", initialData);
 
   const countriesData: ValueProps[] = data.country.map((value) => ({
     ...value,
@@ -177,6 +185,7 @@ export default function GeneralDataForm({ data }: Props) {
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     getValues,
     formState: { errors },
@@ -227,6 +236,25 @@ export default function GeneralDataForm({ data }: Props) {
       });
     },
   });
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageToCrop(reader.result as string);
+        setIsCropDialogOpen(true);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const handleCroppedImage = (croppedImageBlob: Blob) => {
+    const file = new File([croppedImageBlob], "cropped-image.png", {
+      type: "image/png",
+    });
+    setLocalLogoFile(file);
+    setValue("loadLogo", file);
+  };
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -534,17 +562,18 @@ export default function GeneralDataForm({ data }: Props) {
             render={({ field: { ref, name, onBlur, onChange } }) => (
               <div className="flex items-center space-x-2">
                 <div className="relative w-48 h-48 bg-white">
-                  <Image
-                    src={
-                      localLogoFile
-                        ? URL.createObjectURL(localLogoFile)
-                        : logoFile || selectImagePlaceHolder
-                    }
-                    alt="logo-image"
-                    width={200}
-                    height={200}
-                    className="object-cover w-full h-full"
-                  />
+                  <div className="logo-container">
+                    <Image
+                      src={
+                        localLogoFile
+                          ? URL.createObjectURL(localLogoFile)
+                          : logoFile || selectImagePlaceHolder
+                      }
+                      alt="logo-image"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
                   <div
                     className="absolute bottom-0 left-0 flex items-center justify-center w-9 h-9 bg-gray-500 rounded-full cursor-pointer"
                     onClick={() => document.getElementById(name)?.click()}
@@ -561,9 +590,8 @@ export default function GeneralDataForm({ data }: Props) {
                   accept=".png, .jpeg, .jpg, .svg"
                   style={{ display: "none" }}
                   onChange={(e) => {
-                    const selectedFile = e.target.files?.[0];
-                    setLocalLogoFile(selectedFile || undefined);
-                    onChange(selectedFile);
+                    handleImageSelect(e);
+                    onChange(e.target.files?.[0]);
                   }}
                 />
               </div>
@@ -777,6 +805,12 @@ export default function GeneralDataForm({ data }: Props) {
           Salvar
         </Button>
       </div>
+      <ImageCropDialog
+        isOpen={isCropDialogOpen}
+        setIsOpen={setIsCropDialogOpen}
+        imageToCrop={imageToCrop}
+        onCropComplete={handleCroppedImage}
+      />
     </form>
   );
 }

@@ -134,15 +134,21 @@ export async function GET(
     subscriptionNumber: startup?.subscription_number,
     foundationDate: startup?.foundation_date?.toDateString(),
     referenceLink: startup?.reference_link,
-    loadPitchDeck: `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup?.pitch_deck}`,
-    loadLogo: `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup?.logo_img}`,
+    loadPitchDeck:
+      startup?.pitch_deck && startup.pitch_deck.trim() !== ""
+        ? `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup.pitch_deck}`
+        : undefined,
+    loadLogo:
+      startup?.logo_img && startup.logo_img.trim() !== ""
+        ? `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup.logo_img}`
+        : undefined,
     loadPitchDeckUrl:
-      startup?.pitch_deck !== null
-        ? `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup?.pitch_deck}`
+      startup?.pitch_deck && startup.pitch_deck.trim() !== ""
+        ? `https://${STARTUPS_PITCH_BUCKET}.s3.amazonaws.com/${startup.pitch_deck}`
         : undefined,
     loadLogoUrl:
-      startup?.logo_img !== null
-        ? `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup?.logo_img}`
+      startup?.logo_img && startup.logo_img.trim() !== ""
+        ? `https://${STARTUPS_LOGO_BUCKET}.s3.amazonaws.com/${startup.logo_img}`
         : undefined,
     startupChallenges:
       startup?.startup_challenges.map((challenge) => {
