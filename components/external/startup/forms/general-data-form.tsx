@@ -34,12 +34,10 @@ export default function GeneralDataForm({ data }: Props) {
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
 
-  const [localLogoFile, setLocalLogoFile] = useState<File | undefined>(
-    undefined
+  const [localLogoFile, setLocalLogoFile] = useState<File | null>(null);
+  const [localPitchDeckFile, setLocalPitchDeckFile] = useState<File | null>(
+    null
   );
-  const [localPitchDeckFile, setLocalPitchDeckFile] = useState<
-    File | undefined
-  >(undefined);
 
   const truncateFileName = (name: string, maxLength: number) => {
     if (name.length <= maxLength) return name;
@@ -486,7 +484,7 @@ export default function GeneralDataForm({ data }: Props) {
                       style={{ display: "none" }}
                       onChange={(e) => {
                         const selectedFile = e.target.files?.[0];
-                        setLocalPitchDeckFile(selectedFile || undefined);
+                        setLocalPitchDeckFile(selectedFile || null);
                         onChange(selectedFile);
                       }}
                     />
