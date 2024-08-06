@@ -47,12 +47,13 @@ export default function ProgramStartupTab() {
 
   return (
     <Spinner isLoading={isRefetching}>
-      <div className="flex justify-end mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-2 sm:space-y-0">
         <Button
           onClick={handleRefresh}
           variant="outline"
           size="sm"
           disabled={isRefetching}
+          className="w-full sm:w-auto"
         >
           <RefreshCw
             className={`w-4 h-4 mr-2 ${isRefetching ? "animate-spin" : ""}`}

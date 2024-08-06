@@ -62,25 +62,29 @@ export default function HeaderProgramPage({
   ];
 
   return (
-    <div className="h-auto bg-[#FCFCFC] rounded-lg shadow-lg relative w-full">
-      <div className="flex items-center h-[90px] pl-5">
-        <MdOutlineModeEditOutline className="h-6 w-6 text-black mr-2" />
-        <div className="flex gap-10">
-          <h1 className="text-2xl font-semibold text-black">{title}</h1>
-          <h1 className="ml-4 text-2xl font-semibold text-black">
+    <div className="bg-[#FCFCFC] rounded-lg shadow-lg relative w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 space-y-2 sm:space-y-0">
+        <div className="flex items-center">
+          <MdOutlineModeEditOutline className="h-6 w-6 text-black mr-2" />
+          <h1 className="text-xl sm:text-2xl font-semibold text-black">
+            {title}
+          </h1>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:ml-4 space-y-2 sm:space-y-0 sm:space-x-4">
+          <h1 className="text-sm sm:text-base font-semibold text-black">
             Início: {start_date}
           </h1>
-          <h1 className="ml-4 text-2xl font-semibold text-black">
+          <h1 className="text-sm sm:text-base font-semibold text-black">
             Fim: {end_date}
           </h1>
         </div>
       </div>
-      <div className="flex mb-1">
+      <div className="flex overflow-x-auto whitespace-nowrap">
         {tabs.map((tab, index) => (
           <div key={index} className="relative">
             <button
               onClick={() => handleTabChange(tab.id)}
-              className={`px-4 py-2 ${
+              className={`px-4 py-2 text-sm sm:text-base ${
                 activeTab === tab.id ? "text-gray-800" : "text-gray-500"
               }`}
             >
@@ -96,16 +100,16 @@ export default function HeaderProgramPage({
           </div>
         ))}
       </div>
-      <div className="bg-gray-300 mb-4"></div>
-      <div className="p-5">
+      <div className="bg-gray-300 h-[1px] mb-4"></div>
+      <div className="p-4 sm:p-5">
         <Button
           onClick={handleCopyLink}
-          className="flex items-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-[13px] rounded-[30px] w-[250px] h-[30px] hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out"
+          className="flex items-center justify-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-xs sm:text-sm rounded-[30px] w-full sm:w-auto px-4 py-2 hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out mb-4"
         >
-          <MdInsertLink className="h-8 w-8 mr-1 text-[#2292EA]" />
+          <MdInsertLink className="h-5 w-5 mr-1 text-[#2292EA]" />
           Copiar link para cadastro
         </Button>
-        <div className="h-screen w-[1300px] flex-wrap">
+        <div className="w-full overflow-x-auto">
           {tabContents.filter((tab) => tab.key === activeTab)}
         </div>
       </div>
