@@ -50,8 +50,6 @@ export default function GeneralDataForm({ data }: Props) {
     useFormStartupDataState();
   const formSchema = GeneralDataSchema();
 
-  console.log("initialData: ", initialData);
-
   const countriesData: ValueProps[] = data.country.map((value) => ({
     ...value,
     label: value.name_pt,
