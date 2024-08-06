@@ -12,19 +12,16 @@ export async function updateProfileUpdated(startupId: number) {
   }
 
   if (
-    startup.profile_filled_percentage === null ||
     startup.profile_filled_percentage !== 100 ||
     startup.fully_completed_profile !== true
   ) {
     return;
   }
 
-  if (startup.fully_completed_profile) {
-    await prisma.startups.update({
-      where: { id: startupId },
-      data: {
-        profile_updated: true,
-      },
-    });
-  }
+  await prisma.startups.update({
+    where: { id: startupId },
+    data: {
+      profile_updated: true,
+    },
+  });
 }

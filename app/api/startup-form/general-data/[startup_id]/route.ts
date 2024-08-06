@@ -115,9 +115,9 @@ export async function PATCH(
       });
     }
 
+    await updateProfileUpdated(Number(params.startup_id));
     await updateStartupFilledPercentage(Number(params.startup_id));
     await updateStartupKanban(Number(params.startup_id));
-    await updateProfileUpdated(Number(params.startup_id));
 
     return NextResponse.json({}, { status: 201 });
   } catch (error) {
