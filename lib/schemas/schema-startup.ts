@@ -4,21 +4,25 @@ const MAX_IMAGE_FILE = 1024 * 1024;
 
 export const GeneralDataSchema = () =>
   z.object({
-    startupName: z.string().min(1, "Este campo é obrigatório!"),
+    startupName: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(3, "Este campo é obrigatório!")),
     country: z.string().min(1, "Este campo é obrigatório!"),
     vertical: z.string().min(1, "Este campo é obrigatório!"),
     stateAndCity: z
       .string()
-      .min(3, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(3, "Este campo é obrigatório!")),
     operationalStage: z.string().min(1, "Este campo é obrigatório!"),
     businessModel: z.string().min(1, "Este campo é obrigatório!"),
     subscriptionNumber: z
       .string()
-      .min(3, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(3, "Este campo é obrigatório!")),
     foundationDate: z.preprocess(
       (val: any) => (val ? new Date(val) : val),
       z.date({
@@ -27,99 +31,66 @@ export const GeneralDataSchema = () =>
     ),
     referenceLink: z
       .string()
-      .min(3, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(3, "Este campo é obrigatório!")),
     loadPitchDeck: z
-      .custom<File | undefined | string>(
-        (v) => v instanceof File || typeof v === "string" || v === undefined,
-        {
-          message: "Este campo é obrigatório!",
-        }
-      )
+      .union([z.string(), z.instanceof(File), z.undefined()])
       .refine(
         (v) => {
-          if (typeof v === "string") {
-            return v.trim() !== "";
-          }
-          if (v instanceof File) {
-            return v.name !== "" && v.size > 0;
-          }
+          if (typeof v === "string") return v.trim() !== "";
+          if (v instanceof File) return v.name !== "" && v.size > 0;
           return false;
         },
-        {
-          message: "Este campo é obrigatório!",
-        }
+        { message: "Este campo é obrigatório!" }
       )
-      .refine(
-        (file) => {
-          if (file instanceof File) {
-            return file.size <= MAX_FILE_SIZE;
-          }
-          return true;
-        },
-        {
-          message: "Arquivo muito grande!",
-        }
-      ),
+      .refine((file) => !(file instanceof File) || file.size <= MAX_FILE_SIZE, {
+        message: "Arquivo muito grande!",
+      }),
     loadLogo: z
-      .custom<File | undefined | string>(
-        (v) => v instanceof File || typeof v === "string" || v === undefined,
-        {
-          message: "Este campo é obrigatório!",
-        }
-      )
+      .union([z.string(), z.instanceof(File), z.undefined()])
       .refine(
         (v) => {
-          if (typeof v === "string") {
-            return v.trim() !== "";
-          }
-          if (v instanceof File) {
-            return v.name !== "" && v.size > 0;
-          }
+          if (typeof v === "string") return v.trim() !== "";
+          if (v instanceof File) return v.name !== "" && v.size > 0;
           return false;
         },
-        {
-          message: "Este campo é obrigatório!",
-        }
+        { message: "Este campo é obrigatório!" }
       )
       .refine(
-        (file) => {
-          if (file instanceof File) {
-            return file.size <= MAX_IMAGE_FILE;
-          }
-          return true;
-        },
-        {
-          message: "Arquivo muito grande!",
-        }
+        (file) => !(file instanceof File) || file.size <= MAX_IMAGE_FILE,
+        { message: "Arquivo muito grande!" }
       ),
-    startupChallenges: z.array(z.string()).refine((data) => data.length > 0, {
-      message: "Este campo é obrigatório!",
-    }),
-    startupObjectives: z.array(z.string()).refine((data) => data.length > 0, {
-      message: "Este campo é obrigatório!",
-    }),
+    startupChallenges: z.array(z.string()).min(1, "Este campo é obrigatório!"),
+    startupObjectives: z.array(z.string()).min(1, "Este campo é obrigatório!"),
     connectionsOnlyOnStartupCountryOrigin: z
       .string()
-      .min(3, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     valueProposal: z
       .string()
-      .min(10, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(10, "Este campo é obrigatório!")),
     shortDescription: z
       .string()
-      .min(10, "Este campo é obrigatório!")
       .nullable()
-      .transform((v) => v ?? ""),
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(10, "Este campo é obrigatório!")),
   });
 
 export const PartnerSchema = z.object({
-  name: z.string().min(1, "Este campo é obrigatório!"),
-  phone: z.string().min(1, "Este campo é obrigatório!"),
+  name: z
+    .string()
+    .nullable()
+    .transform((v) => (v === null ? "" : v))
+    .pipe(z.string().min(1, "Este campo é obrigatório!")),
+  phone: z
+    .string()
+    .nullable()
+    .transform((v) => (v === null ? "" : v))
+    .pipe(z.string().min(1, "Este campo é obrigatório!")),
   email: z
     .string()
     .min(1, "Este campo é obrigatório!")
@@ -139,14 +110,25 @@ export const PartnerSchema = z.object({
 
 export const TeamDataSchema = () =>
   z.object({
-    mainResponsibleName: z.string().min(3, "Este campo é obrigatório!"),
-    contactNumber: z.string().min(5, "Este campo é obrigatório!"),
+    mainResponsibleName: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
+    contactNumber: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     mainResponsibleEmail: z
       .string()
       .min(1, "Este campo é obrigatório!")
       .email("E-mail não é válido!"),
-
-    employeesQuantity: z.string().min(1, "Este campo é obrigatório!"),
+    employeesQuantity: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     fullTimeEmployeesQuantity: z.coerce
       .number()
       .min(1, "Este campo é obrigatório!"),
@@ -160,10 +142,26 @@ export const ProductServiceDataSchema = () =>
       .refine((data) => data.length > 0, {
         message: "Selecione pelo menos um campo",
       }),
-    quantityOdsGoals: z.string().min(1, "Este campo é obrigatório!"),
-    problemThatIsSolved: z.string().min(1, "Este campo é obrigatório!"),
-    competitors: z.string().min(1, "Este campo é obrigatório!"),
-    competitiveDifferentiator: z.string().min(5, "Este campo é obrigatório!"),
+    quantityOdsGoals: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
+    problemThatIsSolved: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+    competitors: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+    competitiveDifferentiator: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
   });
 
 export const DeepTechDataSchema = () =>
@@ -177,15 +175,29 @@ export const GovernanceDataSchema = () =>
   z.object({
     isStartupOfficiallyRegistered: z
       .string()
-      .min(1, "Este campo é obrigatório!"),
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
     isTherePartnersAgreementSigned: z
       .string()
-      .min(1, "Este campo é obrigatório!"),
-    haveLegalAdvice: z.string().min(1, "Este campo é obrigatório!"),
-    haveAccountingConsultancy: z.string().min(1, "Este campo é obrigatório!"),
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+    haveLegalAdvice: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+    haveAccountingConsultancy: z
+      .string()
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
     relationshipsRegisteredInContract: z
       .string()
-      .min(1, "Este campo é obrigatório!"),
+      .nullable()
+      .transform((v) => (v === null ? "" : v))
+      .pipe(z.string().min(5, "Este campo é obrigatório!")),
   });
 
 export const InvestmentSchema = z
@@ -259,8 +271,16 @@ export const InvestmentSchema = z
 export const FinanceAndMarketDataSchema = () =>
   z
     .object({
-      payingCustomersQuantity: z.string().min(0, "Este campo é obrigatório!"),
-      activeCustomersQuantity: z.string().min(1, "Este campo é obrigatório!"),
+      payingCustomersQuantity: z
+        .string()
+        .nullable()
+        .transform((v) => (v === null ? "" : v))
+        .pipe(z.string().min(1, "Este campo é obrigatório!")),
+      activeCustomersQuantity: z
+        .string()
+        .nullable()
+        .transform((v) => (v === null ? "" : v))
+        .pipe(z.string().min(1, "Este campo é obrigatório!")),
       alreadyEarning: z.boolean().optional(),
       lastRevenue: z.string().optional(),
       lastSixMonthsRevenue: z.string().optional(),

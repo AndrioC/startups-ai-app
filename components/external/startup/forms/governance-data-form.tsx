@@ -87,6 +87,7 @@ export default function GovernanceDataForm() {
                 htmlFor="isStartupOfficiallyRegistered"
                 className="flex items-center mt-5"
               >
+                <span className="text-red-500">*</span>
                 <span className="text-gray-500">
                   A empresa está oficialmente registrada em seu país com um
                   contrato social?
@@ -115,6 +116,7 @@ export default function GovernanceDataForm() {
                 htmlFor="isTherePartnersAgreementSigned"
                 className="flex items-center mt-5"
               >
+                <span className="text-red-500">*</span>
                 <span className="text-gray-500">
                   Existe um Acordo de Sócios assinados pelos sócios?
                 </span>
@@ -142,6 +144,7 @@ export default function GovernanceDataForm() {
                 htmlFor="haveLegalAdvice"
                 className="flex items-center mt-5"
               >
+                <span className="text-red-500">*</span>
                 <span className="text-gray-500">
                   A Startup possui uma assessoria jurídica?
                 </span>
@@ -169,6 +172,7 @@ export default function GovernanceDataForm() {
                 htmlFor="haveAccountingConsultancy"
                 className="flex items-center mt-5"
               >
+                <span className="text-red-500">*</span>
                 <span className="text-gray-500">
                   A Startup possui uma assessoria contábil?
                 </span>
@@ -196,6 +200,7 @@ export default function GovernanceDataForm() {
                 htmlFor="relationshipsRegisteredInContract"
                 className="flex items-center mt-5"
               >
+                <span className="text-red-500">*</span>
                 <span className="text-gray-500">
                   Todas as relações com Clientes, Fornecedores, Parceiros e
                   Funcionários estão devidamente registrados em contrato?

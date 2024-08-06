@@ -6,6 +6,8 @@ import { z } from "zod";
 
 import { PartnerSchema } from "@/lib/schemas/schema-startup";
 
+import { Button } from "../../../../ui/button";
+
 type Partner = z.infer<typeof PartnerSchema>;
 
 type Props = {
@@ -360,17 +362,15 @@ export default function PartnersContainer({
           </div>
         </div>
       </div>
-      {index > 0 && (
-        <div className="flex justify-end">
-          <button
-            type="button"
-            className="text-gray-400 hover:text-gray-500"
-            onClick={() => remove(index)}
-          >
-            <FaTrash />
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <Button
+          variant="ghost"
+          className="text-gray-400 hover:text-gray-500"
+          onClick={() => remove(index)}
+        >
+          <FaTrash />
+        </Button>
+      </div>
     </div>
   );
 }
