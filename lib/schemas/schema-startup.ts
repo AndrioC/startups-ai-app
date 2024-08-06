@@ -177,27 +177,27 @@ export const GovernanceDataSchema = () =>
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     isTherePartnersAgreementSigned: z
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     haveLegalAdvice: z
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     haveAccountingConsultancy: z
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
     relationshipsRegisteredInContract: z
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, "Este campo é obrigatório!")),
+      .pipe(z.string().min(1, "Este campo é obrigatório!")),
   });
 
 export const InvestmentSchema = z
