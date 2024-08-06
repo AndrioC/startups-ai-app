@@ -14,7 +14,7 @@ export async function updateProfileUpdated(startupId: number) {
   if (
     startup.profile_filled_percentage === null ||
     startup.profile_filled_percentage !== 100 ||
-    startup.fully_completed_profile === true
+    startup.fully_completed_profile !== true
   ) {
     return;
   }
