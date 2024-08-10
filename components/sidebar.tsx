@@ -31,7 +31,7 @@ export default function SideBar({ children }: PropsWithChildren) {
       <div className="flex">
         <div
           className={`fixed ${
-            isSidebarOpen ? "w-64" : "w-20"
+            isSidebarOpen ? "w-72" : "w-20"
           } h-screen bg-white border-r-[1px] flex flex-col justify-between transition-all ease-in-out duration-300`}
         >
           <div className="flex flex-col items-center space-y-4">
@@ -55,7 +55,6 @@ export default function SideBar({ children }: PropsWithChildren) {
                   currentRoute={currentRoute}
                   isSidebarOpen={isSidebarOpen}
                   size={20}
-                  strokeWidth={value.strokeWidth}
                 />
               ))}
             </div>

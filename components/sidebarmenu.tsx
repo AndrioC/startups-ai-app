@@ -8,7 +8,6 @@ interface SidebarLinkProps {
   currentRoute: string;
   isSidebarOpen: boolean;
   size: number;
-  strokeWidth: number;
 }
 
 export default function SidebarMenu({
@@ -18,33 +17,56 @@ export default function SidebarMenu({
   currentRoute,
   isSidebarOpen,
   size,
-  strokeWidth,
 }: SidebarLinkProps) {
+  const isActive = currentRoute === href;
+
   return (
     <Link href={href}>
       <div
-        className={`flex ${
-          isSidebarOpen ? "w-64" : "w-full"
-        } hover:bg-gray-100 cursor-pointer my-1 p-3 rounded-lg items-center`}
+        className={`relative flex items-center group ${
+          isActive ? "bg-blue-50" : ""
+        } h-12`}
       >
-        <div className="flex items-center">
-          {React.cloneElement(icon, {
-            size,
-            className: `${
-              currentRoute === href
-                ? `text-blue-400 stroke-[${strokeWidth}]`
-                : "text-gray-400"
-            } ${icon.props.className || ""}`,
-          })}
-          <span
-            className={`${isSidebarOpen ? "flex ml-2" : "hidden"} ${
-              currentRoute === href
-                ? "text-blue-400 font-medium"
-                : "text-gray-400"
+        {isActive && (
+          <>
+            {isSidebarOpen ? (
+              <div className="absolute left-0 w-9 overflow-hidden inline-block">
+                <div className="h-9 w-8 bg-[#2292EA] border border-[#2292EA] rounded-lg rotate-45 -translate-x-[23px]"></div>
+              </div>
+            ) : (
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#2292EA]"></div>
+            )}
+          </>
+        )}
+        <div
+          className={`flex ${
+            isSidebarOpen ? "w-72" : "w-full"
+          } cursor-pointer items-center ${isSidebarOpen ? "py-2 px-4" : "px-[30px]"} h-full`}
+        >
+          <div
+            className={`flex items-center w-full ${
+              isSidebarOpen ? "ml-8" : "p-0"
             }`}
           >
-            {text}
-          </span>
+            <div
+              className={`flex-shrink-0 ${
+                isActive ? "text-[#2292EA]" : "text-gray-400"
+              }`}
+            >
+              {React.cloneElement(icon, { size })}
+            </div>
+            {isSidebarOpen && (
+              <span
+                className={`ml-4 ${
+                  isActive
+                    ? "text-[#2292EA] font-medium"
+                    : "text-gray-500 font-normal"
+                }`}
+              >
+                {text}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </Link>
