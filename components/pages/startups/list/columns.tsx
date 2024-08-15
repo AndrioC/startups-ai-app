@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Badge, Tooltip } from "@radix-ui/themes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -11,14 +10,6 @@ import { type ColumnDef } from "unstyled-table";
 import { type StartupTable } from "@/app/api/startup/route";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -158,7 +149,6 @@ export const startupColumns: ColumnDef<StartupTable, unknown>[] = [
 ];
 
 const StartupActionsDropdown = ({ startup }: { startup: StartupTable }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
   const approvalValue = startup.is_approved ? false : true;
   const onSubmit = async () => {
@@ -198,85 +188,8 @@ const StartupActionsDropdown = ({ startup }: { startup: StartupTable }) => {
             {startup.is_approved ? "Reprove" : "Approve"}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="cursor-pointer text-blue-500 hover:text-blue-700"
-            role="button"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Details
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-h-[600px] overflow-y-auto min-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Detalhes</DialogTitle>
-          </DialogHeader>
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-          >
-            <label htmlFor="startup" className="flex items-center">
-              <span>Startup</span>
-            </label>
-            <input
-              id="startup"
-              value={startup.name}
-              type="text"
-              className="h-8 lg:h-11 px-4 border rounded-md"
-              disabled
-            />
-            <label htmlFor="description" className="flex items-center">
-              <span>Descrição</span>
-            </label>
-            <textarea
-              id="description"
-              value={startup.short_description}
-              rows={4}
-              className="px-4 border rounded-md resize-none h-[120px]"
-              disabled
-            />
-            <label htmlFor="valueProposal" className="flex items-center">
-              <span>Proposta de valor</span>
-            </label>
-            <textarea
-              id="valueProposal"
-              value={startup.value_proposal}
-              rows={4}
-              className="px-4 border rounded-md resize-none h-[120px]"
-              disabled
-            />
-            <label htmlFor="problemSolved" className="flex items-center">
-              <span>Problema que resolve</span>
-            </label>
-            <textarea
-              id="problemSolved"
-              value={startup.problem_that_is_solved}
-              rows={4}
-              className="px-4 border rounded-md resize-none h-[120px]"
-              disabled
-            />
-            <label
-              htmlFor="competitiveDifferentiator"
-              className="flex items-center"
-            >
-              <span>Diferença dos competidores</span>
-            </label>
-            <textarea
-              id="competitiveDifferentiator"
-              value={startup.competitive_differentiator}
-              rows={4}
-              className="px-4 border rounded-md resize-none h-[120px]"
-              disabled
-            />
-          </form>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button>Ok</Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

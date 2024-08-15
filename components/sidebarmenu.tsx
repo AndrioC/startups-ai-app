@@ -18,7 +18,7 @@ export default function SidebarMenu({
   isSidebarOpen,
   size,
 }: SidebarLinkProps) {
-  const isActive = currentRoute === href;
+  const isActive = currentRoute.includes(href);
 
   return (
     <Link href={href}>

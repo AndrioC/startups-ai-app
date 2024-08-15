@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import sha1 from "crypto-js/sha1";
 import {
   ChevronDown,
   ChevronLeft,
@@ -68,7 +69,6 @@ export function StartupTableComponent({
     retry: 3,
   });
 
-  // create query string
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -189,7 +189,22 @@ export function StartupTableComponent({
               )}
             </TableBody>
           ),
-          bodyRow: ({ children }) => <TableRow>{children}</TableRow>,
+          bodyRow: ({ children, row }) => (
+            <TableRow
+              className="cursor-pointer"
+              onClick={(e) => {
+                const url = `startups/startup/${sha1(row.original.id.toString()).toString()}`;
+
+                if (e.metaKey || e.ctrlKey) {
+                  window.open(url, "_blank");
+                } else {
+                  router.push(url);
+                }
+              }}
+            >
+              {children}
+            </TableRow>
+          ),
           bodyCell: ({ children }) => (
             <TableCell>
               {isPending ? <Skeleton className="h-6 w-20" /> : children}

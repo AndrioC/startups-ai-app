@@ -1,10 +1,8 @@
 import { programs } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 
+import { auth } from "@/auth";
 import prisma from "@/prisma/client";
-
-import { auth } from "../../../../../auth";
 
 export async function GET(
   request: NextRequest,
@@ -16,12 +14,12 @@ export async function GET(
   const token = url.searchParams.get("token");
 
   const programInfoByToken: programs[] = await prisma.$queryRaw`
-      SELECT
-        *
-      FROM
-        programs p
-      WHERE
-        encode(digest(CAST(id AS text), 'sha1'), 'hex') = ${token};
+    SELECT
+      *
+    FROM
+      programs p
+    WHERE
+      encode(digest(CAST(id AS text), 'sha1'), 'hex') = ${token};
   `;
 
   return NextResponse.json(
