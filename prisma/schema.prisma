@@ -207,6 +207,7 @@ model startups {
   round_start_date                             DateTime?
   round_end_date                               DateTime?
   startup_profile                              String?
+  score_classification                         Float?
   fully_completed_profile                      Boolean   @default(false)
   profile_filled_percentage                    Float?    @default(0.0)
   profile_updated                              Boolean   @default(false)
@@ -350,6 +351,7 @@ model investors {
   deleted_at                                  DateTime?
   free_subscription_expires_at                DateTime?
   deleted_by                                  Int?
+  score_classification                        Float?
   investor_investiment_stages                 investor_investiment_stages[]
   investor_vertical                           investor_vertical[]
   investor_business_model                     investor_business_model[]
@@ -426,6 +428,7 @@ model experts {
   experience_with_startups_en        String?
   participation_acceleration_program String?
   expert_profile                     String?
+  score_classification               Float?
   plan                               String               @default("free")
   is_deleted                         Boolean              @default(false)
   was_processed                      Boolean              @default(false)
