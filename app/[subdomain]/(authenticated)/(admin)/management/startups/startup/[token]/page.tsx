@@ -37,6 +37,7 @@ export default function StartupDetailPage() {
           ...data.blocks.deepTech,
           ...data.blocks.governance,
           ...data.blocks.marketFinance,
+          ...data.blocks.profile,
         }}
         selectData={selectData!}
       >

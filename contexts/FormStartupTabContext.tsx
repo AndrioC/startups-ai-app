@@ -85,6 +85,8 @@ export interface FormStartupData {
   roundStartDate: Date;
   roundEndDate: Date;
   investments?: Investment[];
+
+  startupProfile: string;
 }
 
 interface FormStartupTabContext {
@@ -175,6 +177,8 @@ const initialFormStartupData: FormStartupData = {
       investors: "",
     },
   ],
+
+  startupProfile: "",
 };
 
 const FormStartupTabContext = createContext<FormStartupTabContext>({

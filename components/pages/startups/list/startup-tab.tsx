@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import GeneralDataTab from "./tabs/general-data-tab";
 import GovernanceDataTab from "./tabs/governance-data-tab";
 import MarketFinanceDataTab from "./tabs/market-finance-data-tab/market-finance-data-tab";
 import ProductServiceDataTab from "./tabs/product-service-data-tab";
+import ProfileDataTab from "./tabs/profile-data-tab/profile-data-tab";
 import TeamDataTab from "./tabs/team-data-tab/team-data-tab";
 
 export default function StartupTab() {
@@ -38,6 +39,7 @@ export default function StartupTab() {
     <DeepTechDataTab key={"deeptech-tab"} />,
     <GovernanceDataTab key={"governance-tab"} />,
     <MarketFinanceDataTab key={"market-finance-tab"} />,
+    <ProfileDataTab key="profile-tab" />,
   ];
 
   const handleTabChange = (id: string) => {
@@ -67,10 +69,26 @@ export default function StartupTab() {
           <div key={index} className="relative">
             <button
               onClick={() => handleTabChange(tab.id)}
-              className={`px-4 py-2 ${
-                activeTab === tab.id ? "text-gray-800" : "text-gray-500"
+              className={`px-2 py-2 text-base flex items-center gap-1 ${
+                tab.disabled
+                  ? "text-gray-400 cursor-not-allowed"
+                  : activeTab === tab.id
+                    ? "text-gray-800"
+                    : "text-gray-500"
               }`}
+              disabled={tab.disabled}
+              style={{ minWidth: "100px" }}
             >
+              {tab.icon && (
+                <tab.icon
+                  className="w-4 h-4"
+                  style={
+                    tab.id === "profile-tab"
+                      ? { color: "#2292EA", fill: "#2292EA" }
+                      : {}
+                  }
+                />
+              )}
               {tab.title}
             </button>
             {activeTab === tab.id && (
@@ -98,4 +116,7 @@ const tabs = [
   { id: "deeptech-tab", title: "DeepTech" },
   { id: "governance-tab", title: "Governança" },
   { id: "market-finance-tab", title: "Mercado e Finança" },
+  { id: "matches-tab", title: "Matches", disabled: true },
+  { id: "historical-tab", title: "Histórico", disabled: true },
+  { id: "profile-tab", title: "Perfil", icon: Sparkles },
 ];
