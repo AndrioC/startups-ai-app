@@ -43,7 +43,7 @@ export default function StartupPage() {
           />
           <StartupMatchesCard />
         </aside>
-        <section className="flex-grow flex justify-center items-center mx-[54px]">
+        <section className="flex-grow flex justify-center items-center mx-[45px]">
           <FormStartupProvider
             initialData={{
               ...data.blocks.generalData,
@@ -52,6 +52,7 @@ export default function StartupPage() {
               ...data.blocks.deepTech,
               ...data.blocks.governance,
               ...data.blocks.marketFinance,
+              ...data.blocks.profile,
             }}
             refetch={refetch}
             actorId={Number(session?.user?.actor_id)}

@@ -13,3 +13,27 @@ body {
   color: #fff;
   -webkit-font-smoothing: antialiased;
 }
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3490dc #e5e7eb;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e5e7eb;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3490dc;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #1d72b8;
+}

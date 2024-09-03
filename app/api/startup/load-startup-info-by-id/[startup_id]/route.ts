@@ -217,6 +217,10 @@ export async function GET(
     investments,
   };
 
+  const profile: Block = {
+    startupProfile: startup?.startup_profile,
+  };
+
   const blocks: { [key: string]: Block } = {
     generalData,
     team,
@@ -224,6 +228,7 @@ export async function GET(
     deepTech,
     governance,
     marketFinance,
+    profile,
   };
 
   const blocksToCalculate = [

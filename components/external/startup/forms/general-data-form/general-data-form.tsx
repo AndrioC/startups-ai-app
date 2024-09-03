@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaEdit } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
+import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import { z } from "zod";
 
@@ -15,8 +16,10 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 
-import ImageCropDialog from "../image-crop-dialog";
-import { SelectDataProps } from "../startup-form";
+import ImageCropDialog from "../../image-crop-dialog";
+import { SelectDataProps } from "../../startup-form";
+
+import PitchdeckListModal from "./pitch-deck-list-modal";
 
 import "react-image-crop/dist/ReactCrop.css";
 
@@ -28,11 +31,13 @@ interface ValueProps {
 interface Props {
   data: SelectDataProps;
 }
+
 export default function GeneralDataForm({ data }: Props) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const queryClient = useQueryClient();
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [localLogoFile, setLocalLogoFile] = useState<File | null>(null);
   const [localPitchDeckFile, setLocalPitchDeckFile] = useState<File | null>(
@@ -71,14 +76,8 @@ export default function GeneralDataForm({ data }: Props) {
   }));
 
   const makeConnectionsOriginCountry = [
-    {
-      id: "yes",
-      label: "Sim",
-    },
-    {
-      id: "no",
-      label: "Não",
-    },
+    { id: "yes", label: "Sim" },
+    { id: "no", label: "Não" },
   ];
 
   const startupsObjectivesData: ValueProps[] = data.objectives.map((value) => ({
@@ -86,97 +85,24 @@ export default function GeneralDataForm({ data }: Props) {
     label: value.name_pt,
   }));
 
-  const sortedCountriesData = countriesData?.slice().sort((a, b) => {
-    const labelA = a.label.toUpperCase();
-    const labelB = b.label.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-  const sortedVerticalData = verticalData?.slice().sort((a, b) => {
-    const labelA = a.label.toUpperCase();
-    const labelB = b.label.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-  const sortedOperationalStage = operationalStageData?.slice().sort((a, b) => {
-    const labelA = a.label.toUpperCase();
-    const labelB = b.label.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-  const sortedBusinessModel = data.business_model.slice().sort((a, b) => {
-    const labelA = a.name.toUpperCase();
-    const labelB = b.name.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-  const sortedChallengesData = challengesData?.slice().sort((a, b) => {
-    const labelA = a.label.toUpperCase();
-    const labelB = b.label.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
-
+  const sortedCountriesData = countriesData
+    ?.slice()
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const sortedVerticalData = verticalData
+    ?.slice()
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const sortedOperationalStage = operationalStageData
+    ?.slice()
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const sortedBusinessModel = data.business_model
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const sortedChallengesData = challengesData
+    ?.slice()
+    .sort((a, b) => a.label.localeCompare(b.label));
   const sortedStartupsObjectives = startupsObjectivesData
     ?.slice()
-    .sort((a: any, b: any) => {
-      const labelA = a.label.toUpperCase();
-      const labelB = b.label.toUpperCase();
-
-      if (labelA < labelB) {
-        return -1;
-      }
-
-      if (labelA > labelB) {
-        return 1;
-      }
-
-      return 0;
-    });
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const {
     register,
@@ -255,9 +181,9 @@ export default function GeneralDataForm({ data }: Props) {
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex gap-10">
-        <div className="flex flex-col gap-1 text-xs lg:text-base">
+        <div className="flex flex-col gap-1 text-xs lg:text-base w-2/3">
           <div className="flex gap-10 mt-10">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="startupName" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Nome</span>
@@ -265,7 +191,7 @@ export default function GeneralDataForm({ data }: Props) {
               <input
                 id="startupName"
                 type="text"
-                className="border rounded-md w-[300px] h-[40px] pl-2"
+                className="border rounded-md w-full h-[40px] pl-2"
                 {...register("startupName")}
               />
               {errors.startupName?.message && (
@@ -274,7 +200,7 @@ export default function GeneralDataForm({ data }: Props) {
                 </p>
               )}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="country" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">País</span>
@@ -282,16 +208,14 @@ export default function GeneralDataForm({ data }: Props) {
               <select
                 id="country"
                 {...register("country")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option value="">País</option>
-                {sortedCountriesData.map(
-                  (option: { id: number; label: string }) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  )
-                )}
+                {sortedCountriesData.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
               {errors.country?.message && (
                 <p className="mt-2 text-sm text-red-400">
@@ -302,7 +226,7 @@ export default function GeneralDataForm({ data }: Props) {
           </div>
 
           <div className="flex gap-10 mt-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="vertical" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Vertical</span>
@@ -310,16 +234,14 @@ export default function GeneralDataForm({ data }: Props) {
               <select
                 id="vertical"
                 {...register("vertical")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option value="">Selecione uma opção</option>
-                {sortedVerticalData.map(
-                  (option: { id: number; label: string }) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  )
-                )}
+                {sortedVerticalData.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
               {errors.vertical?.message && (
                 <p className="mt-2 text-sm text-red-400">
@@ -327,7 +249,7 @@ export default function GeneralDataForm({ data }: Props) {
                 </p>
               )}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="stateAndCity" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Cidade/Estado</span>
@@ -335,7 +257,7 @@ export default function GeneralDataForm({ data }: Props) {
               <input
                 id="stateAndCity"
                 type="text"
-                className="border rounded-md w-[300px] h-[40px] pl-2"
+                className="border rounded-md w-full h-[40px] pl-2"
                 {...register("stateAndCity")}
               />
               {errors.stateAndCity?.message && (
@@ -345,8 +267,9 @@ export default function GeneralDataForm({ data }: Props) {
               )}
             </div>
           </div>
+
           <div className="flex gap-10 mt-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="operationalStage" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Estágio de operação</span>
@@ -354,16 +277,14 @@ export default function GeneralDataForm({ data }: Props) {
               <select
                 id="operationalStage"
                 {...register("operationalStage")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option value="">Selecione uma opção</option>
-                {sortedOperationalStage.map(
-                  (option: { id: number; label: string }) => (
-                    <option key={option.id} value={Number(option.id)}>
-                      {option.label}
-                    </option>
-                  )
-                )}
+                {sortedOperationalStage.map((option) => (
+                  <option key={option.id} value={Number(option.id)}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
               {errors.operationalStage?.message && (
                 <p className="mt-2 text-sm text-red-400">
@@ -371,8 +292,7 @@ export default function GeneralDataForm({ data }: Props) {
                 </p>
               )}
             </div>
-
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="businessModel" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Modelo de negócio</span>
@@ -380,7 +300,7 @@ export default function GeneralDataForm({ data }: Props) {
               <select
                 id="businessModel"
                 {...register("businessModel")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option value="">Selecione uma opção</option>
                 {sortedBusinessModel.map((option) => (
@@ -398,7 +318,7 @@ export default function GeneralDataForm({ data }: Props) {
           </div>
 
           <div className="flex gap-10 mt-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="subscriptionNumber" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">CNPJ</span>
@@ -406,7 +326,7 @@ export default function GeneralDataForm({ data }: Props) {
               <input
                 id="subscriptionNumber"
                 type="text"
-                className="border rounded-md w-[300px] h-[40px] pl-2"
+                className="border rounded-md w-full h-[40px] pl-2"
                 {...register("subscriptionNumber")}
               />
               {errors.subscriptionNumber?.message && (
@@ -415,12 +335,10 @@ export default function GeneralDataForm({ data }: Props) {
                 </p>
               )}
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-1/2">
               <label htmlFor="foundationDate" className="flex items-center">
-                <div>
-                  <span className="text-red-500">*</span>
-                  <span className="text-gray-500">Data fundação</span>
-                </div>
+                <span className="text-red-500">*</span>
+                <span className="text-gray-500">Data fundação</span>
               </label>
               <Controller
                 control={control}
@@ -443,7 +361,7 @@ export default function GeneralDataForm({ data }: Props) {
           </div>
 
           <div className="flex gap-10 mt-5">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <label htmlFor="referenceLink" className="flex items-center">
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">Site</span>
@@ -451,7 +369,7 @@ export default function GeneralDataForm({ data }: Props) {
               <input
                 id="referenceLink"
                 type="text"
-                className="border rounded-md w-[300px] h-[40px] pl-2"
+                className="border rounded-md w-full h-[40px] pl-2"
                 {...register("referenceLink")}
               />
               {errors.referenceLink?.message && (
@@ -460,20 +378,19 @@ export default function GeneralDataForm({ data }: Props) {
                 </p>
               )}
             </div>
-            <div className="flex flex-col">
-              <label htmlFor="loadPitchDeck" className="flex items-center">
-                <div className="flex flex-col">
-                  <div>
-                    <span className="text-red-500">*</span>
-                    <span className="text-gray-500">Pitchdeck</span>
-                  </div>
-                </div>
-              </label>
+          </div>
+
+          <div className="flex flex-col mt-5">
+            <label htmlFor="loadPitchDeck" className="flex items-center">
+              <span className="text-red-500">*</span>
+              <span className="text-gray-500">Pitchdeck</span>
+            </label>
+            <div className="flex items-center gap-20">
               <Controller
                 name="loadPitchDeck"
                 control={control}
                 render={({ field: { ref, name, onBlur, onChange } }) => (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-grow">
                     <input
                       type="file"
                       ref={ref}
@@ -488,69 +405,74 @@ export default function GeneralDataForm({ data }: Props) {
                         onChange(selectedFile);
                       }}
                     />
-                    {localPitchDeckFile || pitchDeckFile ? (
-                      <div className="relative flex items-center space-x-2 font-medium">
-                        <div className="flex items-center justify-between w-[300px]">
-                          <span
-                            className="text-blue-500 cursor-pointer"
-                            title={
-                              localPitchDeckFile
-                                ? localPitchDeckFile.name
-                                : pitchDeckFile || ""
-                            }
-                            onClick={() =>
-                              window.open(
-                                localPitchDeckFile
-                                  ? URL.createObjectURL(localPitchDeckFile)
-                                  : pitchDeckFile,
-                                "_blank"
-                              )
-                            }
-                          >
-                            {truncateFileName(
-                              localPitchDeckFile
-                                ? localPitchDeckFile.name
-                                : pitchDeckFile || "",
-                              30
-                            )}
-                          </span>
-                          <div
-                            className="flex absolute right-[-30px] items-center justify-center w-9 h-9 bg-gray-500 rounded-full cursor-pointer"
-                            onClick={() =>
-                              document.getElementById(name)?.click()
-                            }
-                          >
-                            <FaEdit className="text-white" />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
+                    <div className="relative flex items-center space-x-2 font-medium flex-grow">
                       <span
-                        className="text-gray-500 cursor-pointer"
+                        className="text-blue-500 cursor-pointer truncate flex-grow"
+                        title={
+                          localPitchDeckFile
+                            ? localPitchDeckFile.name
+                            : pitchDeckFile || ""
+                        }
+                        onClick={() =>
+                          window.open(
+                            localPitchDeckFile
+                              ? URL.createObjectURL(localPitchDeckFile)
+                              : pitchDeckFile,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {truncateFileName(
+                          localPitchDeckFile
+                            ? localPitchDeckFile.name
+                            : pitchDeckFile || "Selecionar arquivo",
+                          30
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-9 h-9 bg-gray-500 rounded-full cursor-pointer"
                         onClick={() => document.getElementById(name)?.click()}
                       >
-                        Selecionar arquivo
-                      </span>
-                    )}
+                        <FaEdit className="text-white" />
+                      </button>
+                    </div>
                   </div>
                 )}
               />
-              {errors.loadPitchDeck?.message && (
-                <p className="mt-2 text-sm text-red-400">
-                  {errors.loadPitchDeck.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col mt-10 ml-10">
-          <label htmlFor="loadLogo" className="flex items-center">
-            <div className="flex flex-col">
-              <div>
-                <span className="text-red-500">*</span>
-                <span className="text-gray-500">Logo</span>
+              <div className="flex flex-col">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+                  onClick={() => {
+                    console.log("Generate Pitchdeck clicked");
+                  }}
+                >
+                  <Sparkles size={20} />
+                  GERAR PITCHDECK
+                </Button>
+                <Button
+                  variant="link"
+                  className="text-blue-500 hover:text-blue-700 text-xs"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  VER PITCHDECKS GERADOS
+                </Button>
               </div>
             </div>
+            {errors.loadPitchDeck?.message && (
+              <p className="mt-2 text-sm text-red-400">
+                {errors.loadPitchDeck.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col mt-10 w-1/3">
+          <label htmlFor="loadLogo" className="flex items-center">
+            <span className="text-red-500">*</span>
+            <span className="text-gray-500">Logo</span>
           </label>
           <Controller
             name="loadLogo"
@@ -600,6 +522,7 @@ export default function GeneralDataForm({ data }: Props) {
           )}
         </div>
       </div>
+
       <div className="flex flex-col w-full">
         <label htmlFor="startupChallenges" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
@@ -657,6 +580,7 @@ export default function GeneralDataForm({ data }: Props) {
           </p>
         )}
       </div>
+
       <div className="flex flex-col w-full">
         <label htmlFor="startupObjectives" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
@@ -714,6 +638,7 @@ export default function GeneralDataForm({ data }: Props) {
           </p>
         )}
       </div>
+
       <div>
         <label
           htmlFor="connectionsOnlyOnStartupCountryOrigin"
@@ -744,6 +669,7 @@ export default function GeneralDataForm({ data }: Props) {
           </p>
         )}
       </div>
+
       <div>
         <label htmlFor="valueProposal" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
@@ -757,11 +683,6 @@ export default function GeneralDataForm({ data }: Props) {
           className="border rounded-md resize-none h-[70px] w-full pl-2"
           maxLength={200}
           {...register("valueProposal")}
-          // onChange={(e) =>
-          //   updateFormData({
-          //     valueProposal: e.target.value,
-          //   })
-          // }
         />
         {errors.valueProposal?.message && (
           <p className="mt-2 text-sm text-red-400">
@@ -769,6 +690,7 @@ export default function GeneralDataForm({ data }: Props) {
           </p>
         )}
       </div>
+
       <div>
         <label htmlFor="shortDescription" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
@@ -791,7 +713,8 @@ export default function GeneralDataForm({ data }: Props) {
           </p>
         )}
       </div>
-      <div className="flex justify-end absolute bottom-10 right-5">
+
+      <div className="flex justify-end">
         <Button
           type="submit"
           variant="blue"
@@ -801,11 +724,16 @@ export default function GeneralDataForm({ data }: Props) {
           Salvar
         </Button>
       </div>
+
       <ImageCropDialog
         isOpen={isCropDialogOpen}
         setIsOpen={setIsCropDialogOpen}
         imageToCrop={imageToCrop}
         onCropComplete={handleCroppedImage}
+      />
+      <PitchdeckListModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </form>
   );

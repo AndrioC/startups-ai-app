@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
+import { Sparkles } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -19,8 +20,10 @@ import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { FinanceAndMarketDataSchema } from "@/lib/schemas/schema-startup";
 
 import InvestmentsContainer from "./investments-container";
+import ValuationListModal from "./valuation-list-modal";
 export default function MarketFinanceDataForm() {
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
 
@@ -88,7 +91,29 @@ export default function MarketFinanceDataForm() {
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col">
         <div className="flex flex-col text-xs lg:text-base w-full mt-5">
-          <span className="text-gray-500 font-bold text-xl mb-5">MERCADO</span>
+          <div className="flex justify-between items-center mb-5">
+            <span className="text-gray-500 font-bold text-xl">MERCADO</span>
+            <div className="flex flex-col">
+              <Button
+                type="button"
+                variant="outline"
+                className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+                onClick={() => {
+                  console.log("Generate Pitchdeck clicked");
+                }}
+              >
+                <Sparkles size={20} />
+                GERAR VALUATION
+              </Button>
+              <Button
+                variant="link"
+                className="text-blue-500 hover:text-blue-700 text-xs"
+                onClick={() => setIsModalOpen(true)}
+              >
+                VER VALUATIONS GERADOS
+              </Button>
+            </div>
+          </div>
           <div className="flex items-center gap-5">
             <div className="flex flex-col">
               <label
@@ -256,7 +281,7 @@ export default function MarketFinanceDataForm() {
             </div>
             {isThereOpenInvestmentRound && (
               <>
-                <div className="flex gap-5">
+                <div className="flex gap-2">
                   <div className="flex flex-col">
                     <label
                       htmlFor="valueCollection"
@@ -326,7 +351,7 @@ export default function MarketFinanceDataForm() {
                     )}
                   </div>
                 </div>
-                <div className="flex gap-5">
+                <div className="flex gap-2">
                   <div className="flex flex-col">
                     <label
                       htmlFor="roundStartDate"
@@ -349,6 +374,7 @@ export default function MarketFinanceDataForm() {
                           <DatePicker
                             onChange={(newValue) => field.onChange(newValue)}
                             value={field.value || undefined}
+                            className="w-[270px]"
                           />
                         );
                       }}
@@ -420,6 +446,10 @@ export default function MarketFinanceDataForm() {
             </button>
           </div>
         </div>
+        <ValuationListModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
       <div className="flex justify-end absolute bottom-10 right-5">
         <Button

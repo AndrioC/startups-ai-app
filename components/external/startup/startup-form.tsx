@@ -14,13 +14,15 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import DeepTechDataForm from "./forms/deep-tech-data-form";
-import GeneralDataForm from "./forms/general-data-form";
+import GeneralDataForm from "./forms/general-data-form/general-data-form";
 import GovernanceDataForm from "./forms/governance-data-form";
 import MarketFinanceDataForm from "./forms/market-finance-data-form/market-finance-data-form";
 import ProductServiceDataForm from "./forms/product-service-data-form";
+import ProfileDataForm from "./forms/profile-data-form/profile-data-form";
 import TeamDataForm from "./forms/team-data-form/team-data-form";
 
 export interface SelectDataProps {
@@ -33,7 +35,6 @@ export interface SelectDataProps {
   position: position[];
   service_products: service_products[];
   maturity_level: maturity_level[];
-  // investiment_stages: investiment_stages[];
 }
 
 export default function StartupForm() {
@@ -42,7 +43,7 @@ export default function StartupForm() {
   const tabQuery = searchParams.get("tab");
 
   const defaultTab = "general-data";
-  const isValidTab = tabs.some((tab) => tab.id === tabQuery);
+  const isValidTab = tabs.some((tab) => tab.id === tabQuery && !tab.disabled);
   const initialTab = isValidTab ? tabQuery : defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -62,6 +63,7 @@ export default function StartupForm() {
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
       </div>
     );
+
   const tabContents = [
     <GeneralDataForm key={"general-data"} data={data!} />,
     <TeamDataForm key={"team"} data={data!} />,
@@ -69,13 +71,17 @@ export default function StartupForm() {
     <DeepTechDataForm key={"deeptech"} data={data!} />,
     <GovernanceDataForm key={"governance"} />,
     <MarketFinanceDataForm key={"market-finance"} />,
+    <ProfileDataForm key={"profile"} />,
   ];
 
   const handleTabChange = (id: string) => {
-    setActiveTab(id);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", id);
-    router.push(`?${params.toString()}`);
+    const selectedTab = tabs.find((tab) => tab.id === id);
+    if (selectedTab && !selectedTab.disabled) {
+      setActiveTab(id);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", id);
+      router.push(`?${params.toString()}`);
+    }
   };
 
   return (
@@ -85,13 +91,29 @@ export default function StartupForm() {
           <div key={index} className="relative">
             <button
               onClick={() => handleTabChange(tab.id)}
-              className={`px-4 py-2 ${
-                activeTab === tab.id ? "text-gray-800" : "text-gray-500"
+              className={`px-4 py-2 text-sm flex items-center gap-1 whitespace-nowrap ${
+                tab.disabled
+                  ? "text-gray-400 cursor-not-allowed"
+                  : activeTab === tab.id
+                    ? "text-gray-800"
+                    : "text-gray-500"
               }`}
+              disabled={tab.disabled}
+              style={{ minWidth: "100px" }}
             >
+              {tab.icon && (
+                <tab.icon
+                  className="w-4 h-4"
+                  style={
+                    tab.id === "profile"
+                      ? { color: "#2292EA", fill: "#2292EA" }
+                      : {}
+                  }
+                />
+              )}
               {tab.title}
             </button>
-            {activeTab === tab.id && (
+            {activeTab === tab.id && !tab.disabled && (
               <motion.div
                 layoutId="underline"
                 className="absolute bottom-[-6px] left-0 w-full h-1 bg-gray-400"
@@ -116,6 +138,8 @@ const tabs = [
   { id: "deeptech", title: "DeepTech" },
   { id: "governance", title: "Governança" },
   { id: "market-finance", title: "Mercado e Finança" },
+  { id: "matchmaking", title: "Matchmaking", disabled: true },
+  { id: "profile", title: "Perfil", icon: Sparkles },
 ];
 
 const useSelectData = () =>
