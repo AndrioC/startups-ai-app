@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,12 @@ export default function ProfileDataForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { initialData } = useFormStartupDataState();
+
+  const handleUpdateProfileClick = () => {
+    toast.info(
+      "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
+    );
+  };
 
   if (!initialData.startupProfile) {
     return (
@@ -46,9 +53,7 @@ export default function ProfileDataForm() {
             type="button"
             variant="outline"
             className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
-            onClick={() => {
-              console.log("Generate Pitchdeck clicked");
-            }}
+            onClick={handleUpdateProfileClick}
           >
             <Sparkles size={20} />
             ATUALIZAR PERFIL
@@ -57,6 +62,7 @@ export default function ProfileDataForm() {
             variant="link"
             className="text-blue-500 hover:text-blue-700 text-xs"
             onClick={() => setIsModalOpen(true)}
+            disabled
           >
             VER PERFIS GERADOS
           </Button>

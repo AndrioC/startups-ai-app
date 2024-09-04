@@ -7,6 +7,7 @@ import {
   useForm,
   UseFormRegister,
 } from "react-hook-form";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -87,6 +88,12 @@ export default function MarketFinanceDataForm() {
     },
   });
 
+  const handleGenerateValuationClick = () => {
+    toast.info(
+      "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
+    );
+  };
+
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col">
@@ -98,9 +105,7 @@ export default function MarketFinanceDataForm() {
                 type="button"
                 variant="outline"
                 className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
-                onClick={() => {
-                  console.log("Generate Pitchdeck clicked");
-                }}
+                onClick={handleGenerateValuationClick}
               >
                 <Sparkles size={20} />
                 GERAR VALUATION
@@ -109,6 +114,7 @@ export default function MarketFinanceDataForm() {
                 variant="link"
                 className="text-blue-500 hover:text-blue-700 text-xs"
                 onClick={() => setIsModalOpen(true)}
+                disabled
               >
                 VER VALUATIONS GERADOS
               </Button>
