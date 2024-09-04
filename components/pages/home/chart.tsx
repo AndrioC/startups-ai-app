@@ -92,6 +92,8 @@ export default function Chart({ data, selectedMetric }: ChartProps) {
               (3 * roundedMaxValue) / 4,
               roundedMaxValue,
             ]}
+            width={40}
+            allowDecimals={false}
           />
           <Tooltip<number, string>
             content={(props) => (
