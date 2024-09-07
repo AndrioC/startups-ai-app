@@ -44,7 +44,10 @@ export default function HeaderAdmin() {
     if (session?.user?.user_logo_img) {
       setAvatarUrl(session.user.user_logo_img);
     }
-  }, [session?.user?.user_logo_img]);
+    if (session?.user?.name) {
+      setUserName(session.user.name);
+    }
+  }, [session?.user?.user_logo_img, session?.user?.name]);
 
   const lastAccessFormatted = useMemo(() => {
     if (session?.user?.last_access) {
@@ -74,16 +77,29 @@ export default function HeaderAdmin() {
     setIsProfileModalOpen(false);
   };
 
-  const handleUpdateProfile = async (name: string, newAvatarUrl: string) => {
-    setUserName(name);
-    if (newAvatarUrl) {
+  const handleUpdateProfile = async (
+    name: string | null,
+    newAvatarUrl: string | null
+  ) => {
+    const updatedUser = { ...session?.user };
+    let shouldUpdate = false;
+
+    if (name !== null && name !== userName) {
+      setUserName(name);
+      updatedUser.name = name;
+      shouldUpdate = true;
+    }
+
+    if (newAvatarUrl !== null && newAvatarUrl !== avatarUrl) {
       setAvatarUrl(newAvatarUrl);
+      updatedUser.user_logo_img = newAvatarUrl;
+      shouldUpdate = true;
+    }
+
+    if (shouldUpdate) {
       await update({
         ...session,
-        user: {
-          ...session?.user,
-          user_logo_img: newAvatarUrl,
-        },
+        user: updatedUser,
       });
     }
   };
