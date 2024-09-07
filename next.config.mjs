@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "organizations-imgs.s3.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "user-sgl-imgs.s3.amazonaws.com",
+      },
     ],
   },
 };

@@ -369,6 +369,7 @@ export default function SettingsComponent() {
                           alt="Logo preview"
                           layout="fill"
                           objectFit="contain"
+                          unoptimized
                         />
                       ) : (
                         <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400">
@@ -399,6 +400,7 @@ export default function SettingsComponent() {
                           alt="Logo sidebar preview"
                           layout="fill"
                           objectFit="contain"
+                          unoptimized
                         />
                       ) : (
                         <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400 text-xs cursor-pointer">
