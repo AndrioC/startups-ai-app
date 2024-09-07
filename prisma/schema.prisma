@@ -256,6 +256,7 @@ model user {
   expert_id           Int?
   type                UserType
   name                String
+  logo_img            String?
   email               String
   hashed_password     String
   accepted_terms      Boolean   @default(false)
@@ -276,6 +277,7 @@ model user {
   createdKanban                                  kanbans[]                                        @relation("KanbanCreatedBy")
   deletedKanban                                  kanbans[]                                        @relation("KanbanDeletedBy")
   investors_startus_matchmaking_analysis_history investors_startus_matchmaking_analysis_history[]
+  user_access                                    user_access[]
 
   @@unique([email, organization_id])
 }
@@ -654,4 +656,13 @@ model investors_startus_matchmaking_analysis_history {
   investor        investors @relation(fields: [investor_id], references: [id])
   startup         startups  @relation(fields: [startup_id], references: [id])
   requesting_user user      @relation(fields: [requesting_user_id], references: [id])
+}
+
+model user_access {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  user      user     @relation(fields: [user_id], references: [id])
+  timestamp DateTime @default(now())
+
+  @@index([user_id])
 }

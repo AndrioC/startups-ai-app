@@ -102,7 +102,7 @@ export default async function middleware(req: NextRequest) {
 
     if (req.nextUrl.pathname === "/auth/login" && session?.user) {
       let redirectTo;
-      if (session.user.isAdmin) {
+      if (session.user.isSGL || session.user.isAdmin) {
         redirectTo = "/management/home";
       } else if (session.user.isInvestor) {
         redirectTo = "/investor";
@@ -122,16 +122,20 @@ export default async function middleware(req: NextRequest) {
     }
 
     if (session?.user) {
-      if (
-        req.nextUrl.pathname.startsWith("/management") &&
-        !session.user.isAdmin
-      ) {
-        return new Response(accessDeniedHTML, {
-          status: 403,
-          headers: {
-            "Content-Type": "text/html",
-          },
-        });
+      if (req.nextUrl.pathname.startsWith("/management")) {
+        if (req.nextUrl.pathname.startsWith("/management/companies")) {
+          if (!session.user.isSGL) {
+            return new Response(accessDeniedHTML, {
+              status: 403,
+              headers: { "Content-Type": "text/html" },
+            });
+          }
+        } else if (!session.user.isSGL && !session.user.isAdmin) {
+          return new Response(accessDeniedHTML, {
+            status: 403,
+            headers: { "Content-Type": "text/html" },
+          });
+        }
       }
 
       if (
@@ -140,9 +144,7 @@ export default async function middleware(req: NextRequest) {
       ) {
         return new Response(accessDeniedHTML, {
           status: 403,
-          headers: {
-            "Content-Type": "text/html",
-          },
+          headers: { "Content-Type": "text/html" },
         });
       }
 
@@ -152,9 +154,7 @@ export default async function middleware(req: NextRequest) {
       ) {
         return new Response(accessDeniedHTML, {
           status: 403,
-          headers: {
-            "Content-Type": "text/html",
-          },
+          headers: { "Content-Type": "text/html" },
         });
       }
 
@@ -164,9 +164,7 @@ export default async function middleware(req: NextRequest) {
       ) {
         return new Response(accessDeniedHTML, {
           status: 403,
-          headers: {
-            "Content-Type": "text/html",
-          },
+          headers: { "Content-Type": "text/html" },
         });
       }
     }

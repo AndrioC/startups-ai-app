@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
-import HeaderAdmin from "@/components/header-admin";
+import HeaderAdmin from "@/components/header/header-admin";
 import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";

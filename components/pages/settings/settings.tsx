@@ -5,7 +5,7 @@ import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, XSquare } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -62,6 +62,7 @@ const getCroppedImg = (
           reject(new Error("Canvas is empty"));
           return;
         }
+        XSquare;
         const file = new File([blob], fileName, { type: "image/png" });
         resolve(file);
       },
@@ -94,8 +95,6 @@ export default function SettingsComponent() {
   const { data: session } = useSession();
   const organizationId = session?.user?.organization_id;
   const { refreshAuthData } = useRefreshAuth();
-
-  console.log("organizationId: ", session);
 
   const tabQuery = searchParams.get("tab");
   const defaultTab = "general";

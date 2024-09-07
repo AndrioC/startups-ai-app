@@ -30,6 +30,9 @@ export async function POST() {
         email: user.email,
         organization_id: user.organization_id,
         type: user.type,
+        user_logo_img: user.logo_img
+          ? `https://${process.env.S3_USERS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${user.logo_img}`
+          : null,
         isSGL: user.type === "SGL",
         isAdmin: user.type === "ADMIN",
         isInvestor: user.type === "INVESTOR",

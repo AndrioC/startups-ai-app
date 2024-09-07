@@ -10,6 +10,8 @@ import prisma from "./prisma/client";
 const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
   process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME;
 
+const S3_USERS_IMGS_BUCKET_NAME = process.env.S3_USERS_IMGS_BUCKET_NAME;
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -48,6 +50,9 @@ export const {
         session.user.email = token.email!;
         session.user.organization_id = token.organization_id!;
         session.user.type = token.type!;
+        session.user.user_logo_img = token.user_logo_img
+          ? `https://${S3_USERS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.user_logo_img}`
+          : null;
 
         session.user.isSGL = token.type === "SGL";
         session.user.isAdmin = token.type === "ADMIN";
@@ -63,6 +68,8 @@ export const {
         session.user.logo_sidebar = token.logo_sidebar
           ? `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.logo_sidebar}`
           : null;
+
+        session.user.last_access = token?.last_access;
       }
 
       return session;
@@ -78,10 +85,19 @@ export const {
         where: { id: Number(existingUser.organization_id) },
       });
 
+      const penultimateAccess = await prisma.user_access.findMany({
+        where: { user_id: Number(token.sub) },
+        orderBy: { timestamp: "desc" },
+        take: 2,
+        skip: 1,
+        select: { timestamp: true },
+      });
+
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.organization_id = existingUser.organization_id;
       token.type = existingUser.type;
+      token.user_logo_img = existingUser.logo_img;
 
       token.isSGL = token.type === "SGL";
       token.isAdmin = existingUser.type === "ADMIN";
@@ -91,6 +107,8 @@ export const {
 
       token.logo_img = organization?.logo_img;
       token.logo_sidebar = organization?.logo_sidebar;
+
+      token.last_access = penultimateAccess[0]?.timestamp || null;
 
       switch (existingUser.type) {
         case "STARTUP":

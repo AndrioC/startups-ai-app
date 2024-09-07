@@ -12,8 +12,10 @@ declare module "next-auth" {
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    user_logo_img?: string | null;
     logo_img?: string | null;
     logo_sidebar?: string | null;
+    last_access?: Date | null;
   }
 
   interface User {
@@ -25,8 +27,10 @@ declare module "next-auth" {
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    user_logo_img?: string | null;
     logo_img?: string | null;
     logo_sidebar?: string | null;
+    last_access?: Date | null;
   }
 }
 
@@ -40,7 +44,9 @@ declare module "next-auth/jwt" {
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    user_logo_img?: string | null;
     logo_img?: string | null;
     logo_sidebar?: string | null;
+    last_access?: Date | null;
   }
 }

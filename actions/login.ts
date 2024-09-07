@@ -8,6 +8,8 @@ import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
 import { LoginSchema } from "@/lib/schemas/schema";
 
+import prisma from "../prisma/client";
+
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -43,7 +45,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       email,
       password,
       slug,
+      redirect: false,
     });
+
+    await prisma.user_access.create({
+      data: {
+        user_id: existingUser.id,
+      },
+    });
+
+    return { success: "Logged in successfully!", redirectPath };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -60,6 +71,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
 export const pageRedirect = (type: UserType): string => {
   switch (type) {
+    case UserType.SGL:
+      return "/management/home";
     case UserType.ADMIN:
       return "/management/home";
     case UserType.STARTUP:
