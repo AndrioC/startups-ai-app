@@ -7,6 +7,7 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+    domains: ["organizations-imgs.s3.amazonaws.com"],
   },
 };
 

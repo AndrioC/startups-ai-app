@@ -17,6 +17,7 @@ model organizations {
   slug_admin     String?     @unique
   payment_needed Boolean     @default(false)
   logo_img       String?
+  logo_sidebar   String?
   created_at     DateTime    @default(now())
   updated_at     DateTime    @default(now())
   user           user[]
@@ -244,6 +245,7 @@ enum UserType {
   MENTOR
   INVESTOR
   ADMIN
+  SGL
 }
 
 model user {

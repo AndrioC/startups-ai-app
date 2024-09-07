@@ -47,7 +47,7 @@ export default function HeaderExternalStartupComponent({
 
   return (
     <header className="w-full bg-[#B4D5EE] rounded-b-lg">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-2">
+      <div className="mx-auto flex items-center justify-between px-14 py-2">
         <Image src={logoSrc} alt={logoAlt} width={80} height={80} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -128,6 +128,10 @@ export default function Dashboard() {
     );
   }
 
+  if (!session) {
+    return null;
+  }
+
   if (!dashboardData) {
     return <div>Erro ao carregar dados</div>;
   }

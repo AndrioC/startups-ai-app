@@ -7,6 +7,9 @@ import { getUserById } from "@/data/user";
 
 import prisma from "./prisma/client";
 
+const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
+  process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME;
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -46,12 +49,20 @@ export const {
         session.user.organization_id = token.organization_id!;
         session.user.type = token.type!;
 
+        session.user.isSGL = token.type === "SGL";
         session.user.isAdmin = token.type === "ADMIN";
         session.user.isInvestor = token.type === "INVESTOR";
         session.user.isMentor = token.type === "MENTOR";
         session.user.isStartup = token.type === "STARTUP";
 
         session.user.actor_id = token.actor_id;
+
+        session.user.logo_img = token.logo_img
+          ? `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.logo_img}`
+          : null;
+        session.user.logo_sidebar = token.logo_sidebar
+          ? `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.logo_sidebar}`
+          : null;
       }
 
       return session;
@@ -63,15 +74,23 @@ export const {
 
       if (!existingUser) return token;
 
+      const organization = await prisma.organizations.findFirst({
+        where: { id: Number(existingUser.organization_id) },
+      });
+
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.organization_id = existingUser.organization_id;
       token.type = existingUser.type;
 
+      token.isSGL = token.type === "SGL";
       token.isAdmin = existingUser.type === "ADMIN";
       token.isInvestor = existingUser.type === "INVESTOR";
       token.isMentor = existingUser.type === "MENTOR";
       token.isStartup = existingUser.type === "STARTUP";
+
+      token.logo_img = organization?.logo_img;
+      token.logo_sidebar = organization?.logo_sidebar;
 
       switch (existingUser.type) {
         case "STARTUP":

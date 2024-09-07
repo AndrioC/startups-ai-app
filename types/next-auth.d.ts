@@ -7,20 +7,26 @@ declare module "next-auth" {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
+    isSGL: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    logo_img?: string | null;
+    logo_sidebar?: string | null;
   }
 
   interface User {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
+    isSGL: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    logo_img?: string | null;
+    logo_sidebar?: string | null;
   }
 }
 
@@ -29,9 +35,12 @@ declare module "next-auth/jwt" {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
+    isSGL: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
     actor_id?: number | null;
+    logo_img?: string | null;
+    logo_sidebar?: string | null;
   }
 }
