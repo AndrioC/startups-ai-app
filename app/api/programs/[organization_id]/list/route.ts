@@ -25,7 +25,10 @@ export async function GET(
   };
 
   if (programName) {
-    where.program_name = programName;
+    where.program_name = {
+      contains: programName,
+      mode: "insensitive",
+    };
   }
 
   if (programStartDate !== undefined && programStartDate !== null) {
