@@ -136,104 +136,106 @@ export default function FormProgramDialog({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30" />
         <Dialog.Content
-          className="fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-xl translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg p-6 shadow-lg focus:outline-none"
+          className="fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-xl translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg shadow-lg focus:outline-none overflow-hidden"
           onInteractOutside={(e) => {
             e.preventDefault();
           }}
         >
           <Spinner isLoading={isSubmiting}>
-            <Dialog.Title className="text-lg font-bold uppercase mb-4">
-              {program ? "Editar programa" : "Novo programa"}
-            </Dialog.Title>
-            <Separator />
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="programName"
-                  className="flex items-center space-x-1"
-                >
-                  <span className="text-red-500">*</span>
-                  <span className="text-gray-500">Nome do programa</span>
-                </label>
-                <input
-                  id="programName"
-                  type="text"
-                  className="w-full h-[40px] border border-gray-200 rounded px-2 text-[#747D8C] mt-1"
-                  {...register("programName")}
-                />
-                {errors.programName?.message && (
-                  <p className="mt-2 text-sm text-red-400">
-                    {errors.programName.message}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                <div className="flex-1">
+            <div className="p-6">
+              <Dialog.Title className="text-lg font-bold uppercase">
+                {program ? "Editar programa" : "Novo programa"}
+              </Dialog.Title>
+            </div>
+            <Separator className="w-full" />
+            <div className="p-6 pt-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div>
                   <label
-                    htmlFor="startDate"
-                    className="flex items-center space-x-1"
+                    htmlFor="programName"
+                    className="flex items-center space-x-1 mb-2"
                   >
                     <span className="text-red-500">*</span>
-                    <span className="text-gray-500">Início do Programa</span>
+                    <span className="text-gray-500">Nome do programa</span>
                   </label>
-                  <Controller
-                    control={control}
-                    name="startDate"
-                    render={({ field }) => {
-                      return (
+                  <input
+                    id="programName"
+                    type="text"
+                    className="w-full h-[40px] border border-gray-200 rounded px-2 text-[#747D8C]"
+                    {...register("programName")}
+                  />
+                  {errors.programName?.message && (
+                    <p className="mt-2 text-sm text-red-400">
+                      {errors.programName.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                  <div className="flex-1">
+                    <label
+                      htmlFor="startDate"
+                      className="flex items-center space-x-1 mb-2"
+                    >
+                      <span className="text-red-500">*</span>
+                      <span className="text-gray-500">Início do Programa</span>
+                    </label>
+                    <Controller
+                      control={control}
+                      name="startDate"
+                      render={({ field }) => (
                         <DatePicker
                           onChange={(newValue: Date | undefined) => {
                             field.onChange(newValue);
                           }}
                           value={field.value}
                         />
-                      );
-                    }}
-                  />
-                  {errors?.startDate && (
-                    <p className="mt-2 text-sm text-red-500">
-                      {errors?.startDate?.message}
-                    </p>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="endDate"
-                    className="flex items-center space-x-1"
-                  >
-                    <span className="text-red-500">*</span>
-                    <span className="text-gray-500">Final do Programa</span>
-                  </label>
-                  <Controller
-                    control={control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <DatePicker
-                        onChange={(newValue: Date | undefined) => {
-                          field.onChange(newValue);
-                        }}
-                        value={field.value}
-                      />
+                      )}
+                    />
+                    {errors?.startDate && (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors?.startDate?.message}
+                      </p>
                     )}
-                  />
-                  {errors?.endDate && (
-                    <p className="mt-2 text-sm text-red-500">
-                      {errors?.endDate?.message}
-                    </p>
-                  )}
+                  </div>
+                  <div className="flex-1">
+                    <label
+                      htmlFor="endDate"
+                      className="flex items-center space-x-1 mb-2"
+                    >
+                      <span className="text-red-500">*</span>
+                      <span className="text-gray-500">Final do Programa</span>
+                    </label>
+                    <Controller
+                      control={control}
+                      name="endDate"
+                      render={({ field }) => (
+                        <DatePicker
+                          onChange={(newValue: Date | undefined) => {
+                            field.onChange(newValue);
+                          }}
+                          value={field.value}
+                        />
+                      )}
+                    />
+                    {errors?.endDate && (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors?.endDate?.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={isSubmiting}
-                  variant="blue"
-                  className="bg-[#2292EA] text-white font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
-                >
-                  Salvar
-                </Button>
-              </div>
-            </form>
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    disabled={isSubmiting}
+                    variant="blue"
+                    className="bg-[#2292EA] text-white font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
+                  >
+                    Salvar
+                  </Button>
+                </div>
+              </form>
+            </div>
           </Spinner>
           <Dialog.Close asChild>
             <button className="absolute top-3 right-3" aria-label="Close">

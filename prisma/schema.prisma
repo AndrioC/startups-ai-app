@@ -258,7 +258,7 @@ model user {
   name                String
   logo_img            String?
   email               String
-  hashed_password     String
+  hashed_password     String?
   accepted_terms      Boolean   @default(false)
   is_blocked          Boolean   @default(false)
   accepted_terms_date DateTime?
