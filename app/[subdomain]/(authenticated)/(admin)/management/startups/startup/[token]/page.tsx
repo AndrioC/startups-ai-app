@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { SelectDataProps } from "@/components/external/startup/startup-form";
+import LoadingSpinner from "@/components/loading-spinner";
 import StartupTab from "@/components/pages/startups/list/startup-tab";
 import Spinner from "@/components/spinner";
 import { FormStartupTabProvider } from "@/contexts/FormStartupTabContext";
@@ -20,12 +21,7 @@ export default function StartupDetailPage() {
 
   const { data: selectData, isLoading: isLoadingSelectData } = useSelectData();
 
-  if (isLoading || isLoadingSelectData)
-    return (
-      <div className="flex justify-center items-center mt-10 mb-10">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+  if (isLoading || isLoadingSelectData) return <LoadingSpinner />;
 
   return (
     <Spinner isLoading={isLoading}>

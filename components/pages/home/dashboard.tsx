@@ -8,6 +8,7 @@ import axios from "axios";
 import { ArrowRightLeftIcon, ChevronDown, GlobeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import LoadingSpinner from "@/components/loading-spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
@@ -121,11 +122,7 @@ export default function Dashboard() {
   );
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center mt-10 mb-10">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!session) {

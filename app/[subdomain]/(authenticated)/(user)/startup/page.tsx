@@ -10,6 +10,7 @@ import StartupDataCard from "@/components/external/startup/startup-data-card";
 import StartupForm from "@/components/external/startup/startup-form";
 import StartupMatchesCard from "@/components/external/startup/startup-matches-card";
 import StatusRegisterCard from "@/components/external/startup/status-register-card";
+import LoadingSpinner from "@/components/loading-spinner";
 import { FormStartupProvider } from "@/contexts/FormStartupContext";
 
 export default function StartupPage() {
@@ -21,11 +22,7 @@ export default function StartupPage() {
   );
 
   if (status === "loading" || isLoading) {
-    return (
-      <div className="flex justify-center items-center mt-10 mb-10">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!session) {

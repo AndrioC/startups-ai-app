@@ -17,6 +17,8 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import LoadingSpinner from "@/components/loading-spinner";
+
 import DeepTechDataForm from "./forms/deep-tech-data-form";
 import GeneralDataForm from "./forms/general-data-form/general-data-form";
 import GovernanceDataForm from "./forms/governance-data-form";
@@ -57,12 +59,7 @@ export default function StartupForm() {
 
   const { data, isLoading } = useSelectData();
 
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center mt-10 mb-10">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+  if (isLoading) return <LoadingSpinner />;
 
   const tabContents = [
     <GeneralDataForm key={"general-data"} data={data!} />,
