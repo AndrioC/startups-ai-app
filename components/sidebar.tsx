@@ -19,6 +19,65 @@ import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 
 import SidebarMenu from "./sidebarmenu";
 
+const menus = [
+  {
+    id: 1,
+    key: "home",
+    title: "Home",
+    href: "/management/home",
+    icon: <GoHome />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 2,
+    key: "programs",
+    title: "Programas",
+    href: "/management/programs",
+    icon: <RxDashboard />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 3,
+    key: "startups",
+    title: "Startups",
+    href: "/management/startups",
+    icon: <IoRocketOutline />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 4,
+    key: "investors",
+    title: "Investidores",
+    href: "/management/investors",
+    icon: <IoWalletOutline />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 5,
+    key: "experts",
+    title: "Experts",
+    href: "/management/experts",
+    icon: <BsPeople />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 6,
+    key: "companies",
+    title: "Empresas",
+    href: "/management/companies",
+    icon: <IoBusinessOutline />,
+    strokeWidth: 0.5,
+  },
+  {
+    id: 7,
+    key: "settings",
+    title: "Configurações",
+    href: "/management/settings",
+    icon: <FiSettings />,
+    strokeWidth: 2,
+  },
+];
+
 export default function SideBar() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { data: session } = useSession();
@@ -34,6 +93,12 @@ export default function SideBar() {
     } else {
       return session?.user?.logo_sidebar || logoPlaceholder;
     }
+  };
+
+  const getFilteredMenus = () => {
+    return menus.filter(
+      (menu) => menu.key !== "companies" || session?.user?.isSGL === true
+    );
   };
 
   return (
@@ -56,7 +121,7 @@ export default function SideBar() {
         </Link>
         <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
         <div className="flex flex-col items-center justify-center w-full">
-          {menus.map((value) => (
+          {getFilteredMenus().map((value) => (
             <SidebarMenu
               key={value.id}
               href={value.href}
@@ -81,55 +146,3 @@ export default function SideBar() {
     </aside>
   );
 }
-
-const menus = [
-  {
-    id: 1,
-    title: "Home",
-    href: "/management/home",
-    icon: <GoHome />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 2,
-    title: "Programas",
-    href: "/management/programs",
-    icon: <RxDashboard />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 3,
-    title: "Startups",
-    href: "/management/startups",
-    icon: <IoRocketOutline />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 4,
-    title: "Investidores",
-    href: "/management/investors",
-    icon: <IoWalletOutline />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 5,
-    title: "Experts",
-    href: "/management/experts",
-    icon: <BsPeople />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 6,
-    title: "Empresas",
-    href: "/management/companies",
-    icon: <IoBusinessOutline />,
-    strokeWidth: 0.5,
-  },
-  {
-    id: 7,
-    title: "Configurações",
-    href: "/management/settings",
-    icon: <FiSettings />,
-    strokeWidth: 2,
-  },
-];

@@ -251,23 +251,19 @@ export default function FormCompanyDialog({
           img.onload = resolve;
         });
 
-        let imageToUpload: File;
+        const cropDimensions: PixelCrop = completedCrop || {
+          unit: "px",
+          x: 0,
+          y: 0,
+          width: cropType === "logo" ? 300 : 50,
+          height: cropType === "logo" ? 100 : 50,
+        };
 
-        if (completedCrop) {
-          imageToUpload = await getCroppedImg(
-            img,
-            completedCrop,
-            cropType === "logo" ? "logo.png" : "logo-sidebar.png"
-          );
-        } else {
-          const response = await fetch(cropImage);
-          const blob = await response.blob();
-          imageToUpload = new File(
-            [blob],
-            cropType === "logo" ? "logo.png" : "logo-sidebar.png",
-            { type: blob.type }
-          );
-        }
+        const imageToUpload = await getCroppedImg(
+          img,
+          cropDimensions,
+          cropType === "logo" ? "logo.png" : "logo-sidebar.png"
+        );
 
         const preview = URL.createObjectURL(imageToUpload);
         if (cropType === "logo") {
