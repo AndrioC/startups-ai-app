@@ -115,18 +115,20 @@ export function LoginForm({ subdomain }: { subdomain: string }) {
         </Link>
       </div>
 
-      <Button
-        variant="blue"
-        type="submit"
-        className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out mt-4 md:mt-auto flex items-center justify-center"
-        disabled={isPending}
-      >
-        {isPending ? (
-          <FaSpinner className="animate-spin h-5 w-5 mr-2" />
-        ) : (
-          "Entrar"
-        )}
-      </Button>
+      <div className="flex justify-center">
+        <Button
+          variant="blue"
+          type="submit"
+          className="bg-[#4087C2] text-white font-bold uppercase text-[20px] rounded-[30px] w-[175px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out flex items-center justify-center"
+          disabled={isPending}
+        >
+          {isPending ? (
+            <FaSpinner className="animate-spin h-5 w-5 mr-2" />
+          ) : (
+            "Entrar"
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
