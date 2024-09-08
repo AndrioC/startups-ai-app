@@ -48,6 +48,7 @@ export interface FormStartupData {
   connectionsOnlyOnStartupCountryOrigin: string;
   valueProposal: string;
   shortDescription: string;
+  organizationLogo: string | null;
 
   mainResponsibleName: string;
   contactNumber: string;
@@ -124,6 +125,7 @@ const initialFormStartupData: FormStartupData = {
   connectionsOnlyOnStartupCountryOrigin: "",
   valueProposal: "",
   shortDescription: "",
+  organizationLogo: null,
 
   mainResponsibleName: "",
   contactNumber: "",

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
+import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,19 +13,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 
 interface HeaderProps {
-  logoSrc: string;
   logoAlt: string;
   userName: string;
 }
 
 export default function HeaderExternalStartupComponent({
-  logoSrc,
   logoAlt,
   userName,
 }: HeaderProps) {
   const router = useRouter();
+
+  const { initialData } = useFormStartupDataState();
 
   const initials = userName
     .split(" ")
@@ -45,10 +47,12 @@ export default function HeaderExternalStartupComponent({
     router.push(redirectUrl);
   };
 
+  const logoUrl = initialData.organizationLogo || logoPlaceholder.src;
+
   return (
     <header className="w-full bg-[#B4D5EE] rounded-b-lg">
       <div className="mx-auto flex items-center justify-between px-14 py-2">
-        <Image src={logoSrc} alt={logoAlt} width={80} height={80} />
+        <Image src={logoUrl} alt={logoAlt} width={80} height={80} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">

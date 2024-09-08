@@ -41,8 +41,12 @@ export interface ProgramData {
 
 const STARTUPS_LOGO_BUCKET = process.env
   .S3_STARTUP_LOGO_IMGS_BUCKET_NAME as string;
+
 const STARTUPS_PITCH_BUCKET = process.env
   .S3_STARTUP_PITCH_DECK_FILES_BUCKET_NAME as string;
+
+const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
+  process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME;
 
 export interface StartupTable {
   id: number;
@@ -76,6 +80,7 @@ export async function GET(
       startup_investiments_rounds: true,
       business_model: true,
       vertical: true,
+      organizations: true,
       kanban_cards: {
         include: {
           kanban: {
@@ -162,6 +167,9 @@ export async function GET(
       startup?.connections_only_on_origin_country,
     valueProposal: startup?.value_proposal_pt,
     shortDescription: startup?.short_description_pt,
+    organizationLogo: startup?.organizations?.logo_img
+      ? `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${startup?.organizations?.logo_img}`
+      : null,
   };
 
   const team: Block = {
