@@ -97,47 +97,42 @@ export function StartupTableComponent({
           table: ({ children, tableInstance }) => {
             return (
               <div className="w-full p-1">
-                <div className="flex items-center gap-2 py-4">
-                  <div className="ml-auto flex items-center space-x-2">
-                    {/* <Button
-                      variant="destructive"
-                      disabled={
-                        !tableInstance.getSelectedRowModel().rows.length ||
-                        isPending
-                      }
-                    >
-                      Delete
-                    </Button> */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                          Columns <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {tableInstance
-                          .getAllColumns()
-                          .filter((column) => column.getCanHide())
-                          .map((column) => {
-                            return (
-                              <DropdownMenuCheckboxItem
-                                key={column.id}
-                                className="capitalize"
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(value) => {
-                                  column.toggleVisibility(!!value);
-                                }}
-                              >
-                                {column.id}
-                              </DropdownMenuCheckboxItem>
-                            );
-                          })}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                <div className="flex items-center justify-between py-4">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="ml-auto">
+                        Colunas <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {tableInstance
+                        .getAllColumns()
+                        .filter((column) => column.getCanHide())
+                        .map((column) => {
+                          return (
+                            <DropdownMenuCheckboxItem
+                              key={column.id}
+                              className="capitalize"
+                              checked={column.getIsVisible()}
+                              onCheckedChange={(value) => {
+                                column.toggleVisibility(!!value);
+                              }}
+                            >
+                              {column.id}
+                            </DropdownMenuCheckboxItem>
+                          );
+                        })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-                <div className="rounded-md border">
-                  <Table>{children}</Table>
+                <div className="rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <div className="inline-block min-w-full align-middle">
+                      <div className="overflow-hidden">
+                        <Table>{children}</Table>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -146,7 +141,7 @@ export function StartupTableComponent({
           headerRow: ({ children }) => <TableRow>{children}</TableRow>,
           headerCell: ({ children, header }) => (
             <TableHead
-              className="whitespace-nowrap bg-[#E5E7E7] text-[16px] font-semibold h-[55px]"
+              className="whitespace-nowrap bg-[#E5E7E7] text-sm sm:text-base font-semibold h-[55px]"
               onClick={() => {
                 const isSortable = header.column.getCanSort();
                 const nextSortDirection = header.column.getNextSortingOrder();
@@ -170,7 +165,7 @@ export function StartupTableComponent({
                   <TableRow key={index}>
                     {startupColumns.map((_, columnIndex) => (
                       <TableCell key={columnIndex}>
-                        <Skeleton className="h-6 w-20" />
+                        <Skeleton className="h-6 w-full" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -181,9 +176,9 @@ export function StartupTableComponent({
                 <TableRow>
                   <TableCell
                     colSpan={startupColumns.length}
-                    className="h-24 text-center"
+                    className="h-24 text-center text-gray-500"
                   >
-                    No results.
+                    Nenhum resultado encontrado.
                   </TableCell>
                 </TableRow>
               )}
@@ -191,7 +186,7 @@ export function StartupTableComponent({
           ),
           bodyRow: ({ children, row }) => (
             <TableRow
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-gray-50 transition-colors"
               onClick={(e) => {
                 const url = `startups/startup/${sha1(row.original.id.toString()).toString()}`;
 
@@ -206,20 +201,22 @@ export function StartupTableComponent({
             </TableRow>
           ),
           bodyCell: ({ children }) => (
-            <TableCell>
-              {isPending ? <Skeleton className="h-6 w-20" /> : children}
+            <TableCell className="px-4 py-3 text-sm text-gray-700">
+              {isPending ? <Skeleton className="h-6 w-full" /> : children}
             </TableCell>
           ),
           paginationBar: ({ tableInstance }) => {
             return (
-              <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row">
-                <div className="flex-1 text-sm font-medium">
-                  {tableInstance.getFilteredSelectedRowModel().rows.length} of{" "}
-                  {pageSize} row(s) selected.
+              <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row bg-gray-50 px-4 border-t border-gray-200">
+                <div className="flex-1 text-sm font-medium text-gray-700">
+                  {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
+                  {pageSize} linha(s) selecionada(s).
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
-                    <span className="text-sm font-medium">Rows per page</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Linhas por página
+                    </span>
                     <Select
                       value={pageSize}
                       onValueChange={(value) => {
@@ -246,8 +243,8 @@ export function StartupTableComponent({
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="text-sm font-medium">
-                    {`Page ${page} of ${pageCount ?? 10}`}
+                  <div className="text-sm font-medium text-gray-700">
+                    {`Página ${page} de ${pageCount ?? 10}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -267,7 +264,7 @@ export function StartupTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">First page</span>
+                      <span className="sr-only">Primeira página</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -286,7 +283,7 @@ export function StartupTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Previous page</span>
+                      <span className="sr-only">Página anterior</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -309,7 +306,7 @@ export function StartupTableComponent({
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Next page</span>
+                      <span className="sr-only">Próxima página</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -330,7 +327,7 @@ export function StartupTableComponent({
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Last page</span>
+                      <span className="sr-only">Última página</span>
                     </Button>
                   </div>
                 </div>

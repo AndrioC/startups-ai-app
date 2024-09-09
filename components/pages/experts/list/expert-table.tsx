@@ -68,7 +68,6 @@ export function ExpertTableComponent({
     retry: 3,
   });
 
-  // create query string
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -99,19 +98,10 @@ export function ExpertTableComponent({
               <div className="w-full p-1">
                 <div className="flex items-center gap-2 py-4">
                   <div className="ml-auto flex items-center space-x-2">
-                    {/* <Button
-                      variant="destructive"
-                      disabled={
-                        !tableInstance.getSelectedRowModel().rows.length ||
-                        isPending
-                      }
-                    >
-                      Delete
-                    </Button> */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                          Columns <ChevronDown className="ml-2 h-4 w-4" />
+                          Colunas <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -146,7 +136,7 @@ export function ExpertTableComponent({
           headerRow: ({ children }) => <TableRow>{children}</TableRow>,
           headerCell: ({ children, header }) => (
             <TableHead
-              className="whitespace-nowrap"
+              className="whitespace-nowrap bg-[#E5E7E7] text-sm sm:text-base font-semibold h-[55px]"
               onClick={() => {
                 const isSortable = header.column.getCanSort();
                 const nextSortDirection = header.column.getNextSortingOrder();
@@ -183,7 +173,7 @@ export function ExpertTableComponent({
                     colSpan={startupColumns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    Nenhum resultado encontrado.
                   </TableCell>
                 </TableRow>
               )}
@@ -199,12 +189,14 @@ export function ExpertTableComponent({
             return (
               <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row">
                 <div className="flex-1 text-sm font-medium">
-                  {tableInstance.getFilteredSelectedRowModel().rows.length} of{" "}
-                  {pageSize} row(s) selected.
+                  {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
+                  {pageSize} resultado(s) selecionado(s).
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
-                    <span className="text-sm font-medium">Rows per page</span>
+                    <span className="text-sm font-medium">
+                      Resultados por página
+                    </span>
                     <Select
                       value={pageSize}
                       onValueChange={(value) => {
@@ -232,7 +224,7 @@ export function ExpertTableComponent({
                     </Select>
                   </div>
                   <div className="text-sm font-medium">
-                    {`Page ${page} of ${pageCount ?? 10}`}
+                    {`Página ${page} de ${pageCount ?? 10}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -252,7 +244,7 @@ export function ExpertTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">First page</span>
+                      <span className="sr-only">Primeira página</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -271,7 +263,7 @@ export function ExpertTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Previous page</span>
+                      <span className="sr-only">Página anterior</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -294,7 +286,7 @@ export function ExpertTableComponent({
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Next page</span>
+                      <span className="sr-only">Próxima página</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -315,7 +307,7 @@ export function ExpertTableComponent({
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Last page</span>
+                      <span className="sr-only">Última página</span>
                     </Button>
                   </div>
                 </div>

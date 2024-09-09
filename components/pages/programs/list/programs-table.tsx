@@ -150,7 +150,7 @@ export function ProgramsTableComponent() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" className="ml-auto">
-                            Columns <ChevronDown className="ml-2 h-4 w-4" />
+                            Colunas <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">
@@ -279,12 +279,14 @@ export function ProgramsTableComponent() {
               return (
                 <div className="flex flex-col items-center gap-4 py-4 sm:flex-row">
                   <div className="flex-1 text-sm font-medium text-center sm:text-left">
-                    {tableInstance.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {pageSize} row(s) selected.
+                    {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
+                    {pageSize} resultado(s) selecionado(s).
                   </div>
                   <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                     <div className="flex flex-wrap items-center space-x-2">
-                      <span className="text-sm font-medium">Rows per page</span>
+                      <span className="text-sm font-medium">
+                        Resultados por página
+                      </span>
                       <Select
                         value={pageSize}
                         onValueChange={(value) => {
@@ -312,7 +314,7 @@ export function ProgramsTableComponent() {
                       </Select>
                     </div>
                     <div className="text-sm font-medium">
-                      {`Page ${page} of ${pageCount ?? 10}`}
+                      {`Página ${page} de ${pageCount ?? 10}`}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button
@@ -337,7 +339,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">First page</span>
+                        <span className="sr-only">Primeira página</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -361,7 +363,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Previous page</span>
+                        <span className="sr-only">Página anterior</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -385,7 +387,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Next page</span>
+                        <span className="sr-only">Próxima página</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -407,7 +409,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Last page</span>
+                        <span className="sr-only">Última página</span>
                       </Button>
                     </div>
                   </div>
