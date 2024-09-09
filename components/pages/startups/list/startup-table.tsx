@@ -87,7 +87,7 @@ export function StartupTableComponent({
   );
 
   return (
-    <div className="min-h-screen px-32 py-10">
+    <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
       <ShadcnTable
         columns={startupColumns}
         data={data ?? []}

@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 
 import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 
+import HeaderAdmin from "./header/header-admin";
 import SidebarMenu from "./sidebarmenu";
 
 const menus = [
@@ -78,7 +79,7 @@ const menus = [
   },
 ];
 
-export default function SideBar() {
+export default function SideBar({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { data: session } = useSession();
   const currentRoute = usePathname();
@@ -102,47 +103,53 @@ export default function SideBar() {
   };
 
   return (
-    <aside
-      className={`${
-        isSidebarOpen ? "w-72" : "w-20"
-      } h-screen bg-white border-r-[1px] flex flex-col justify-between transition-all ease-in-out duration-300`}
-    >
-      <div className="flex flex-col items-center space-y-4">
-        <Link href="/">
-          <div className="text-white p-3 mt-4 rounded-lg inline-block">
-            <Image
-              src={getLogo()}
-              alt="sidebar-menu-logo"
-              priority
-              width={isSidebarOpen ? 300 : 100}
-              height={isSidebarOpen ? 100 : 50}
-            />
+    <div className="flex h-screen overflow-hidden">
+      <aside
+        className={`${
+          isSidebarOpen ? "w-72" : "w-20"
+        } h-full bg-white border-r-[1px] flex flex-col transition-all ease-in-out duration-300`}
+      >
+        <div className="flex flex-col h-full">
+          <Link href="/">
+            <div className="text-white p-3 mt-4 rounded-lg inline-block">
+              <Image
+                src={getLogo()}
+                alt="sidebar-menu-logo"
+                priority
+                width={isSidebarOpen ? 300 : 100}
+                height={isSidebarOpen ? 100 : 50}
+              />
+            </div>
+          </Link>
+          <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
+          <div className="flex-grow overflow-y-auto">
+            {getFilteredMenus().map((value) => (
+              <SidebarMenu
+                key={value.id}
+                href={value.href}
+                icon={value.icon}
+                text={value.title}
+                currentRoute={currentRoute}
+                isSidebarOpen={isSidebarOpen}
+                size={20}
+              />
+            ))}
           </div>
-        </Link>
-        <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
-        <div className="flex flex-col items-center justify-center w-full">
-          {getFilteredMenus().map((value) => (
-            <SidebarMenu
-              key={value.id}
-              href={value.href}
-              icon={value.icon}
-              text={value.title}
-              currentRoute={currentRoute}
-              isSidebarOpen={isSidebarOpen}
-              size={20}
-            />
-          ))}
         </div>
+        <div className="flex p-4 items-center justify-center bg-gray-100 w-full">
+          <button onClick={toggleSidebar}>
+            {isSidebarOpen ? (
+              <IoIosArrowDropleft size={21} className="text-gray-400" />
+            ) : (
+              <IoIosArrowDropright size={21} className="text-gray-400" />
+            )}
+          </button>
+        </div>
+      </aside>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <HeaderAdmin />
+        <main className="flex-1 overflow-y-auto bg-white">{children}</main>
       </div>
-      <div className="flex p-4 items-center justify-center bg-gray-100 w-full h-10">
-        <button onClick={toggleSidebar}>
-          {isSidebarOpen ? (
-            <IoIosArrowDropleft size={21} className="text-gray-400" />
-          ) : (
-            <IoIosArrowDropright size={21} className="text-gray-400" />
-          )}
-        </button>
-      </div>
-    </aside>
+    </div>
   );
 }

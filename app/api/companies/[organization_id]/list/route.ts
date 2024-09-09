@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [companies, companiesCount] = await Promise.all([
+    const [companies, companyCount] = await Promise.all([
       prisma.organizations.findMany({
         where,
         orderBy: { name: "asc" },
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       })),
     }));
 
-    return NextResponse.json({ companyTable, companiesCount }, { status: 200 });
+    return NextResponse.json({ companyTable, companyCount }, { status: 200 });
   } catch (error) {
     console.error("Error fetching organizations:", error);
     return NextResponse.json(

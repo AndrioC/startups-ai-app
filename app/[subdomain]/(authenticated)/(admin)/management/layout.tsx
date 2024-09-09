@@ -6,7 +6,6 @@ import { Inter } from "next/font/google";
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
-import HeaderAdmin from "@/components/header/header-admin";
 import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -35,24 +34,14 @@ export default async function RootLayout({
 
   return (
     <AuthProvider session={session}>
-      <html lang="en">
-        <body className={inter.className}>
-          <div className="flex h-screen overflow-hidden">
-            <SideBar />
-            <div className="flex-1 flex flex-col overflow-hidden bg-gray-100">
-              <QueryClientProvider>
-                <Theme>
-                  <HeaderAdmin />
-                  <main className="flex-1 overflow-x-hidden overflow-y-auto">
-                    <div className="w-full h-full bg-white shadow-sm">
-                      {children}
-                    </div>
-                  </main>
-                </Theme>
-                <ToastContainer />
-              </QueryClientProvider>
-            </div>
-          </div>
+      <html lang="en" className="h-full">
+        <body className={`${inter.className} h-full`}>
+          <QueryClientProvider>
+            <Theme>
+              <SideBar>{children}</SideBar>
+              <ToastContainer />
+            </Theme>
+          </QueryClientProvider>
         </body>
       </html>
     </AuthProvider>

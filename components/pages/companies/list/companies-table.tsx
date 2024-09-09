@@ -111,7 +111,7 @@ export function CompaniesTableComponent() {
       refetch={refetch}
       isRefetching={isRefetching}
     >
-      <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
+      <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-10">
           <h1 className="text-center text-black font-semibold text-xl sm:text-2xl mb-4 sm:mb-0">
             ORGANIZAÇÕES
