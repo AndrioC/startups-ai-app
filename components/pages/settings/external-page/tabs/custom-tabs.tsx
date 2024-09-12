@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { ExternalPageSettingsSchema } from "@/lib/schemas/schema-external-page-setting";
 
-type FormSchema = z.infer<typeof ExternalPageSettingsSchema>;
+type FormSchema = z.infer<ReturnType<typeof ExternalPageSettingsSchema>>;
 
 interface TabData {
   title?: string;
