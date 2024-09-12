@@ -60,7 +60,7 @@ export default function HomeComponent() {
         {cards.map((card, index) => (
           <div
             key={index}
-            className="bg-[#F9F9FC] rounded-[30px] shadow-lg w-full max-w-[270px] h-[424px] flex flex-col items-center p-5 mb-20 lg:mb-0"
+            className="bg-[#F9F9FC] rounded-[30px] shadow-lg w-full max-w-[270px] h-[424px] flex items-center flex-col p-5 mb-20 lg:mb-0"
           >
             <div className="relative w-full bg-purple-400 left-1/2 transform -translate-x-1/2 mb-14">
               <Image
@@ -71,15 +71,17 @@ export default function HomeComponent() {
                 className="w-full object-cover absolute top-[-80px]"
               />
             </div>
-            <h3 className="text-black text-[20px] font-bold mt-24 self-start">
-              {card.title}
-            </h3>
-            <ul className="flex flex-col self-start gap-2 mt-2 list-none text-[#484849] font-semibold">
-              {card.bullet_points.map((bullet_point) => (
-                <li key={bullet_point.id}>{bullet_point.title}</li>
-              ))}
-            </ul>
-            <Button className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-10">
+            <div className="flex flex-col flex-grow">
+              <h3 className="text-black text-[20px] font-bold mt-24">
+                {card.title}
+              </h3>
+              <ul className="flex flex-col gap-2 mt-2 list-none text-[#484849] font-semibold">
+                {card.bullet_points.map((bullet_point) => (
+                  <li key={bullet_point.id}>{bullet_point.title}</li>
+                ))}
+              </ul>
+            </div>
+            <Button className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-auto">
               {card.button_text}
             </Button>
           </div>
