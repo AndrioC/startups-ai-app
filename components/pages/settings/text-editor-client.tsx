@@ -258,7 +258,7 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
                   Cancel
                 </Button>
                 <Button onClick={setLink}>
-                  {isEditingLink ? "Update" : "Apply"}
+                  {isEditingLink ? "Atualizar" : "Aplicar"}
                 </Button>
               </div>
             </div>
