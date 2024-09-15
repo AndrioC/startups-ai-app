@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import QueryClientProvider from "@/app/QueryClientProvider";
+
 import "react-toastify/dist/ReactToastify.css";
 import "@/styles/custom.css";
 import "@/styles/global.css";
@@ -26,7 +28,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main>{children}</main>
+        <QueryClientProvider>{children}</QueryClientProvider>
       </body>
     </html>
   );

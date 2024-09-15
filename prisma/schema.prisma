@@ -11,21 +11,22 @@ datasource db {
 }
 
 model organizations {
-  id             Int         @id @default(autoincrement())
-  name           String
-  slug           String?     @unique
-  slug_admin     String?     @unique
-  payment_needed Boolean     @default(false)
-  logo_img       String?
-  logo_sidebar   String?
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @default(now())
-  user           user[]
-  startups       startups[]
-  ebooks         ebooks[]
-  investors      investors[]
-  experts        experts[]
-  programs       programs[]
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  slug                   String?                  @unique
+  slug_admin             String?                  @unique
+  payment_needed         Boolean                  @default(false)
+  logo_img               String?
+  logo_sidebar           String?
+  created_at             DateTime                 @default(now())
+  updated_at             DateTime                 @default(now())
+  user                   user[]
+  startups               startups[]
+  ebooks                 ebooks[]
+  investors              investors[]
+  experts                experts[]
+  programs               programs[]
+  external_page_settings external_page_settings[]
 }
 
 model vertical {
@@ -225,19 +226,19 @@ model startups {
   user                                         user[]
 
   //relacionamentos
-  organizations                                  organizations?                                   @relation(fields: [organization_id], references: [id])
-  vertical                                       vertical?                                        @relation(fields: [vertical_id], references: [id])
-  country                                        country?                                         @relation(fields: [country_id], references: [id])
-  business_model                                 business_model?                                  @relation(fields: [business_model_id], references: [id])
-  operation_stage                                operational_stage?                               @relation(fields: [operation_stage_id], references: [id])
-  maturity_level                                 maturity_level?                                  @relation(fields: [maturity_level_id], references: [id])
-  startup_challenges                             startup_challenges[]
-  startup_service_products                       startup_service_products[]
-  startup_objectives                             startup_objectives[]
-  startup_partner                                startup_partner[]
-  startup_investiments_rounds                    startup_investiments_rounds[]
-  kanban_cards                                   kanban_cards[]
-  investors_startus_matchmaking_analysis_history investors_startus_matchmaking_analysis_history[]
+  organizations                                   organizations?                                    @relation(fields: [organization_id], references: [id])
+  vertical                                        vertical?                                         @relation(fields: [vertical_id], references: [id])
+  country                                         country?                                          @relation(fields: [country_id], references: [id])
+  business_model                                  business_model?                                   @relation(fields: [business_model_id], references: [id])
+  operation_stage                                 operational_stage?                                @relation(fields: [operation_stage_id], references: [id])
+  maturity_level                                  maturity_level?                                   @relation(fields: [maturity_level_id], references: [id])
+  startup_challenges                              startup_challenges[]
+  startup_service_products                        startup_service_products[]
+  startup_objectives                              startup_objectives[]
+  startup_partner                                 startup_partner[]
+  startup_investiments_rounds                     startup_investiments_rounds[]
+  kanban_cards                                    kanban_cards[]
+  investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
 }
 
 enum UserType {
@@ -267,17 +268,17 @@ model user {
   email_verified      DateTime?
 
   //relacionamentos
-  organizations                                  organizations?                                   @relation(fields: [organization_id], references: [id])
-  startups                                       startups?                                        @relation(fields: [startup_id], references: [id])
-  investors                                      investors?                                       @relation(fields: [investor_id], references: [id])
-  experts                                        experts?                                         @relation(fields: [expert_id], references: [id])
-  createdPrograms                                programs[]                                       @relation("ProgramCreatedBy")
-  deletedPrograms                                programs[]                                       @relation("ProgramDeletedBy")
-  pausedPrograms                                 programs[]                                       @relation("ProgramPausedBy")
-  createdKanban                                  kanbans[]                                        @relation("KanbanCreatedBy")
-  deletedKanban                                  kanbans[]                                        @relation("KanbanDeletedBy")
-  investors_startus_matchmaking_analysis_history investors_startus_matchmaking_analysis_history[]
-  user_access                                    user_access[]
+  organizations                                   organizations?                                    @relation(fields: [organization_id], references: [id])
+  startups                                        startups?                                         @relation(fields: [startup_id], references: [id])
+  investors                                       investors?                                        @relation(fields: [investor_id], references: [id])
+  experts                                         experts?                                          @relation(fields: [expert_id], references: [id])
+  createdPrograms                                 programs[]                                        @relation("ProgramCreatedBy")
+  deletedPrograms                                 programs[]                                        @relation("ProgramDeletedBy")
+  pausedPrograms                                  programs[]                                        @relation("ProgramPausedBy")
+  createdKanban                                   kanbans[]                                         @relation("KanbanCreatedBy")
+  deletedKanban                                   kanbans[]                                         @relation("KanbanDeletedBy")
+  investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
+  user_access                                     user_access[]
 
   @@unique([email, organization_id])
 }
@@ -362,9 +363,9 @@ model investors {
   investor_maturity_level                     investor_maturity_level[]
   user                                        user[]
 
-  organizations                                  organizations?                                   @relation(fields: [organization_id], references: [id])
-  country                                        country?                                         @relation(fields: [country_id], references: [id])
-  investors_startus_matchmaking_analysis_history investors_startus_matchmaking_analysis_history[]
+  organizations                                   organizations?                                    @relation(fields: [organization_id], references: [id])
+  country                                         country?                                          @relation(fields: [country_id], references: [id])
+  investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
 }
 
 model investor_investiment_stages {
@@ -587,12 +588,13 @@ model programs {
   created_at      DateTime  @default(now())
   updated_at      DateTime  @default(now())
 
-  organization organizations @relation(fields: [organization_id], references: [id])
-  created_by   user          @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
-  deleted_by   user?         @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
-  paused_by    user?         @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
-  kanbans      kanbans[]
-  rule         rule[]
+  organization           organizations           @relation(fields: [organization_id], references: [id])
+  created_by             user                    @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
+  deleted_by             user?                   @relation("ProgramDeletedBy", fields: [deleted_by_id], references: [id])
+  paused_by              user?                   @relation("ProgramPausedBy", fields: [paused_by_id], references: [id])
+  kanbans                kanbans[]
+  rule                   rule[]
+  external_page_settings external_page_settings?
 }
 
 model kanbans {
@@ -644,7 +646,7 @@ model rule {
   moveToKanbanId kanbans  @relation("MoveToKanbanId", fields: [move_to_kanban_id], references: [id])
 }
 
-model investors_startus_matchmaking_analysis_history {
+model investors_startups_matchmaking_analysis_history {
   id                 Int      @id @default(autoincrement())
   investor_id        Int
   startup_id         Int
@@ -665,4 +667,70 @@ model user_access {
   timestamp DateTime @default(now())
 
   @@index([user_id])
+}
+
+enum PageType {
+  ORGANIZATION
+  PROGRAM
+}
+
+model external_page_settings {
+  id              Int                                   @id @default(autoincrement())
+  load_banner     String
+  banner_phrase   String?                               @db.VarChar(40)
+  show_learn_more Boolean                               @default(false)
+  learn_more_text String?                               @db.VarChar(15)
+  learn_more_link String?
+  page_title      String?                               @db.VarChar(30)
+  link_video      String?
+  free_text       String?                               @db.Text
+  created_at      DateTime                              @default(now())
+  updated_at      DateTime                              @default(now())
+  tabs_cards      external_page_settings_tabs_cards[]
+  enabled_tabs    external_page_settings_enabled_tabs[]
+
+  page_type       PageType
+  organization_id Int
+  organizations   organizations @relation(fields: [organization_id], references: [id])
+
+  program_id Int?      @unique
+  programs   programs? @relation(fields: [program_id], references: [id])
+
+  @@unique([organization_id, page_type])
+}
+
+model external_page_settings_enabled_tabs {
+  id                        Int                                @id @default(autoincrement())
+  external_page_settings_id Int
+  tab_number                Int
+  is_enabled                Boolean                            @default(false)
+  created_at                DateTime                           @default(now())
+  updated_at                DateTime                           @default(now())
+  external_page_settings    external_page_settings             @relation(fields: [external_page_settings_id], references: [id])
+  tab_card                  external_page_settings_tabs_cards?
+
+  @@unique([external_page_settings_id, tab_number])
+}
+
+model external_page_settings_tabs_cards {
+  id                        Int                                 @id @default(autoincrement())
+  enabled_tab_id            Int                                 @unique
+  title                     String                              @db.VarChar(30)
+  button_text               String                              @db.VarChar(18)
+  button_link               String
+  benefits                  external_page_settings_benefit[]
+  enabled_tab               external_page_settings_enabled_tabs @relation(fields: [enabled_tab_id], references: [id])
+  external_page_settings    external_page_settings?             @relation(fields: [external_page_settings_id], references: [id])
+  external_page_settings_id Int?
+}
+
+model external_page_settings_benefit {
+  id          Int    @id @default(autoincrement())
+  tab_card_id Int
+  description String @db.VarChar(30)
+  order       Int
+
+  tabs_cards external_page_settings_tabs_cards @relation(fields: [tab_card_id], references: [id])
+
+  @@unique([tab_card_id, order])
 }

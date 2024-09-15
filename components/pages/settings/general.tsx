@@ -146,7 +146,6 @@ export default function GeneralTab() {
         },
       });
 
-      console.log(`${type} upload successful:`, response.data);
       toast.success(
         `${type === "logo" ? "Logo" : "Logo da sidebar"} atualizado com sucesso!`,
         {

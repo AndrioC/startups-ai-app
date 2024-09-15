@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,6 +7,19 @@ import mentorCardImage from "@/assets/img/mentor-card-image.svg";
 import sponsorCardImage from "@/assets/img/sponsor-card-image.svg";
 import startupCardImage from "@/assets/img/startup-card-image.svg";
 import { Button } from "@/components/ui/button";
+
+type TabCard = {
+  title: string;
+  buttonText: string;
+  buttonLink: string;
+  benefits: string[];
+};
+
+type EnabledTab = {
+  tab_number: number;
+  is_enabled: boolean;
+  tab_card: TabCard | null;
+};
 
 type PreviewProps = {
   headerLogo: string;
@@ -18,13 +31,7 @@ type PreviewProps = {
   pageTitle: string;
   linkVideo: string;
   freeText: string;
-  enabledTabs: boolean[];
-  tabs: {
-    title: string;
-    buttonText: string;
-    buttonLink: string;
-    benefits: string[];
-  }[];
+  enabled_tabs: EnabledTab[];
 };
 
 const cardImages = [
@@ -79,36 +86,45 @@ export function PreviewComponent({
   pageTitle,
   linkVideo,
   freeText,
-  enabledTabs,
-  tabs,
+  enabled_tabs,
 }: PreviewProps) {
   const embedUrl = useMemo(() => getEmbedUrl(linkVideo), [linkVideo]);
 
+  const bannerStyle = useMemo(() => {
+    if (loadBanner) {
+      return {
+        backgroundImage: `url(${loadBanner})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      };
+    }
+    return {
+      backgroundColor: "#f0f0f0",
+    };
+  }, [loadBanner]);
+
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <header className="flex items-center justify-between bg-white h-[80px] px-4 md:px-10">
-        <div className="flex items-center justify-between w-full py-4 md:py-16">
+      <header className="flex items-center justify-between bg-white h-[80px] px-4 md:px-10 mb-8">
+        <div className="flex items-center justify-between w-full py-4 md:py-16 mt-8">
           {headerLogo ? (
             <Image src={headerLogo} alt="logo" width={275} height={80} />
           ) : (
             <div className="text-2xl font-bold text-primary">Sem imagem</div>
           )}
-          <Link href={"/auth/login"}>
+          <Link href="/auth/login">
             <Button className="bg-[#383838] bg-opacity-78 text-white rounded-full w-[120px] h-[40px] text-[16px] md:text-[20px] font-bold md:mr-16 uppercase shadow-xl hover:bg-[#282727] hover:text-white transition-colors duration-300 ease-in-out">
               Entrar
             </Button>
           </Link>
         </div>
       </header>
+
       <section>
         <div
           className="flex flex-col items-center justify-center bg-cover bg-center h-[400px] w-full"
-          style={{
-            backgroundImage: `url(${loadBanner || "/page-bg.svg"})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
+          style={bannerStyle}
         >
           <h1 className="text-white text-[32px] w-[300px] md:text-[64px] font-extrabold text-center md:text-left p-4 md:p-14 md:w-[700px] md:self-start">
             {bannerPhrase}
@@ -149,41 +165,47 @@ export function PreviewComponent({
       </section>
 
       <section className="flex flex-wrap items-center justify-center mt-10 md:mt-28 gap-5 py-10 px-4 md:px-0">
-        {tabs.map((tab, index) => {
-          if (!enabledTabs[index]) return null;
-          return (
-            <div
-              key={index}
-              className="bg-[#F9F9FC] rounded-[30px] shadow-lg w-full max-w-[270px] h-[424px] flex items-center flex-col p-5 mb-20 lg:mb-0"
-            >
-              <div className="relative w-full bg-purple-400 left-1/2 transform -translate-x-1/2 mb-14">
-                <Image
-                  src={cardImages[index]}
-                  width={212}
-                  height={210}
-                  alt={`image-${tab.title}`}
-                  className="w-full object-cover absolute top-[-80px]"
-                />
-              </div>
-              <div className="flex flex-col flex-grow">
-                <h3 className="text-black text-[20px] font-bold mt-24">
-                  {tab.title}
-                </h3>
-                <ul className="flex flex-col gap-2 mt-2 list-none text-[#484849] font-semibold">
-                  {tab.benefits.map((benefit, benefitIndex) => (
-                    <li key={benefitIndex}>{benefit}</li>
-                  ))}
-                </ul>
-              </div>
-              <Button
-                className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-auto"
-                onClick={() => window.open(tab.buttonLink, "_blank")}
+        {enabled_tabs && enabled_tabs.length > 0 ? (
+          enabled_tabs.map((tab, index) => {
+            if (!tab.is_enabled || !tab.tab_card) return null;
+            return (
+              <div
+                key={index}
+                className="bg-[#F9F9FC] rounded-[30px] shadow-lg w-full max-w-[270px] h-[424px] flex items-center flex-col p-5 mb-20 lg:mb-0"
               >
-                {tab.buttonText}
-              </Button>
-            </div>
-          );
-        })}
+                <div className="relative w-full bg-purple-400 left-1/2 transform -translate-x-1/2 mb-14">
+                  <Image
+                    src={cardImages[index]}
+                    width={212}
+                    height={210}
+                    alt={`image-${tab.tab_card.title}`}
+                    className="w-full object-cover absolute top-[-80px]"
+                  />
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <h3 className="text-black text-[20px] font-bold mt-24">
+                    {tab.tab_card.title}
+                  </h3>
+                  <ul className="flex flex-col gap-2 mt-2 list-none text-[#484849] font-semibold">
+                    {tab.tab_card.benefits.map((benefit, benefitIndex) => (
+                      <li key={benefitIndex}>{benefit}</li>
+                    ))}
+                  </ul>
+                </div>
+                <Button
+                  className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-auto"
+                  onClick={() =>
+                    window.open(tab.tab_card?.buttonLink, "_blank")
+                  }
+                >
+                  {tab.tab_card.buttonText}
+                </Button>
+              </div>
+            );
+          })
+        ) : (
+          <div className="text-center text-gray-500">No tabs available</div>
+        )}
       </section>
     </div>
   );

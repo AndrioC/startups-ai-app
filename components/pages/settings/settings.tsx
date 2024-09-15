@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { PageType } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+import Spinner from "@/components/spinner";
+import { ExternalPageSettingsProvider } from "@/contexts/FormExternalPageSettings";
 
 import ExternalPageSettings from "./external-page/external-page";
 import GeneralTab from "./general";
@@ -15,12 +22,27 @@ const tabs = [
 export default function SettingsComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const tabQuery = searchParams.get("tab");
   const defaultTab = "general";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery);
   const initialTab = isValidTab ? tabQuery : defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
+
+  const {
+    data: externalPageSettings,
+    refetch: refetchExternalPageSettings,
+    isLoading: isLoadingExternalPageSettings,
+    isRefetching: isRefetchingExternalPageSettings,
+  } = useLoadExternalPageSettings(
+    Number(session?.user?.organization_id),
+    PageType.ORGANIZATION
+  );
+
+  if (isLoadingExternalPageSettings) {
+    return <Spinner isLoading={true}>{""}</Spinner>;
+  }
 
   const handleTabChange = (id: string) => {
     setActiveTab(id);
@@ -58,10 +80,44 @@ export default function SettingsComponent() {
           <div className="w-full">
             {activeTab === "general" && <GeneralTab />}
 
-            {activeTab === "external-page" && <ExternalPageSettings />}
+            {activeTab === "external-page" && (
+              <>
+                {isLoadingExternalPageSettings ? (
+                  <Spinner isLoading={true}>{""}</Spinner>
+                ) : (
+                  <ExternalPageSettingsProvider
+                    initialData={externalPageSettings}
+                    refetch={refetchExternalPageSettings}
+                    isRefetching={isRefetchingExternalPageSettings}
+                  >
+                    <ExternalPageSettings
+                      key={JSON.stringify(externalPageSettings)}
+                    />
+                  </ExternalPageSettingsProvider>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+const useLoadExternalPageSettings = (
+  organization_id: number,
+  pageType: PageType
+) =>
+  useQuery<any>({
+    queryKey: ["list-kanbans-with-cards-by-program-token"],
+    queryFn: () =>
+      axios
+        .get(
+          `/api/settings/${organization_id}/load-external-page-settings?pageType=${pageType}`
+        )
+        .then((res) => {
+          return res.data;
+        }),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!organization_id || !!pageType,
+  });

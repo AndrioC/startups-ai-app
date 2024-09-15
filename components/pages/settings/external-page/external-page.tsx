@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaEdit } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { Link2 } from "lucide-react";
+import { Link2, Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { z } from "zod";
 
 import bannerCardExternalPageSettingsInfo from "@/assets/img/banner-card-external-page-settings-info.svg";
@@ -18,6 +21,7 @@ import phraseOverBannerCardExternalPageSettingsInfo from "@/assets/img/phrase-ov
 import sponsorCardImage from "@/assets/img/sponsor-card-image.svg";
 import startupCardImage from "@/assets/img/startup-card-image.svg";
 import { Button } from "@/components/ui/button";
+import { useExternalPageSettingsData } from "@/contexts/FormExternalPageSettings";
 import { ExternalPageSettingsSchema } from "@/lib/schemas/schema-external-page-setting";
 
 import TextEditor from "../text-editor";
@@ -27,17 +31,93 @@ import { ImageTooltip } from "./image-tooltip";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
+const cards = [
+  {
+    id: 1,
+    title: "Empreendedores",
+    button_text: "Sou empreendedor",
+    button_link: "https://sgl.startups-globallink.com.br",
+    image: startupCardImage,
+    bullet_points: [
+      { id: 1, title: "Aceleração Gratuita" },
+      { id: 2, title: "Mentorias Individuais" },
+      { id: 3, title: "Conexão com o Ecossistema" },
+    ],
+  },
+  {
+    id: 2,
+    title: "Investidores",
+    button_text: "Sou investidor",
+    button_link: "https://sgl.startups-globallink.com.br",
+    image: investorCardImage,
+    bullet_points: [
+      { id: 1, title: "Conexão com Startups" },
+      { id: 2, title: "Oportunidades Exclusivas" },
+      { id: 3, title: "Demodays" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Mentores",
+    button_text: "Sou mentor",
+    button_link: "https://sgl.startups-globallink.com.br",
+    image: mentorCardImage,
+    bullet_points: [
+      { id: 1, title: "Give back" },
+      { id: 2, title: "Visibilidade no Ecossistema" },
+      { id: 3, title: "Eventos Exclusivos" },
+    ],
+  },
+  {
+    id: 4,
+    title: "Patrocinadores",
+    button_text: "Sou patrocinador",
+    button_link: "https://sgl.startups-globallink.com.br",
+    image: sponsorCardImage,
+    bullet_points: [
+      { id: 1, title: "Visibilidade da marca" },
+      { id: 2, title: "Acesso VIP" },
+      { id: 3, title: "Eventos exclusivos" },
+    ],
+  },
+];
+
 export default function ExternalPageSettings() {
-  const [showLearnMore, setShowLearnMore] = useState(false);
+  const { data: session } = useSession();
+  const { subdomain } = useParams();
+  const organizationId = session?.user?.organization_id;
   const [bannerFileImage, setBannerFileImage] = useState<File | null>(null);
-  const [enabledTabs, setEnabledTabs] = useState([true, true, false, false]);
+  const [enabledTabs, setEnabledTabs] = useState(cards.map(() => false));
   const [fileSizeError, setFileSizeError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formSchema = ExternalPageSettingsSchema(enabledTabs);
+  const { initialData, refetch, logoBannerFile, setLogoBannerFile } =
+    useExternalPageSettingsData();
 
-  const truncateFileName = (name: string, maxLength: number) => {
-    if (name.length <= maxLength) return name;
-    return name.slice(0, maxLength) + "...";
+  const formSchema = ExternalPageSettingsSchema();
+
+  const defaultValues = {
+    headerLogoUrl: initialData.headerLogoUrl || null,
+    loadBanner: initialData?.loadBannerUrl || null,
+    bannerPhrase: "",
+    showLearnMore: false,
+    learnMoreText: "",
+    learnMoreLink: "",
+    pageTitle: "",
+    linkVideo: "",
+    freeText: "",
+    enabled_tabs: cards.map((card) => ({
+      tab_number: card.id,
+      is_enabled: false,
+      tab_card: null,
+    })),
+    tab_card: cards.map((card) => ({
+      id: card.id,
+      title: card.title,
+      buttonText: card.button_text,
+      buttonLink: card.button_link,
+      benefits: card.bullet_points.map((point) => point.title),
+    })),
   };
 
   const {
@@ -45,26 +125,84 @@ export default function ExternalPageSettings() {
     handleSubmit,
     control,
     watch,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      loadBanner: undefined,
-      bannerPhrase: "",
-      showLearnMore: false,
-      learnMoreText: "",
-      learnMoreLink: "",
-      linkVideo: "",
-      pageTitle: "",
-      freeText: "",
-      tabs: [
-        { title: "", buttonText: "", buttonLink: "", benefits: ["", "", ""] },
-        { title: "", buttonText: "", buttonLink: "", benefits: ["", "", ""] },
-        { title: "", buttonText: "", buttonLink: "", benefits: ["", "", ""] },
-        { title: "", buttonText: "", buttonLink: "", benefits: ["", "", ""] },
-      ],
-    },
+    defaultValues: initialData || defaultValues,
   });
+
+  useEffect(() => {
+    if (initialData.enabled_tabs) {
+      const newEnabledTabs = cards.map((card) => {
+        const enabledTab = initialData.enabled_tabs.find(
+          (tab) => tab.tab_number === card.id
+        );
+        return enabledTab ? enabledTab.is_enabled : false;
+      });
+      setEnabledTabs(newEnabledTabs);
+
+      setValue(
+        "enabled_tabs",
+        cards.map((card, index) => {
+          const enabledTab = initialData.enabled_tabs.find(
+            (tab) => tab.tab_number === card.id
+          );
+          return {
+            tab_number: card.id,
+            is_enabled: newEnabledTabs[index],
+            tab_card:
+              enabledTab && enabledTab.is_enabled
+                ? {
+                    title: enabledTab.tab_card?.title || card.title,
+                    buttonText:
+                      enabledTab.tab_card?.buttonText || card.button_text,
+                    buttonLink:
+                      enabledTab.tab_card?.buttonLink || card.button_link,
+                    benefits:
+                      enabledTab.tab_card?.benefits ||
+                      card.bullet_points.map((point) => point.title),
+                  }
+                : null,
+          };
+        })
+      );
+    }
+  }, [initialData, setValue, cards]);
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        loadBanner: initialData.loadBannerUrl,
+        bannerPhrase: initialData.bannerPhrase || "",
+        showLearnMore: initialData.showLearnMore || false,
+        learnMoreText: initialData.learnMoreText || "",
+        learnMoreLink: initialData.learnMoreLink || "",
+        pageTitle: initialData.pageTitle || "",
+        linkVideo: initialData.linkVideo || "",
+        freeText: initialData.freeText || "",
+        enabled_tabs: initialData.enabled_tabs.map((tab) => ({
+          tab_number: tab.tab_number,
+          is_enabled: tab.is_enabled,
+          tab_card:
+            tab.is_enabled && tab.tab_card
+              ? {
+                  title: tab.tab_card.title || "",
+                  buttonText: tab.tab_card.buttonText || "",
+                  buttonLink: tab.tab_card.buttonLink || "",
+                  benefits: tab.tab_card.benefits || [],
+                }
+              : null,
+        })),
+      });
+    }
+  }, [initialData, reset]);
+
+  const truncateFileName = (name: string, maxLength: number) => {
+    if (name.length <= maxLength) return name;
+    return name.slice(0, maxLength) + "...";
+  };
 
   const onSubmit = async (
     data: z.infer<typeof formSchema>,
@@ -73,12 +211,67 @@ export default function ExternalPageSettings() {
     if (event) {
       event.preventDefault();
     }
-    console.log(data);
+
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+
+    if (data.loadBanner instanceof File) {
+      formData.append("load_banner", data.loadBanner);
+    }
+
+    formData.append("page_type", "ORGANIZATION");
+    formData.append("banner_phrase", data.bannerPhrase || "");
+    formData.append("show_learn_more", data.showLearnMore ? "true" : "false");
+    formData.append("learn_more_text", data.learnMoreText || "");
+    formData.append("learn_more_link", data.learnMoreLink || "");
+    formData.append("page_title", data.pageTitle || "");
+    formData.append("link_video", data.linkVideo || "");
+    formData.append("free_text", data.freeText || "");
+
+    const enabledTabsData = data.enabled_tabs.map((tab) => ({
+      tab_number: tab.tab_number,
+      is_enabled: tab.is_enabled,
+      tab_card: tab.is_enabled ? tab.tab_card : null,
+    }));
+
+    formData.append("enabled_tabs", JSON.stringify(enabledTabsData));
+
+    try {
+      const response = await fetch(
+        `/api/settings/${organizationId}/external-page-settings`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Falha ao salvar as configurações");
+      }
+
+      toast.success("Configurações salvas com sucesso!", {
+        autoClose: 3000,
+        position: "top-center",
+      });
+      await refetch();
+    } catch (error) {
+      toast.error(
+        "Erro ao salvar as configurações. Por favor, tente novamente.",
+        {
+          autoClose: 3000,
+          position: "top-center",
+        }
+      );
+      console.error("Erro ao salvar as configurações:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (file: File | null) => void
+    onChange: (value: File | string | null) => void
   ) => {
     const selectedFile = e.target.files?.[0];
     setFileSizeError(null);
@@ -93,23 +286,100 @@ export default function ExternalPageSettings() {
       } else {
         setBannerFileImage(selectedFile);
         onChange(selectedFile);
+        setLogoBannerFile(URL.createObjectURL(selectedFile));
       }
+    } else {
+      onChange(logoBannerFile || null);
     }
   };
 
   const handlePreview = async () => {
     const formData = watch();
+    let bannerUrl = null;
+
+    if (bannerFileImage instanceof File) {
+      bannerUrl = URL.createObjectURL(bannerFileImage);
+    } else if (logoBannerFile) {
+      bannerUrl = logoBannerFile;
+    }
+
     const previewData = {
-      ...formData,
-      enabledTabs,
-      loadBanner: formData.loadBanner
-        ? URL.createObjectURL(formData.loadBanner)
-        : null,
+      headerLogo: initialData.headerLogoUrl || session?.user?.logo_img || null,
+      loadBanner: bannerUrl,
+      bannerPhrase: formData.bannerPhrase || "",
+      showLearnMore: formData.showLearnMore || false,
+      learnMoreText: formData.learnMoreText || "",
+      learnMoreLink: formData.learnMoreLink || "",
+      pageTitle: formData.pageTitle || "",
+      linkVideo: formData.linkVideo || "",
+      freeText: formData.freeText || "",
+      enabled_tabs: formData.enabled_tabs.map((tab) => ({
+        tab_number: tab.tab_number,
+        is_enabled: tab.is_enabled,
+        tab_card:
+          tab.is_enabled && tab.tab_card
+            ? {
+                title: tab.tab_card.title,
+                buttonText: tab.tab_card.buttonText,
+                buttonLink: tab.tab_card.buttonLink,
+                benefits: tab.tab_card.benefits,
+              }
+            : null,
+      })),
     };
 
     const encodedData = encodeURIComponent(JSON.stringify(previewData));
     window.open(`/page-preview?data=${encodedData}`, "_blank");
   };
+
+  const handleTabToggle = (index: number) => {
+    const newEnabledTabs = [...enabledTabs];
+    newEnabledTabs[index] = !newEnabledTabs[index];
+    setEnabledTabs(newEnabledTabs);
+
+    setValue(`enabled_tabs.${index}.is_enabled`, newEnabledTabs[index]);
+    if (!newEnabledTabs[index]) {
+      setValue(`enabled_tabs.${index}.tab_card`, null);
+    } else {
+      setValue(`enabled_tabs.${index}.tab_card`, {
+        title: "",
+        buttonText: "",
+        buttonLink: "",
+        benefits: ["", "", ""],
+      });
+    }
+  };
+
+  const handleCopyLink = () => {
+    const link = `https://${subdomain}.startups-globallink.com`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success("Link copiado para a área de transferência!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        toast.error("Falha ao copiar o link. Por favor, tente novamente.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+  };
+
+  const showLearnMore = watch("showLearnMore");
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -151,11 +421,16 @@ export default function ExternalPageSettings() {
                         <div className="relative flex items-center space-x-2 font-medium flex-grow">
                           <span
                             className="text-blue-500 cursor-pointer truncate flex-grow"
-                            title={bannerFileImage ? bannerFileImage.name : ""}
+                            title={
+                              bannerFileImage
+                                ? bannerFileImage.name
+                                : logoBannerFile || ""
+                            }
                             onClick={() =>
-                              bannerFileImage &&
                               window.open(
-                                URL.createObjectURL(bannerFileImage),
+                                bannerFileImage
+                                  ? URL.createObjectURL(bannerFileImage)
+                                  : logoBannerFile,
                                 "_blank"
                               )
                             }
@@ -163,7 +438,7 @@ export default function ExternalPageSettings() {
                             {truncateFileName(
                               bannerFileImage
                                 ? bannerFileImage.name
-                                : "Selecionar arquivo",
+                                : logoBannerFile || "Selecionar arquivo",
                               30
                             )}
                           </span>
@@ -200,6 +475,7 @@ export default function ExternalPageSettings() {
               type="button"
               variant="ghost"
               className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border-2 border-[#2292EA] transition-colors duration-300 ease-in-out"
+              onClick={handleCopyLink}
             >
               <Link2 className="w-5 h-5 mr-2" />
               LINK
@@ -207,7 +483,7 @@ export default function ExternalPageSettings() {
             <Button
               type="button"
               variant="ghost"
-              className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border-2 border-[#2292EA] transition-colors duration-300 ease-in-out"
+              className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border -2 border-[#2292EA] transition-colors duration-300 ease-in-out"
               onClick={handlePreview}
             >
               VISUALIZAR
@@ -215,9 +491,15 @@ export default function ExternalPageSettings() {
             <Button
               type="submit"
               variant="blue"
-              className="bg-[#2292EA] text-white font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
+              className={`bg-[#2292EA] text-white font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out flex items-center justify-center ${
+                isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+              disabled={isSubmitting}
             >
-              SALVAR
+              {isSubmitting && (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              )}
+              <span>{isSubmitting ? "SALVANDO" : "SALVAR"}</span>
             </Button>
           </div>
         </div>
@@ -265,7 +547,6 @@ export default function ExternalPageSettings() {
               type="checkbox"
               {...register("showLearnMore")}
               className="appearance-none w-5 h-5 mr-2 border-2 border-blue-500 rounded checked:bg-blue-500 checked:border-0 cursor-pointer bg-white transition-colors duration-300 ease-in-out"
-              onChange={() => setShowLearnMore(!showLearnMore)}
             />
             <label htmlFor="showLearnMore" className="flex items-center gap-2">
               <span className="text-gray-500">
@@ -409,7 +690,7 @@ export default function ExternalPageSettings() {
           </label>
           <div className="flex mt-10 md:mt-28 gap-5 py-10 px-4 md:px-0 max-w-[900px]">
             {cards.map((card, index) => (
-              <div key={index} className="flex flex-col items-center">
+              <div key={card.id} className="flex flex-col items-center">
                 <div className="bg-[#F9F9FC] rounded-[30px] shadow-lg w-full max-w-[270px] h-[424px] flex flex-col p-5 mb-4">
                   <div className="relative w-full bg-purple-400 left-1/2 transform -translate-x-1/2 mb-14">
                     <Image
@@ -438,18 +719,18 @@ export default function ExternalPageSettings() {
                   <input
                     type="checkbox"
                     className="appearance-none w-5 h-5 mr-2 border-2 rounded cursor-pointer bg-white transition-colors duration-300 ease-in-out
-               border-blue-500 checked:bg-blue-500 checked:border-0
-               disabled:border-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      border-blue-500 checked:bg-blue-500 checked:border-0
+                      disabled:border-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
                     checked={enabledTabs[index]}
-                    onChange={() => {
-                      const newEnabledTabs = [...enabledTabs];
-                      newEnabledTabs[index] = !newEnabledTabs[index];
-                      setEnabledTabs(newEnabledTabs);
-                    }}
+                    onChange={() => handleTabToggle(index)}
                     disabled={index >= cards.length - 2}
                   />
                   <span
-                    className={`text-sm ${index >= cards.length - 2 ? "text-gray-400" : "text-gray-700"}`}
+                    className={`text-sm ${
+                      index >= cards.length - 2
+                        ? "text-gray-400"
+                        : "text-gray-700"
+                    }`}
                   >
                     Exibir na página
                   </span>
@@ -462,94 +743,12 @@ export default function ExternalPageSettings() {
         <div className="space-y-8">
           <ExternalPageSettingsCustomTabs
             control={control}
-            enabledTabs={enabledTabs}
             errors={errors}
+            tabsData={watch("enabled_tabs")}
+            enabledTabs={enabledTabs}
           />
         </div>
       </div>
     </form>
   );
 }
-
-const cards = [
-  {
-    id: 1,
-    title: "Empreendedores",
-    button_text: "Sou empreendedor",
-    image: startupCardImage,
-    bullet_points: [
-      {
-        id: 1,
-        title: "Aceleração Gratuita",
-      },
-      {
-        id: 2,
-        title: "Mentorias Individuais",
-      },
-      {
-        id: 3,
-        title: "Conexão com o Ecossistema",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Investidores",
-    button_text: "Sou investidor",
-    image: investorCardImage,
-    bullet_points: [
-      {
-        id: 1,
-        title: "Conexão com Startups",
-      },
-      {
-        id: 2,
-        title: "Oportunidades Exclusivas",
-      },
-      {
-        id: 3,
-        title: "Demodays",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "Mentores",
-    button_text: "Sou mentor",
-    image: mentorCardImage,
-    bullet_points: [
-      {
-        id: 1,
-        title: "Give back",
-      },
-      {
-        id: 2,
-        title: "Visibilidade no Ecossistema",
-      },
-      {
-        id: 3,
-        title: "Eventos Exclusivos",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "Patrocinadores",
-    button_text: "Sou patrocinador",
-    image: sponsorCardImage,
-    bullet_points: [
-      {
-        id: 1,
-        title: "Visibilidade da marca",
-      },
-      {
-        id: 2,
-        title: "Acesso VIP",
-      },
-      {
-        id: 3,
-        title: "Eventos exclusivos",
-      },
-    ],
-  },
-];

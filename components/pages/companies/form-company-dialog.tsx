@@ -348,8 +348,6 @@ export default function FormCompanyDialog({
           ? `/api/companies/${session?.user?.organization_id}/update?companyId=${company.id}`
           : `/api/companies/${session?.user?.organization_id}/create`;
 
-        console.log("url: ", url);
-
         const response = await axios({
           method,
           url,
