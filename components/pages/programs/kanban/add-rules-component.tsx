@@ -553,7 +553,7 @@ export default function AddRulesComponent({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="fixed top-1/2 left-1/2 w-[1200px] max-w-[95vw] max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg focus:outline-none overflow-y-auto custom-scrollbar">
+      <DialogContent className="fixed top-1/2 left-1/2 w-[1100px] max-w-[95vw] max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg focus:outline-none overflow-y-auto custom-scrollbar">
         <Spinner isLoading={isLoading}>
           <div className="h-full">
             <DialogTitle className="text-2xl font-bold uppercase mb-4">

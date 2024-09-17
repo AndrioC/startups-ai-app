@@ -79,29 +79,31 @@ export default function HeaderProgramPage({
           </h1>
         </div>
       </div>
-      <div className="flex overflow-x-auto whitespace-nowrap">
-        {tabs.map((tab, index) => (
-          <div key={index} className="relative">
-            <button
-              onClick={() => handleTabChange(tab.id)}
-              className={`px-4 py-2 text-sm sm:text-base ${
-                activeTab === tab.id ? "text-gray-800" : "text-gray-500"
-              }`}
-            >
-              {tab.title}
-            </button>
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="underline"
-                className="absolute bottom-[-6px] left-0 w-full h-1 bg-gray-400"
-                transition={{ duration: 0.2 }}
-              />
-            )}
-          </div>
-        ))}
+      <div>
+        <div className="flex whitespace-nowrap">
+          {tabs.map((tab, index) => (
+            <div key={index} className="relative flex-shrink-0">
+              <button
+                onClick={() => handleTabChange(tab.id)}
+                className={`px-4 py-2 text-sm sm:text-base ${
+                  activeTab === tab.id ? "text-gray-800" : "text-gray-500"
+                }`}
+              >
+                {tab.title}
+              </button>
+              {activeTab === tab.id && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-[-2px] left-0 w-full h-1 bg-gray-400"
+                  style={{ transform: "translateY(100%)" }}
+                  transition={{ duration: 0.2 }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="bg-gray-300 h-[1px] mb-4"></div>
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 w-full">
         <Button
           onClick={handleCopyLink}
           className="flex items-center justify-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-xs sm:text-sm rounded-[30px] w-full sm:w-auto px-4 py-2 hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out mb-4"
@@ -109,7 +111,7 @@ export default function HeaderProgramPage({
           <MdInsertLink className="h-5 w-5 mr-1 text-[#2292EA]" />
           Copiar link para cadastro
         </Button>
-        <div className="w-full overflow-x-auto">
+        <div className="w-full">
           {tabContents.filter((tab) => tab.key === activeTab)}
         </div>
       </div>

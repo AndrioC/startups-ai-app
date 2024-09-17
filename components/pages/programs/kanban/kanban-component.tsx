@@ -87,9 +87,9 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
   };
 
   return (
-    <div className="flex bg-[#FCFCFC] p-5 min-h-screen">
-      <div className="flex h-full overflow-x-auto custom-scrollbar">
-        <div className="flex gap-4 h-full mb-5 pl-5 pr-5">
+    <div className="flex bg-[#FCFCFC] min-h-screen">
+      <div className="flex h-full overflow-x-auto custom-scrollbar w-[1100px] pl-5 pr-5">
+        <div className="flex gap-4 h-full mb-5">
           <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragEnd}>
             {kanbanData
               ?.sort((a, b) => a.kanban_position - b.kanban_position)
