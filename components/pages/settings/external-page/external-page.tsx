@@ -228,11 +228,17 @@ export default function ExternalPageSettings() {
     formData.append("page_title", data.pageTitle || "");
     formData.append("link_video", data.linkVideo || "");
     formData.append("free_text", data.freeText || "");
+    const buttonLinkUrl = `https://${subdomain}.startups-globallink.com.br/auth/login`;
 
     const enabledTabsData = data.enabled_tabs.map((tab) => ({
       tab_number: tab.tab_number,
       is_enabled: tab.is_enabled,
-      tab_card: tab.is_enabled ? tab.tab_card : null,
+      tab_card: tab.is_enabled
+        ? {
+            ...tab.tab_card,
+            buttonLink: buttonLinkUrl,
+          }
+        : null,
     }));
 
     formData.append("enabled_tabs", JSON.stringify(enabledTabsData));

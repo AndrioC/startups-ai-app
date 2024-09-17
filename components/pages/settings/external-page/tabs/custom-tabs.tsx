@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
 import { z } from "zod";
 
 import investorCardImage from "@/assets/img/investor-card-image.svg";
@@ -89,6 +90,8 @@ export default function ExternalPageSettingsCustomTabs({
   enabledTabs,
 }: ExternalPageSettingsCustomTabsProps) {
   const [activeTab, setActiveTab] = useState(0);
+  const { subdomain } = useParams();
+  const buttonLinkUrl = `https://${subdomain}.startups-globallink.com.br/auth/login`;
 
   useEffect(() => {
     const firstEnabledTabIndex = enabledTabs.findIndex((tab) => tab);
@@ -264,22 +267,23 @@ export default function ExternalPageSettingsCustomTabs({
                   <Controller
                     name={`enabled_tabs.${tabIndex}.tab_card.buttonLink`}
                     control={control}
-                    defaultValue={tab.tab_card?.buttonLink ?? ""}
+                    defaultValue={buttonLinkUrl}
                     render={({ field }) => (
                       <div>
                         <input
                           {...field}
                           type="text"
-                          value={field.value ?? ""}
+                          value={buttonLinkUrl}
                           id={`enabled_tabs.${tabIndex}.tab_card.buttonLink`}
                           placeholder={cards[tabIndex].button_link}
-                          className="border rounded-md w-full h-[40px] pl-2 placeholder:font-light placeholder:text-[#A7B6CD]"
+                          className="border rounded-md w-full h-[40px] pl-2 placeholder:font-light placeholder:text-[#A7B6CD] cursor-not-allowed text-[#A7B6CD]"
                           aria-invalid={!!getError(tabIndex, "buttonLink")}
                           aria-describedby={
                             getError(tabIndex, "buttonLink")
                               ? `enabled_tabs.${tabIndex}.tab_card.buttonLink-error`
                               : undefined
                           }
+                          disabled
                         />
                         {getError(tabIndex, "buttonLink") && (
                           <p
