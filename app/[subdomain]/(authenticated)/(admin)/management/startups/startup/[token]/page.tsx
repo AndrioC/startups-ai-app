@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 import { SelectDataProps } from "@/components/external/startup/startup-form";
 import LoadingSpinner from "@/components/loading-spinner";
 import StartupTab from "@/components/pages/startups/list/startup-tab";
-import Spinner from "@/components/spinner";
 import { FormStartupTabProvider } from "@/contexts/FormStartupTabContext";
 
 export default function StartupDetailPage() {
@@ -24,22 +23,20 @@ export default function StartupDetailPage() {
   if (isLoading || isLoadingSelectData) return <LoadingSpinner />;
 
   return (
-    <Spinner isLoading={isLoading}>
-      <FormStartupTabProvider
-        initialData={{
-          ...data.blocks.generalData,
-          ...data.blocks.team,
-          ...data.blocks.productService,
-          ...data.blocks.deepTech,
-          ...data.blocks.governance,
-          ...data.blocks.marketFinance,
-          ...data.blocks.profile,
-        }}
-        selectData={selectData!}
-      >
-        <StartupTab />
-      </FormStartupTabProvider>
-    </Spinner>
+    <FormStartupTabProvider
+      initialData={{
+        ...data.blocks.generalData,
+        ...data.blocks.team,
+        ...data.blocks.productService,
+        ...data.blocks.deepTech,
+        ...data.blocks.governance,
+        ...data.blocks.marketFinance,
+        ...data.blocks.profile,
+      }}
+      selectData={selectData!}
+    >
+      <StartupTab />
+    </FormStartupTabProvider>
   );
 }
 
