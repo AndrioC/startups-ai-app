@@ -2,23 +2,51 @@
 
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 
 import ProfileListModal from "./profile-list-modal";
 import StartupProfileMarkDown from "./startup-profile-markdown";
 
 export default function ProfileDataForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
-  const { initialData } = useFormStartupDataState();
+  const { initialData, refetch } = useFormStartupDataState();
 
-  const handleUpdateProfileClick = () => {
-    toast.info(
-      "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
-    );
+  const handleUpdateProfileClick = async () => {
+    setIsLoading(true);
+    setIsAIModalOpen(true);
+    try {
+      const response = await axios.post(`/api/startup/generate-profile`, {
+        params: {
+          codigo_startup: initialData.startupId,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Perfil atualizado com sucesso!");
+        refetch();
+      } else {
+        throw new Error("Falha ao atualizar o perfil");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+      toast.error("Erro ao atualizar o perfil. Por favor, tente novamente.");
+    } finally {
+      setIsLoading(false);
+      setIsAIModalOpen(false);
+    }
   };
 
   if (!initialData.startupProfile) {
@@ -42,7 +70,6 @@ export default function ProfileDataForm() {
           <h1 className="text-2xl font-semibold">
             PERFIL DA STARTUP GERADO PELA I.A.
           </h1>
-          <span className="text-xl font-semibold mr-2">NOTA: 7,8</span>
           <p className="text-sm text-gray-500 font-normal">
             Mantenha o Perfil de sua Startup sempre atualizado para melhorar a
             nota e para facilitar a busca por investidores.
@@ -54,6 +81,7 @@ export default function ProfileDataForm() {
             variant="outline"
             className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
             onClick={handleUpdateProfileClick}
+            disabled={isLoading}
           >
             <Sparkles size={20} />
             ATUALIZAR PERFIL
@@ -62,7 +90,6 @@ export default function ProfileDataForm() {
             variant="link"
             className="text-blue-500 hover:text-blue-700 text-xs"
             onClick={() => setIsModalOpen(true)}
-            disabled
           >
             VER PERFIS GERADOS
           </Button>
@@ -75,6 +102,21 @@ export default function ProfileDataForm() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
+      <Dialog open={isAIModalOpen} onOpenChange={setIsAIModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Analisando dados</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center justify-center p-4">
+            <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+            <p className="text-center text-gray-600">
+              A IA está analisando os dados e formulando o perfil da sua
+              startup. Por favor, aguarde um momento...
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

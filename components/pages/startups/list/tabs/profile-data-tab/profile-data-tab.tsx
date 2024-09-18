@@ -29,7 +29,7 @@ export default function ProfileDataTab() {
           <h1 className="text-2xl font-semibold">
             PERFIL DA STARTUP GERADO PELA I.A.
           </h1>
-          <span className="text-xl font-semibold mr-2">NOTA: 7,8</span>
+          {/* <span className="text-xl font-semibold mr-2">NOTA: 7,8</span> */}
         </div>
       </div>
 

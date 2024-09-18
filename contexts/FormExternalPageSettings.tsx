@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { QueryObserverResult, UseQueryResult } from "@tanstack/react-query";
 
 interface TabCard {
@@ -16,7 +16,7 @@ interface EnabledTab {
 
 interface ExternalPageSettingsData {
   headerLogoUrl: string;
-  loadBanner: File;
+  loadBanner: File | undefined;
   loadBannerUrl: string;
   bannerPhrase: string;
   showLearnMore: boolean;
@@ -49,6 +49,8 @@ const initialExternalPageSettingsData: ExternalPageSettingsData = {
 
 interface FormExternalPageSettingsContext {
   initialData: ExternalPageSettingsData;
+  formData: ExternalPageSettingsData;
+  updateFormData: (data: Partial<ExternalPageSettingsData>) => void;
   logoBannerFile: string | undefined;
   setLogoBannerFile: React.Dispatch<React.SetStateAction<string | undefined>>;
   refetch: UseQueryResult["refetch"];
@@ -58,6 +60,8 @@ interface FormExternalPageSettingsContext {
 const ExternalPageSettingsContext =
   createContext<FormExternalPageSettingsContext>({
     initialData: initialExternalPageSettingsData,
+    formData: initialExternalPageSettingsData,
+    updateFormData: () => {},
     logoBannerFile: "",
     setLogoBannerFile: () => {},
     refetch: () => Promise.resolve({} as QueryObserverResult<unknown, Error>),
@@ -77,14 +81,31 @@ export function ExternalPageSettingsProvider({
   refetch,
   isRefetching,
 }: Props) {
+  const [formData, setFormData] = useState<ExternalPageSettingsData>(
+    initialData || initialExternalPageSettingsData
+  );
+
   const [logoBannerFile, setLogoBannerFile] = useState<string | undefined>(
     initialData?.loadBannerUrl
   );
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+      setLogoBannerFile(initialData.loadBannerUrl);
+    }
+  }, [initialData]);
+
+  const updateFormData = (data: Partial<ExternalPageSettingsData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+  };
 
   return (
     <ExternalPageSettingsContext.Provider
       value={{
         initialData: initialData || initialExternalPageSettingsData,
+        formData,
+        updateFormData,
         logoBannerFile,
         setLogoBannerFile,
         refetch,

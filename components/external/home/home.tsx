@@ -154,7 +154,7 @@ export default function HomeComponent() {
           className="flex flex-col items-center justify-center bg-cover bg-center h-[400px] w-full"
           style={bannerStyle}
         >
-          <h1 className="text-white text-[32px] w-[300px] md:text-[64px] font-extrabold text-center md:text-left p-4 md:p-14 md:w-[700px] md:self-start">
+          <h1 className="text-white text-[24px] w-[300px] md:text-[50px] font-extrabold text-center md:text-left p-4 md:p-14 md:w-[700px] md:self-start">
             {data?.bannerPhrase}
           </h1>
           <Link href={data?.learnMoreLink ?? "/"}>

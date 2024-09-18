@@ -94,6 +94,20 @@ export async function GET(
     },
   });
 
+  const generatedProfiles = await prisma.startup_generated_profiles.findMany({
+    where: {
+      startup_id: Number(params.startup_id),
+    },
+    orderBy: [{ generated_date: "asc" }, { id: "asc" }],
+  });
+
+  const numberedProfiles = generatedProfiles
+    .map((profile, index) => ({
+      ...profile,
+      profile_number: index + 1,
+    }))
+    .sort((a, b) => a.profile_number - b.profile_number);
+
   const partners = startup?.startup_partner
     ? startup?.startup_partner.map((partner) => ({
         name: partner.name,
@@ -225,8 +239,11 @@ export async function GET(
     investments,
   };
 
+  const activeProfile = generatedProfiles.find((profile) => profile.active);
+
   const profile: Block = {
-    startupProfile: startup?.startup_profile,
+    startupProfile: activeProfile ? activeProfile.profile : null,
+    allGeneratedProfiles: numberedProfiles,
   };
 
   const blocks: { [key: string]: Block } = {

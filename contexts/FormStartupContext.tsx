@@ -26,6 +26,15 @@ interface Investment {
   investors: string;
 }
 
+export interface Profile {
+  id: number;
+  startup_id: number;
+  profile: string;
+  active: boolean;
+  generated_date: string;
+  profile_number: number;
+}
+
 export interface FormStartupData {
   startupId: number;
   startupName: string;
@@ -89,6 +98,7 @@ export interface FormStartupData {
   investments?: Investment[];
 
   startupProfile: string;
+  allGeneratedProfiles: Profile[];
 }
 
 interface FormStartupDataContext {
@@ -189,6 +199,7 @@ const initialFormStartupData: FormStartupData = {
   ],
 
   startupProfile: "",
+  allGeneratedProfiles: [],
 };
 
 const FormContext = createContext<FormStartupDataContext>({

@@ -23,7 +23,7 @@ type EnabledTab = {
 
 type PreviewProps = {
   headerLogo: string;
-  loadBanner: string | null;
+  loadBannerUrl: string | null;
   bannerPhrase: string;
   showLearnMore: boolean;
   learnMoreText: string;
@@ -78,7 +78,7 @@ function getEmbedUrl(url: string): string {
 
 export function PreviewComponent({
   headerLogo,
-  loadBanner,
+  loadBannerUrl,
   bannerPhrase,
   showLearnMore,
   learnMoreText,
@@ -91,9 +91,9 @@ export function PreviewComponent({
   const embedUrl = useMemo(() => getEmbedUrl(linkVideo), [linkVideo]);
 
   const bannerStyle = useMemo(() => {
-    if (loadBanner) {
+    if (loadBannerUrl) {
       return {
-        backgroundImage: `url(${loadBanner})`,
+        backgroundImage: `url(${loadBannerUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -102,7 +102,7 @@ export function PreviewComponent({
     return {
       backgroundColor: "#f0f0f0",
     };
-  }, [loadBanner]);
+  }, [loadBannerUrl]);
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -126,7 +126,7 @@ export function PreviewComponent({
           className="flex flex-col items-center justify-center bg-cover bg-center h-[400px] w-full"
           style={bannerStyle}
         >
-          <h1 className="text-white text-[32px] w-[300px] md:text-[64px] font-extrabold text-center md:text-left p-4 md:p-14 md:w-[700px] md:self-start">
+          <h1 className="text-white text-[24px] w-[300px] md:text-[50px] font-extrabold text-center md:text-left p-4 md:p-14 md:w-[700px] md:self-start">
             {bannerPhrase}
           </h1>
           {showLearnMore && (

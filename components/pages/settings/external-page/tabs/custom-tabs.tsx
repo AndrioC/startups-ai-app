@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import React, { useCallback, useEffect, useState } from "react";
+import { Control, Controller, FieldErrors, useWatch } from "react-hook-form";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
@@ -10,6 +10,7 @@ import mentorCardImage from "@/assets/img/mentor-card-image.svg";
 import sponsorCardImage from "@/assets/img/sponsor-card-image.svg";
 import startupCardImage from "@/assets/img/startup-card-image.svg";
 import { Label } from "@/components/ui/label";
+import { useExternalPageSettingsData } from "@/contexts/FormExternalPageSettings";
 import { ExternalPageSettingsSchema } from "@/lib/schemas/schema-external-page-setting";
 
 type FormSchema = z.infer<ReturnType<typeof ExternalPageSettingsSchema>>;
@@ -28,7 +29,6 @@ interface TabData {
 interface ExternalPageSettingsCustomTabsProps {
   control: Control<FormSchema>;
   errors: FieldErrors<FormSchema>;
-  tabsData: TabData[];
   enabledTabs: boolean[];
 }
 
@@ -86,12 +86,25 @@ const cards = [
 export default function ExternalPageSettingsCustomTabs({
   control,
   errors,
-  tabsData,
   enabledTabs,
 }: ExternalPageSettingsCustomTabsProps) {
   const [activeTab, setActiveTab] = useState(0);
   const { subdomain } = useParams();
   const buttonLinkUrl = `https://${subdomain}.startups-globallink.com.br/auth/login`;
+
+  const { updateFormData } = useExternalPageSettingsData();
+
+  const tabsData = useWatch({
+    control,
+    name: "enabled_tabs",
+  });
+
+  const updateContextData = useCallback(
+    (newTabsData: TabData[]) => {
+      updateFormData({ enabled_tabs: newTabsData });
+    },
+    [updateFormData]
+  );
 
   useEffect(() => {
     const firstEnabledTabIndex = enabledTabs.findIndex((tab) => tab);
@@ -184,7 +197,6 @@ export default function ExternalPageSettingsCustomTabs({
                         <input
                           {...field}
                           type="text"
-                          value={field.value ?? ""}
                           id={`enabled_tabs.${tabIndex}.tab_card.title`}
                           placeholder={cards[tabIndex].title}
                           className="border rounded-md w-full h-[40px] pl-2 placeholder:font-light placeholder:text-[#A7B6CD]"
@@ -195,6 +207,15 @@ export default function ExternalPageSettingsCustomTabs({
                               ? `enabled_tabs.${tabIndex}.tab_card.title-error`
                               : undefined
                           }
+                          onChange={(e) => {
+                            field.onChange(e);
+                            const newTabsData = [...tabsData];
+                            if (newTabsData[tabIndex].tab_card) {
+                              newTabsData[tabIndex].tab_card!.title =
+                                e.target.value;
+                              updateContextData(newTabsData);
+                            }
+                          }}
                         />
                         {getError(tabIndex, "title") && (
                           <p
@@ -230,7 +251,6 @@ export default function ExternalPageSettingsCustomTabs({
                         <input
                           {...field}
                           type="text"
-                          value={field.value ?? ""}
                           id={`enabled_tabs.${tabIndex}.tab_card.buttonText`}
                           placeholder={cards[tabIndex].button_text}
                           className="border rounded-md w-full h-[40px] pl-2 placeholder:font-light placeholder:text-[#A7B6CD]"
@@ -241,6 +261,15 @@ export default function ExternalPageSettingsCustomTabs({
                               ? `enabled_tabs.${tabIndex}.tab_card.buttonText-error`
                               : undefined
                           }
+                          onChange={(e) => {
+                            field.onChange(e);
+                            const newTabsData = [...tabsData];
+                            if (newTabsData[tabIndex].tab_card) {
+                              newTabsData[tabIndex].tab_card!.buttonText =
+                                e.target.value;
+                              updateContextData(newTabsData);
+                            }
+                          }}
                         />
                         {getError(tabIndex, "buttonText") && (
                           <p
@@ -284,6 +313,7 @@ export default function ExternalPageSettingsCustomTabs({
                               : undefined
                           }
                           disabled
+                          readOnly
                         />
                         {getError(tabIndex, "buttonLink") && (
                           <p
@@ -320,7 +350,6 @@ export default function ExternalPageSettingsCustomTabs({
                           <input
                             {...field}
                             type="text"
-                            value={field.value ?? ""}
                             id={`enabled_tabs.${tabIndex}.tab_card.benefits.${index}`}
                             placeholder={bullet_point.title}
                             className="border rounded-md w-full h-[40px] pl-2 placeholder:font-light placeholder:text-[#A7B6CD]"
@@ -331,6 +360,16 @@ export default function ExternalPageSettingsCustomTabs({
                                 ? `enabled_tabs.${tabIndex}.tab_card.benefits.${index}-error`
                                 : undefined
                             }
+                            onChange={(e) => {
+                              field.onChange(e);
+                              const newTabsData = [...tabsData];
+                              if (newTabsData[tabIndex].tab_card) {
+                                newTabsData[tabIndex].tab_card!.benefits[
+                                  index
+                                ] = e.target.value;
+                                updateContextData(newTabsData);
+                              }
+                            }}
                           />
                           {getBenefitError(tabIndex, index) && (
                             <p

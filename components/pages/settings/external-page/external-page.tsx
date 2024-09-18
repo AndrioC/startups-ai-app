@@ -91,34 +91,40 @@ export default function ExternalPageSettings() {
   const [fileSizeError, setFileSizeError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { initialData, refetch, logoBannerFile, setLogoBannerFile } =
-    useExternalPageSettingsData();
+  const {
+    initialData,
+    formData,
+    refetch,
+    logoBannerFile,
+    setLogoBannerFile,
+    updateFormData,
+  } = useExternalPageSettingsData();
 
   const formSchema = ExternalPageSettingsSchema();
 
-  const defaultValues = {
-    headerLogoUrl: initialData.headerLogoUrl || null,
-    loadBanner: initialData?.loadBannerUrl || null,
-    bannerPhrase: "",
-    showLearnMore: false,
-    learnMoreText: "",
-    learnMoreLink: "",
-    pageTitle: "",
-    linkVideo: "",
-    freeText: "",
-    enabled_tabs: cards.map((card) => ({
-      tab_number: card.id,
-      is_enabled: false,
-      tab_card: null,
-    })),
-    tab_card: cards.map((card) => ({
-      id: card.id,
-      title: card.title,
-      buttonText: card.button_text,
-      buttonLink: card.button_link,
-      benefits: card.bullet_points.map((point) => point.title),
-    })),
-  };
+  // const defaultValues = {
+  //   headerLogoUrl: initialData.headerLogoUrl || null,
+  //   loadBanner: initialData?.loadBanner,
+  //   bannerPhrase: "",
+  //   showLearnMore: false,
+  //   learnMoreText: "",
+  //   learnMoreLink: "",
+  //   pageTitle: "",
+  //   linkVideo: "",
+  //   freeText: "",
+  //   enabled_tabs: cards.map((card) => ({
+  //     tab_number: card.id,
+  //     is_enabled: false,
+  //     tab_card: null,
+  //   })),
+  //   tab_card: cards.map((card) => ({
+  //     id: card.id,
+  //     title: card.title,
+  //     buttonText: card.button_text,
+  //     buttonLink: card.button_link,
+  //     benefits: card.bullet_points.map((point) => point.title),
+  //   })),
+  // };
 
   const {
     register,
@@ -130,13 +136,13 @@ export default function ExternalPageSettings() {
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || defaultValues,
+    defaultValues: formData,
   });
 
   useEffect(() => {
-    if (initialData.enabled_tabs) {
+    if (formData.enabled_tabs) {
       const newEnabledTabs = cards.map((card) => {
-        const enabledTab = initialData.enabled_tabs.find(
+        const enabledTab = formData.enabled_tabs.find(
           (tab) => tab.tab_number === card.id
         );
         return enabledTab ? enabledTab.is_enabled : false;
@@ -146,7 +152,7 @@ export default function ExternalPageSettings() {
       setValue(
         "enabled_tabs",
         cards.map((card, index) => {
-          const enabledTab = initialData.enabled_tabs.find(
+          const enabledTab = formData.enabled_tabs.find(
             (tab) => tab.tab_number === card.id
           );
           return {
@@ -169,35 +175,17 @@ export default function ExternalPageSettings() {
         })
       );
     }
-  }, [initialData, setValue, cards]);
+  }, [formData, setValue]);
 
   useEffect(() => {
-    if (initialData) {
-      reset({
-        loadBanner: initialData.loadBannerUrl,
-        bannerPhrase: initialData.bannerPhrase || "",
-        showLearnMore: initialData.showLearnMore || false,
-        learnMoreText: initialData.learnMoreText || "",
-        learnMoreLink: initialData.learnMoreLink || "",
-        pageTitle: initialData.pageTitle || "",
-        linkVideo: initialData.linkVideo || "",
-        freeText: initialData.freeText || "",
-        enabled_tabs: initialData.enabled_tabs.map((tab) => ({
-          tab_number: tab.tab_number,
-          is_enabled: tab.is_enabled,
-          tab_card:
-            tab.is_enabled && tab.tab_card
-              ? {
-                  title: tab.tab_card.title || "",
-                  buttonText: tab.tab_card.buttonText || "",
-                  buttonLink: tab.tab_card.buttonLink || "",
-                  benefits: tab.tab_card.benefits || [],
-                }
-              : null,
-        })),
-      });
-    }
-  }, [initialData, reset]);
+    reset(formData);
+  }, [formData, reset]);
+
+  const handleChange = (name: string, value: any) => {
+    setValue(name as any, value);
+    const updatedFormData = { ...formData, [name]: value };
+    updateFormData(updatedFormData);
+  };
 
   const truncateFileName = (name: string, maxLength: number) => {
     if (name.length <= maxLength) return name;
@@ -293,6 +281,7 @@ export default function ExternalPageSettings() {
         setBannerFileImage(selectedFile);
         onChange(selectedFile);
         setLogoBannerFile(URL.createObjectURL(selectedFile));
+        handleChange("loadBanner", selectedFile);
       }
     } else {
       onChange(logoBannerFile || null);
@@ -311,7 +300,7 @@ export default function ExternalPageSettings() {
 
     const previewData = {
       headerLogo: initialData.headerLogoUrl || session?.user?.logo_img || null,
-      loadBanner: bannerUrl,
+      loadBannerUrl: bannerUrl,
       bannerPhrase: formData.bannerPhrase || "",
       showLearnMore: formData.showLearnMore || false,
       learnMoreText: formData.learnMoreText || "",
@@ -354,6 +343,17 @@ export default function ExternalPageSettings() {
         benefits: ["", "", ""],
       });
     }
+    handleChange(`enabled_tabs.${index}`, {
+      is_enabled: newEnabledTabs[index],
+      tab_card: newEnabledTabs[index]
+        ? {
+            title: "",
+            buttonText: "",
+            buttonLink: "",
+            benefits: ["", "", ""],
+          }
+        : null,
+    });
   };
 
   const handleCopyLink = () => {
@@ -489,7 +489,7 @@ export default function ExternalPageSettings() {
             <Button
               type="button"
               variant="ghost"
-              className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border -2 border-[#2292EA] transition-colors duration-300 ease-in-out"
+              className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border-2 border-[#2292EA] transition-colors duration-300 ease-in-out"
               onClick={handlePreview}
             >
               VISUALIZAR
@@ -530,6 +530,7 @@ export default function ExternalPageSettings() {
             type="text"
             className="border rounded-md w-[900px] h-[40px] pl-2"
             maxLength={40}
+            onChange={(e) => handleChange("bannerPhrase", e.target.value)}
           />
           {errors.bannerPhrase && (
             <p className="mt-2 text-sm text-red-500">
@@ -553,6 +554,7 @@ export default function ExternalPageSettings() {
               type="checkbox"
               {...register("showLearnMore")}
               className="appearance-none w-5 h-5 mr-2 border-2 border-blue-500 rounded checked:bg-blue-500 checked:border-0 cursor-pointer bg-white transition-colors duration-300 ease-in-out"
+              onChange={(e) => handleChange("showLearnMore", e.target.checked)}
             />
             <label htmlFor="showLearnMore" className="flex items-center gap-2">
               <span className="text-gray-500">
@@ -579,6 +581,9 @@ export default function ExternalPageSettings() {
                   type="text"
                   className="w-full max-w-[450px] border rounded-md h-10 px-3"
                   maxLength={15}
+                  onChange={(e) =>
+                    handleChange("learnMoreText", e.target.value)
+                  }
                 />
                 {errors.learnMoreText && (
                   <p className="mt-2 text-sm text-red-500">
@@ -595,6 +600,9 @@ export default function ExternalPageSettings() {
                   {...register("learnMoreLink")}
                   type="text"
                   className="w-full max-w-[450px] border rounded-md h-10 px-3"
+                  onChange={(e) =>
+                    handleChange("learnMoreLink", e.target.value)
+                  }
                 />
                 {errors.learnMoreLink && (
                   <p className="mt-2 text-sm text-red-500">
@@ -627,6 +635,7 @@ export default function ExternalPageSettings() {
             type="text"
             className="border rounded-md w-[900px] h-[40px] pl-2"
             maxLength={30}
+            onChange={(e) => handleChange("pageTitle", e.target.value)}
           />
           {errors.pageTitle && (
             <p className="mt-2 text-sm text-red-500">
@@ -652,6 +661,7 @@ export default function ExternalPageSettings() {
             {...register("linkVideo")}
             type="text"
             className="border rounded-md w-[900px] h-[40px] pl-2"
+            onChange={(e) => handleChange("linkVideo", e.target.value)}
           />
           {errors.linkVideo && (
             <p className="mt-2 text-sm text-red-500">
@@ -677,7 +687,13 @@ export default function ExternalPageSettings() {
             control={control}
             defaultValue=""
             render={({ field: { value, onChange } }) => (
-              <TextEditor value={value || ""} onChange={onChange} />
+              <TextEditor
+                value={value || ""}
+                onChange={(newValue) => {
+                  onChange(newValue);
+                  handleChange("freeText", newValue);
+                }}
+              />
             )}
           />
           {errors.freeText && (
@@ -750,7 +766,6 @@ export default function ExternalPageSettings() {
           <ExternalPageSettingsCustomTabs
             control={control}
             errors={errors}
-            tabsData={watch("enabled_tabs")}
             enabledTabs={enabledTabs}
           />
         </div>

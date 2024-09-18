@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PageType } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -39,6 +39,15 @@ export default function SettingsComponent() {
     Number(session?.user?.organization_id),
     PageType.ORGANIZATION
   );
+
+  const [mountExternalPageSettings, setMountExternalPageSettings] =
+    useState(false);
+
+  useEffect(() => {
+    if (activeTab === "external-page" && !mountExternalPageSettings) {
+      setMountExternalPageSettings(true);
+    }
+  }, [activeTab]);
 
   if (isLoadingExternalPageSettings) {
     return <Spinner isLoading={true}>{""}</Spinner>;
@@ -80,22 +89,14 @@ export default function SettingsComponent() {
           <div className="w-full">
             {activeTab === "general" && <GeneralTab />}
 
-            {activeTab === "external-page" && (
-              <>
-                {isLoadingExternalPageSettings ? (
-                  <Spinner isLoading={true}>{""}</Spinner>
-                ) : (
-                  <ExternalPageSettingsProvider
-                    initialData={externalPageSettings}
-                    refetch={refetchExternalPageSettings}
-                    isRefetching={isRefetchingExternalPageSettings}
-                  >
-                    <ExternalPageSettings
-                      key={JSON.stringify(externalPageSettings)}
-                    />
-                  </ExternalPageSettingsProvider>
-                )}
-              </>
+            {mountExternalPageSettings && (
+              <ExternalPageSettingsProvider
+                initialData={externalPageSettings}
+                refetch={refetchExternalPageSettings}
+                isRefetching={isRefetchingExternalPageSettings}
+              >
+                {activeTab === "external-page" && <ExternalPageSettings />}
+              </ExternalPageSettingsProvider>
             )}
           </div>
         </div>

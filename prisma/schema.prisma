@@ -239,6 +239,7 @@ model startups {
   startup_investiments_rounds                     startup_investiments_rounds[]
   kanban_cards                                    kanban_cards[]
   investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
+  startup_generated_profiles                      startup_generated_profiles[]
 }
 
 enum UserType {
@@ -733,4 +734,15 @@ model external_page_settings_benefit {
   tabs_cards external_page_settings_tabs_cards @relation(fields: [tab_card_id], references: [id])
 
   @@unique([tab_card_id, order])
+}
+
+model startup_generated_profiles {
+  id             Int      @id @default(autoincrement())
+  startup_id     Int
+  profile        String   @db.Text
+  active         Boolean  @default(true)
+  generated_date DateTime @default(now())
+  startups       startups @relation(fields: [startup_id], references: [id])
+
+  @@index([startup_id])
 }

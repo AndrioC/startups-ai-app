@@ -2,12 +2,9 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Profile } from "@/contexts/FormStartupContext";
 
-interface Profile {
-  id: string;
-  name: string;
-  createdAt: string;
-}
+import StartupProfileMarkDown from "./startup-profile-markdown";
 
 interface Props {
   profile: Profile;
@@ -26,9 +23,7 @@ export default function ProfileViewer({ profile, onBack }: Props) {
         <ArrowLeft className="h-4 w-4" />
       </Button>
       <div className="border p-4 rounded-md">
-        <h2 className="text-xl font-bold mb-2">{profile.name}</h2>
-        <p>Data de criação: {profile.createdAt}</p>
-        <p className="mt-4">Conteúdo do Perfil mockado aqui...</p>
+        <StartupProfileMarkDown profileData={profile.profile} />
       </div>
     </div>
   );
