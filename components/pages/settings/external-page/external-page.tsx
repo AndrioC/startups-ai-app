@@ -102,30 +102,6 @@ export default function ExternalPageSettings() {
 
   const formSchema = ExternalPageSettingsSchema();
 
-  // const defaultValues = {
-  //   headerLogoUrl: initialData.headerLogoUrl || null,
-  //   loadBanner: initialData?.loadBanner,
-  //   bannerPhrase: "",
-  //   showLearnMore: false,
-  //   learnMoreText: "",
-  //   learnMoreLink: "",
-  //   pageTitle: "",
-  //   linkVideo: "",
-  //   freeText: "",
-  //   enabled_tabs: cards.map((card) => ({
-  //     tab_number: card.id,
-  //     is_enabled: false,
-  //     tab_card: null,
-  //   })),
-  //   tab_card: cards.map((card) => ({
-  //     id: card.id,
-  //     title: card.title,
-  //     buttonText: card.button_text,
-  //     buttonLink: card.button_link,
-  //     benefits: card.bullet_points.map((point) => point.title),
-  //   })),
-  // };
-
   const {
     register,
     handleSubmit,

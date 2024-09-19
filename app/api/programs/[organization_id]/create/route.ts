@@ -1,29 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { uploadFileToS3 } from "@/actions/upload-s3";
 import { ProgramSchema } from "@/lib/schemas/schema-programs";
 import prisma from "@/prisma/client";
+
+const S3_PROGRAMS_EDITAL_FILES = process.env.S3_PROGRAMS_EDITAL_FILES;
 
 const formSchema = ProgramSchema();
 
 interface DataRequest extends z.infer<typeof formSchema> {
   userId: number;
+  editalFile?: File;
 }
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { organization_id: string } }
 ) {
-  const data = (await request.json()) as DataRequest;
+  const data = await request.formData();
+  const jsonData = JSON.parse(data.get("json") as string) as DataRequest;
+  const editalFile = data.get("editalFile") as File | null;
 
   await prisma.$transaction(async (prisma) => {
     const program = await prisma.programs.create({
       data: {
         organization_id: Number(params.organization_id),
-        program_name: data.programName,
-        start_date: data.startDate,
-        end_date: data.endDate,
-        created_by_id: Number(data.userId),
+        program_name: jsonData.programName,
+        start_date: jsonData.startDate,
+        end_date: jsonData.endDate,
+        created_by_id: Number(jsonData.userId),
+        description: jsonData.description,
+        is_published: jsonData.isPublished,
       },
     });
 
@@ -31,10 +39,25 @@ export async function POST(
     await prisma.kanbans.create({
       data: {
         program_id: program.id,
-        created_by_id: Number(data.userId),
+        created_by_id: Number(jsonData.userId),
         color: randomColor,
       },
     });
+
+    if (editalFile) {
+      const fileBuffer = await editalFile.arrayBuffer();
+      const fileName = await uploadFileToS3(
+        Buffer.from(fileBuffer),
+        editalFile.name,
+        S3_PROGRAMS_EDITAL_FILES as string,
+        "file"
+      );
+
+      await prisma.programs.update({
+        where: { id: program.id },
+        data: { edital_file: fileName },
+      });
+    }
   });
 
   try {

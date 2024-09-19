@@ -72,10 +72,6 @@ export function ProgramsTableComponent() {
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
 
-  if (!session) {
-    return null;
-  }
-
   const { data, isLoading, isRefetching, refetch } = useListPrograms(
     Number(session?.user?.organization_id),
     Number(page),

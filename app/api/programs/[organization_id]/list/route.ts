@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/prisma/client";
 
+const S3_PROGRAMS_EDITAL_FILES = process.env.S3_PROGRAMS_EDITAL_FILES;
+
 export interface ProgramTable {
   id: number;
   programName: string;
   startDate: Date;
   endDate: Date;
+  description: string;
+  editalFile?: File;
+  editalFileUrl: string | null;
+  isPublished: boolean;
 }
 
 export async function GET(
@@ -62,6 +68,11 @@ export async function GET(
       programName: value.program_name,
       startDate: value.start_date,
       endDate: value.end_date,
+      description: value.description!,
+      editalFileUrl: value.edital_file
+        ? `https://${S3_PROGRAMS_EDITAL_FILES}.s3.amazonaws.com/${value.edital_file}`
+        : null,
+      isPublished: value.is_published!,
     };
   });
 

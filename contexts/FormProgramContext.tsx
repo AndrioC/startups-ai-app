@@ -2,9 +2,14 @@ import { createContext, useContext } from "react";
 import { QueryObserverResult, UseQueryResult } from "@tanstack/react-query";
 
 export interface FormProgramData {
+  id?: number;
   programName: string;
   startDate: Date;
   endDate: Date;
+  description: string;
+  editalFile?: File | undefined;
+  editalFileUrl: string | null;
+  isPublished: boolean;
 }
 
 interface FormProgramDataContext {
@@ -18,6 +23,10 @@ const initialFormProgramData: FormProgramData[] = [
     programName: "",
     startDate: new Date(),
     endDate: new Date(),
+    description: "",
+    editalFile: new File([], ""),
+    editalFileUrl: null,
+    isPublished: false,
   },
 ];
 

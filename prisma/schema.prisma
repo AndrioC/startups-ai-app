@@ -579,8 +579,11 @@ model programs {
   program_name    String
   start_date      DateTime
   end_date        DateTime
+  description     String?   @db.Text
+  edital_file     String?
   created_by_id   Int
   is_deleted      Boolean   @default(false)
+  is_published    Boolean?  @default(false)
   deleted_by_id   Int?
   deleted_at      DateTime?
   is_paused       Boolean   @default(false)

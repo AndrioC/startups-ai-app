@@ -49,6 +49,47 @@ export const programColumns: ColumnDef<ProgramTable, unknown>[] = [
     enableColumnFilter: false,
   },
   {
+    id: "Publicado",
+    accessorKey: "isPublished",
+    header: "Publicado",
+    enableColumnFilter: false,
+    cell: ({ row }) => {
+      const value = row.original;
+
+      return value.isPublished ? (
+        <span className="px-2 py-1 text-sm font-medium text-green-800 bg-green-200 rounded-full">
+          Sim
+        </span>
+      ) : (
+        <span className="px-2 py-1 text-sm font-medium text-red-800 bg-red-200 rounded-full">
+          Não
+        </span>
+      );
+    },
+  },
+  {
+    id: "Edital",
+    accessorKey: "editalFileUrl",
+    header: "Edital",
+    enableColumnFilter: false,
+    cell: ({ row }) => {
+      const value = row.original;
+
+      return value.editalFileUrl ? (
+        <a
+          href={value.editalFileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          Abrir Edital
+        </a>
+      ) : (
+        <span className="text-gray-400">Nenhum arquivo</span>
+      );
+    },
+  },
+  {
     id: "Início do programa",
     accessorKey: "startDate",
     header: "Início do programa",
@@ -105,7 +146,7 @@ export const programColumns: ColumnDef<ProgramTable, unknown>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer text-blue-500 hover:text-blue-700"
@@ -118,7 +159,7 @@ export const programColumns: ColumnDef<ProgramTable, unknown>[] = [
                 className="cursor-pointer text-blue-500 hover:text-blue-700"
                 role="button"
               >
-                Details
+                Detalhes
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
