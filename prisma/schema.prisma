@@ -27,6 +27,8 @@ model organizations {
   experts                experts[]
   programs               programs[]
   external_page_settings external_page_settings[]
+  startup_organizations  startup_organizations[]
+  user_organizations     user_organizations[]
 }
 
 model vertical {
@@ -240,6 +242,8 @@ model startups {
   kanban_cards                                    kanban_cards[]
   investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
   startup_generated_profiles                      startup_generated_profiles[]
+  startup_organizations                           startup_organizations[]
+  startup_programs                                startup_programs[]
 }
 
 enum UserType {
@@ -280,6 +284,7 @@ model user {
   deletedKanban                                   kanbans[]                                         @relation("KanbanDeletedBy")
   investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
   user_access                                     user_access[]
+  user_organizations                              user_organizations[]
 
   @@unique([email, organization_id])
 }
@@ -599,6 +604,7 @@ model programs {
   kanbans                kanbans[]
   rule                   rule[]
   external_page_settings external_page_settings?
+  startup_programs       startup_programs[]
 }
 
 model kanbans {
@@ -748,4 +754,37 @@ model startup_generated_profiles {
   startups       startups @relation(fields: [startup_id], references: [id])
 
   @@index([startup_id])
+}
+
+model startup_organizations {
+  startup_id      Int
+  organization_id Int
+  created_at      DateTime @default(now())
+
+  startup      startups      @relation(fields: [startup_id], references: [id])
+  organization organizations @relation(fields: [organization_id], references: [id])
+
+  @@id([startup_id, organization_id])
+}
+
+model startup_programs {
+  startup_id Int
+  program_id Int
+  joined_at  DateTime @default(now())
+
+  startup startups @relation(fields: [startup_id], references: [id])
+  program programs @relation(fields: [program_id], references: [id])
+
+  @@id([startup_id, program_id])
+}
+
+model user_organizations {
+  user_id         Int
+  organization_id Int
+  joined_at       DateTime @default(now())
+
+  user         user          @relation(fields: [user_id], references: [id])
+  organization organizations @relation(fields: [organization_id], references: [id])
+
+  @@id([user_id, organization_id])
 }

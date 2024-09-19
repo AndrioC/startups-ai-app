@@ -42,7 +42,7 @@ export interface SelectDataProps {
 export default function StartupForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const tabQuery = searchParams.get("tab");
+  const tabQuery = searchParams.get("subTab");
 
   const defaultTab = "general-data";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery && !tab.disabled);
@@ -52,7 +52,7 @@ export default function StartupForm() {
   useEffect(() => {
     if (!isValidTab) {
       const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", defaultTab);
+      params.set("subTab", defaultTab);
       router.push(`?${params.toString()}`);
     }
   }, [isValidTab, router, searchParams]);
@@ -76,7 +76,7 @@ export default function StartupForm() {
     if (selectedTab && !selectedTab.disabled) {
       setActiveTab(id);
       const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", id);
+      params.set("subTab", id);
       router.push(`?${params.toString()}`);
     }
   };
@@ -112,7 +112,7 @@ export default function StartupForm() {
             </button>
             {activeTab === tab.id && !tab.disabled && (
               <motion.div
-                layoutId="underline"
+                layoutId="underline-startup-form"
                 className="absolute bottom-[-6px] left-0 w-full h-1 bg-gray-400"
                 transition={{ duration: 0.2 }}
               />
