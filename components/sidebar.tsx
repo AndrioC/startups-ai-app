@@ -56,7 +56,7 @@ const menus = [
   {
     id: 5,
     key: "experts",
-    title: "Experts",
+    title: "Mentores",
     href: "/management/experts",
     icon: <BsPeople />,
     strokeWidth: 0.5,
