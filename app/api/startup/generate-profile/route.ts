@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Erro detalhado:", errorData);
+      console.error("erro detalhado:", errorData);
       return NextResponse.json(
         {
           error: "Ocorreu um erro ao iniciar a geração do perfil",
