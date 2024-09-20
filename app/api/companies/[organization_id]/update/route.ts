@@ -1,4 +1,5 @@
 import { UserType } from "@prisma/client";
+import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { z } from "zod";
@@ -70,7 +71,9 @@ export async function PATCH(
 
     const existingCompany = await prisma.organizations.findUnique({
       where: { id: companyId },
-      select: { logo_img: true, logo_sidebar: true },
+      include: {
+        user: true,
+      },
     });
 
     if (!existingCompany) {
@@ -104,18 +107,41 @@ export async function PATCH(
         );
       }
 
-      await prismaClient.user.deleteMany({
-        where: { organization_id: companyId },
-      });
+      const existingUserMap = new Map(
+        existingCompany.user.map((user) => [user.email, user])
+      );
 
       if (companyData.users && companyData.users.length > 0) {
-        await prismaClient.user.createMany({
-          data: companyData.users.map((user) => ({
-            ...user,
-            organization_id: Number(companyId),
-            type: UserType.ADMIN,
-          })),
-        });
+        for (const user of companyData.users) {
+          const existingUser = existingUserMap.get(user.email);
+
+          if (existingUser) {
+            await prismaClient.user.update({
+              where: { id: existingUser.id },
+              data: {
+                name: user.name,
+                email: user.email,
+                is_blocked: user.is_blocked,
+                blocked_at: user.is_blocked ? new Date() : null,
+              },
+            });
+          } else {
+            const hashedPassword = await bcryptjs.hash(user.password, 10);
+            await prismaClient.user.create({
+              data: {
+                name: user.name,
+                email: user.email,
+                organization_id: Number(companyId),
+                type: UserType.ADMIN,
+                hashed_password: hashedPassword,
+                accepted_terms: true,
+                email_verified: new Date(),
+                is_blocked: user.is_blocked,
+                blocked_at: user.is_blocked ? new Date() : null,
+              },
+            });
+          }
+        }
       }
 
       return updatedCompany;

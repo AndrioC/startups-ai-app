@@ -1,4 +1,5 @@
 import { UserType } from "@prisma/client";
+import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { z } from "zod";
@@ -71,11 +72,20 @@ export async function POST(
 
       if (companyData.users && companyData.users.length > 0) {
         await prismaClient.user.createMany({
-          data: companyData.users.map((user) => ({
-            ...user,
-            organization_id: Number(company.id),
-            type: UserType.ADMIN,
-          })),
+          data: await Promise.all(
+            companyData.users.map(async (user) => {
+              const hashedPassword = await bcryptjs.hash(user.password, 10);
+              return {
+                name: user.name,
+                email: user.email,
+                organization_id: Number(company.id),
+                type: UserType.ADMIN,
+                hashed_password: hashedPassword,
+                accepted_terms: true,
+                email_verified: new Date(),
+              };
+            })
+          ),
         });
       }
 

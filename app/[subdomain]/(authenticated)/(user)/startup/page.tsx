@@ -45,10 +45,6 @@ export default function StartupPage() {
     return <LoadingSpinner />;
   }
 
-  if (!session) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col">
       {data && (
@@ -69,7 +65,7 @@ export default function StartupPage() {
         >
           <HeaderExternalStartupComponent
             logoAlt={`${subdomain}-logo`}
-            userName={session.user?.name || ""}
+            userName={session?.user?.name || ""}
           />
           <main className="flex flex-grow mt-[40px]">
             <aside className="w-[300px] flex-shrink-0 ml-[30px] flex flex-col gap-4">

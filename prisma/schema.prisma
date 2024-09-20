@@ -268,6 +268,7 @@ model user {
   accepted_terms      Boolean   @default(false)
   is_blocked          Boolean   @default(false)
   accepted_terms_date DateTime?
+  blocked_at          DateTime?
   created_at          DateTime  @default(now())
   updated_at          DateTime  @default(now())
   email_verified      DateTime?

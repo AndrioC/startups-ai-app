@@ -22,7 +22,13 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   const existingUser = await getUserByEmail(email, values.slug);
 
   if (!existingUser || !existingUser.email || !existingUser.hashed_password) {
-    return { error: "Email does not exist!" };
+    return { error: "E-mail não existe!" };
+  }
+
+  if (existingUser.is_blocked) {
+    return {
+      error: "Conta bloqueada. Entre em contato com o administrador.",
+    };
   }
 
   const redirectPath = pageRedirect(existingUser.type);

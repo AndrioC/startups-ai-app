@@ -38,6 +38,12 @@ export const {
 
       if (!existingUser?.email_verified) return false;
 
+      if (existingUser.is_blocked) {
+        throw new Error(
+          "Conta bloqueada. Entre em contato com o administrador."
+        );
+      }
+
       return true;
     },
     async session({ session, token }) {
@@ -46,6 +52,13 @@ export const {
       }
 
       if (session.user) {
+        const existingUser = await getUserById(Number(token.sub));
+        if (existingUser?.is_blocked) {
+          throw new Error(
+            "Conta bloqueada. Entre em contato com o administrador."
+          );
+        }
+
         session.user.name = token.name;
         session.user.email = token.email!;
         session.user.organization_id = token.organization_id!;
@@ -80,6 +93,12 @@ export const {
       const existingUser = await getUserById(Number(token.sub));
 
       if (!existingUser) return token;
+
+      if (existingUser.is_blocked) {
+        throw new Error(
+          "Conta bloqueada. Entre em contato com o administrador."
+        );
+      }
 
       const organization = await prisma.organizations.findFirst({
         where: { id: Number(existingUser.organization_id) },

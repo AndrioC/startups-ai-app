@@ -8,13 +8,22 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, Mail, Trash2, User, UserPlus, X } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  Unlock,
+  User,
+  UserPlus,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
 
 import { CompanyTable } from "@/app/api/companies/[organization_id]/list/route";
-import Spinner from "@/components/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -111,6 +120,7 @@ export default function FormCompanyDialog({
   const logoInputRef = useRef<HTMLInputElement>(null);
   const logoSidebarInputRef = useRef<HTMLInputElement>(null);
 
+  const [showPassword, setShowPassword] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoSidebarPreview, setLogoSidebarPreview] = useState<string | null>(
     null
@@ -146,11 +156,15 @@ export default function FormCompanyDialog({
       companyName: company?.companyName || "",
       createdAt: company?.createdAt || new Date(),
       isPaying: company?.isPaying || true,
-      users: company?.users || [],
+      users:
+        company?.users.map((user) => ({
+          ...user,
+          is_blocked: user.is_blocked || false,
+        })) || [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "users",
   });
@@ -293,6 +307,12 @@ export default function FormCompanyDialog({
     if (logoSidebarInputRef.current) logoSidebarInputRef.current.value = "";
   };
 
+  const toggleUserBlock = (index: number) => {
+    const users = [...fields];
+    users[index].is_blocked = !users[index].is_blocked;
+    reset({ ...control._formValues, users });
+  };
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
@@ -313,6 +333,10 @@ export default function FormCompanyDialog({
     }
 
     mutation.mutate(formData);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const toastSuccess = () => {
@@ -387,7 +411,9 @@ export default function FormCompanyDialog({
             e.preventDefault();
           }}
         >
-          <Spinner isLoading={isSubmitting}>
+          <div
+            className={`relative ${isSubmitting ? "pointer-events-none" : ""}`}
+          >
             <div className="p-6">
               <Dialog.Title className="text-lg font-bold uppercase">
                 {company ? "Editar organização" : "Nova organização"}
@@ -539,7 +565,14 @@ export default function FormCompanyDialog({
                   <h3 className="text-lg font-medium">Usuários</h3>
                   <Button
                     type="button"
-                    onClick={() => append({ name: "", email: "" })}
+                    onClick={() =>
+                      append({
+                        name: "",
+                        email: "",
+                        password: "",
+                        is_blocked: false,
+                      })
+                    }
                     variant="outline"
                     size="sm"
                   >
@@ -555,6 +588,7 @@ export default function FormCompanyDialog({
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
+                      className={`mb-4 p-4 rounded-lg ${field.is_blocked ? "bg-red-50" : "bg-gray-50"} transition-colors duration-300`}
                     >
                       <div className="mb-4 p-4 bg-gray-50 rounded-lg">
                         <div className="grid grid-cols-2 gap-4">
@@ -577,7 +611,7 @@ export default function FormCompanyDialog({
                             <div className="relative">
                               <Mail className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                               <Input
-                                placeholder="Email"
+                                placeholder="E-mail"
                                 {...register(`users.${index}.email` as const)}
                                 className="pl-10 h-12 text-base"
                               />
@@ -588,16 +622,73 @@ export default function FormCompanyDialog({
                               </p>
                             )}
                           </div>
+                          <div>
+                            <div className="relative">
+                              <Lock className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                              <Input
+                                placeholder="Senha"
+                                type={showPassword ? "text" : "password"}
+                                {...register(
+                                  `users.${index}.password` as const
+                                )}
+                                className="pl-10 pr-10 h-12 text-base"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-1/2 right-2 transform -translate-y-1/2"
+                                onClick={togglePasswordVisibility}
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-5 w-5 text-gray-400" />
+                                ) : (
+                                  <Eye className="h-5 w-5 text-gray-400" />
+                                )}
+                                <span className="sr-only">
+                                  {showPassword
+                                    ? "Hide password"
+                                    : "Show password"}
+                                </span>
+                              </Button>
+                            </div>
+                            {formErrors.users?.[index]?.password && (
+                              <p className="mt-1 text-sm text-red-600">
+                                {formErrors.users[index]?.password?.message}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-end mt-4">
                           <Button
                             type="button"
-                            onClick={() => remove(index)}
-                            variant="ghost"
+                            onClick={() => toggleUserBlock(index)}
+                            variant="outline"
                             size="sm"
-                            className="mt-2 text-gray-400"
+                            className={`
+                            flex items-center space-x-2 px-3 py-2
+                            text-sm font-medium
+                            border border-gray-300
+                            rounded-md shadow-sm
+                            transition-all duration-300
+                            ${
+                              field.is_blocked
+                                ? "bg-red-100 hover:bg-red-200 text-red-700 hover:text-red-800 border-red-300"
+                                : "bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900"
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                          `}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            {field.is_blocked ? (
+                              <Lock className="w-4 h-4" aria-hidden="true" />
+                            ) : (
+                              <Unlock className="w-4 h-4" aria-hidden="true" />
+                            )}
+                            <span>
+                              {field.is_blocked
+                                ? "Desbloquear usuário"
+                                : "Bloquear usuário"}
+                            </span>
                           </Button>
                         </div>
                       </div>
@@ -619,12 +710,17 @@ export default function FormCompanyDialog({
                 </Button>
               </div>
             </form>
-          </Spinner>
-          <Dialog.Close asChild>
-            <button className="absolute top-3 right-3" aria-label="Close">
-              <Cross2Icon className="w-6 h-6 text-black" />
-            </button>
-          </Dialog.Close>
+            <Dialog.Close asChild>
+              <button className="absolute top-3 right-3" aria-label="Close">
+                <Cross2Icon className="w-6 h-6 text-black" />
+              </button>
+            </Dialog.Close>
+            {isSubmitting && (
+              <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+              </div>
+            )}
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
 

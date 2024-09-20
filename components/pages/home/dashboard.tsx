@@ -117,8 +117,6 @@ export default function Dashboard() {
   const { data: session } = useSession();
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>("startups");
 
-  console.log("session: ", session);
-
   const { data: dashboardData, isLoading } = useDashboardData(
     Number(session?.user?.organization_id)
   );

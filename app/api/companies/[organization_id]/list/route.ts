@@ -9,7 +9,13 @@ export interface CompanyTable {
   logo: string | null;
   logoSidebar: string | null;
   isPaying: boolean;
-  users: { name: string; email: string }[];
+  users: {
+    name: string;
+    email: string;
+    password?: string;
+    is_blocked: boolean;
+  }[];
+  hasBlockedUsers: boolean;
 }
 
 const S3_ORGANIZATIONS_IMGS_BUCKET_NAME = process.env
@@ -47,14 +53,12 @@ export async function GET(request: NextRequest) {
     const [companies, companyCount] = await Promise.all([
       prisma.organizations.findMany({
         where,
-        orderBy: { name: "asc" },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
         include: {
           user: {
             select: {
               name: true,
               email: true,
+              is_blocked: true,
             },
           },
         },
@@ -76,10 +80,27 @@ export async function GET(request: NextRequest) {
       users: value.user.map((user) => ({
         name: user.name,
         email: user.email,
+        is_blocked: user.is_blocked,
       })),
+      hasBlockedUsers: value.user.some((user) => user.is_blocked),
     }));
 
-    return NextResponse.json({ companyTable, companyCount }, { status: 200 });
+    companyTable.sort((a, b) => {
+      if (a.hasBlockedUsers !== b.hasBlockedUsers) {
+        return a.hasBlockedUsers ? 1 : -1;
+      }
+      return a.companyName.localeCompare(b.companyName);
+    });
+
+    const paginatedCompanies = companyTable.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
+
+    return NextResponse.json(
+      { companyTable: paginatedCompanies, companyCount },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching organizations:", error);
     return NextResponse.json(
