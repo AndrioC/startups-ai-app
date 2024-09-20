@@ -214,9 +214,11 @@ export default function HomeComponent() {
                 ))}
               </ul>
             </div>
-            <Button className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-auto">
-              {card?.button_text}
-            </Button>
+            <Link href={card?.button_link ?? "/"}>
+              <Button className="bg-[#0A2979] text-white rounded-full w-[200px] h-[50px] text-[15px] font-bold shadow-xl hover:bg-[#051b52] transition-colors duration-300 ease-in-out mt-auto">
+                {card?.button_text}
+              </Button>
+            </Link>
           </div>
         ))}
       </section>

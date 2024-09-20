@@ -80,18 +80,7 @@ export const ExternalPageSettingsSchema = () =>
                   )
                   .transform((val) => val?.trim())
                   .pipe(z.string().max(18, "Máximo de 18 caracteres")),
-                buttonLink: z
-                  .string()
-                  .nullish()
-                  .refine(
-                    (val) =>
-                      val !== null && val !== undefined && val.trim() !== "",
-                    {
-                      message: "O link do botão é obrigatório",
-                    }
-                  )
-                  .transform((val) => val?.trim())
-                  .pipe(z.string().url("URL inválida")),
+                buttonLink: z.string(),
                 benefits: z
                   .array(
                     z

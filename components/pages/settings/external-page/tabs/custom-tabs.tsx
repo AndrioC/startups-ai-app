@@ -37,7 +37,7 @@ const cards = [
     id: 1,
     title: "Empreendedores",
     button_text: "Sou empreendedor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: startupCardImage,
     bullet_points: [
       { id: 1, title: "Aceleração Gratuita" },
@@ -49,7 +49,7 @@ const cards = [
     id: 2,
     title: "Investidores",
     button_text: "Sou investidor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: investorCardImage,
     bullet_points: [
       { id: 1, title: "Conexão com Startups" },
@@ -61,7 +61,7 @@ const cards = [
     id: 3,
     title: "Mentores",
     button_text: "Sou mentor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: mentorCardImage,
     bullet_points: [
       { id: 1, title: "Give back" },
@@ -73,7 +73,7 @@ const cards = [
     id: 4,
     title: "Patrocinadores",
     button_text: "Sou patrocinador",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: sponsorCardImage,
     bullet_points: [
       { id: 1, title: "Visibilidade da marca" },
@@ -88,9 +88,9 @@ export default function ExternalPageSettingsCustomTabs({
   errors,
   enabledTabs,
 }: ExternalPageSettingsCustomTabsProps) {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState<number | null>(null);
   const { subdomain } = useParams();
-  const buttonLinkUrl = `https://${subdomain}.startups-globallink.com.br/auth/login`;
+  const buttonLinkUrl = `https://${subdomain}.startups-globallink.com/auth/login`;
 
   const { updateFormData } = useExternalPageSettingsData();
 
@@ -107,11 +107,13 @@ export default function ExternalPageSettingsCustomTabs({
   );
 
   useEffect(() => {
-    const firstEnabledTabIndex = enabledTabs.findIndex((tab) => tab);
-    if (firstEnabledTabIndex !== -1) {
-      setActiveTab(firstEnabledTabIndex);
+    if (activeTab === null) {
+      const firstEnabledTabIndex = enabledTabs.findIndex((tab) => tab);
+      if (firstEnabledTabIndex !== -1) {
+        setActiveTab(firstEnabledTabIndex);
+      }
     }
-  }, [enabledTabs]);
+  }, [enabledTabs, activeTab]);
 
   const handleTabClick = (index: number, event: React.MouseEvent) => {
     event.preventDefault();
@@ -216,6 +218,7 @@ export default function ExternalPageSettingsCustomTabs({
                               updateContextData(newTabsData);
                             }
                           }}
+                          onFocus={() => setActiveTab(tabIndex)}
                         />
                         {getError(tabIndex, "title") && (
                           <p

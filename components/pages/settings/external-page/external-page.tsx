@@ -36,7 +36,7 @@ const cards = [
     id: 1,
     title: "Empreendedores",
     button_text: "Sou empreendedor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: startupCardImage,
     bullet_points: [
       { id: 1, title: "Aceleração Gratuita" },
@@ -48,7 +48,7 @@ const cards = [
     id: 2,
     title: "Investidores",
     button_text: "Sou investidor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: investorCardImage,
     bullet_points: [
       { id: 1, title: "Conexão com Startups" },
@@ -60,7 +60,7 @@ const cards = [
     id: 3,
     title: "Mentores",
     button_text: "Sou mentor",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: mentorCardImage,
     bullet_points: [
       { id: 1, title: "Give back" },
@@ -72,7 +72,7 @@ const cards = [
     id: 4,
     title: "Patrocinadores",
     button_text: "Sou patrocinador",
-    button_link: "https://sgl.startups-globallink.com.br",
+    button_link: "https://sgl.startups-globallink.com",
     image: sponsorCardImage,
     bullet_points: [
       { id: 1, title: "Visibilidade da marca" },
@@ -192,7 +192,7 @@ export default function ExternalPageSettings() {
     formData.append("page_title", data.pageTitle || "");
     formData.append("link_video", data.linkVideo || "");
     formData.append("free_text", data.freeText || "");
-    const buttonLinkUrl = `https://${subdomain}.startups-globallink.com.br/auth/login`;
+    const buttonLinkUrl = `https://${subdomain}.startups-globallink.com/auth/login`;
 
     const enabledTabsData = data.enabled_tabs.map((tab) => ({
       tab_number: tab.tab_number,
@@ -308,18 +308,8 @@ export default function ExternalPageSettings() {
     newEnabledTabs[index] = !newEnabledTabs[index];
     setEnabledTabs(newEnabledTabs);
 
-    setValue(`enabled_tabs.${index}.is_enabled`, newEnabledTabs[index]);
-    if (!newEnabledTabs[index]) {
-      setValue(`enabled_tabs.${index}.tab_card`, null);
-    } else {
-      setValue(`enabled_tabs.${index}.tab_card`, {
-        title: "",
-        buttonText: "",
-        buttonLink: "",
-        benefits: ["", "", ""],
-      });
-    }
-    handleChange(`enabled_tabs.${index}`, {
+    const updatedTabData = {
+      tab_number: cards[index].id,
       is_enabled: newEnabledTabs[index],
       tab_card: newEnabledTabs[index]
         ? {
@@ -329,7 +319,15 @@ export default function ExternalPageSettings() {
             benefits: ["", "", ""],
           }
         : null,
-    });
+    };
+
+    setValue(`enabled_tabs.${index}`, updatedTabData);
+
+    const updatedFormData = { ...formData };
+    updatedFormData.enabled_tabs = updatedFormData.enabled_tabs.map(
+      (tab, idx) => (idx === index ? updatedTabData : tab)
+    );
+    updateFormData(updatedFormData);
   };
 
   const handleCopyLink = () => {
