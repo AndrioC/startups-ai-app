@@ -53,18 +53,13 @@ export async function POST(request: NextRequest) {
       });
 
       const currentDate = new Date();
-      const dateWithoutTime = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate()
-      );
 
       const newProfile = await prisma.startup_generated_profiles.create({
         data: {
           startup_id: Number(codigo_startup),
           profile: data,
           active: true,
-          generated_date: dateWithoutTime,
+          generated_date: currentDate,
         },
       });
 
