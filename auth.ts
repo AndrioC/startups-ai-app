@@ -34,7 +34,10 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
 
-      const existingUser = await getUserById(Number(user.id));
+      const existingUser = await getUserById(
+        Number(user.id),
+        user.organization_id
+      );
 
       if (!existingUser?.email_verified) return false;
 
@@ -52,7 +55,10 @@ export const {
       }
 
       if (session.user) {
-        const existingUser = await getUserById(Number(token.sub));
+        const existingUser = await getUserById(
+          Number(token.sub),
+          token.organization_id
+        );
         if (existingUser?.is_blocked) {
           throw new Error(
             "Conta bloqueada. Entre em contato com o administrador."
@@ -87,66 +93,80 @@ export const {
 
       return session;
     },
-    async jwt({ token }) {
-      if (!token.sub) return token;
-
-      const existingUser = await getUserById(Number(token.sub));
-
-      if (!existingUser) return token;
-
-      if (existingUser.is_blocked) {
-        throw new Error(
-          "Conta bloqueada. Entre em contato com o administrador."
-        );
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        return {
+          ...token,
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          organization_id: user.organization_id,
+          type: user.type,
+          user_logo_img: user.logo_img,
+        };
       }
 
-      const organization = await prisma.organizations.findFirst({
-        where: { id: Number(existingUser.organization_id) },
-      });
+      if (token.id && token.organization_id) {
+        const existingUser = await getUserById(
+          Number(token.id),
+          Number(token.organization_id)
+        );
 
-      const penultimateAccess = await prisma.user_access.findMany({
-        where: { user_id: Number(token.sub) },
-        orderBy: { timestamp: "desc" },
-        take: 2,
-        skip: 1,
-        select: { timestamp: true },
-      });
+        if (!existingUser) return token;
 
-      token.name = existingUser.name;
-      token.email = existingUser.email;
-      token.organization_id = existingUser.organization_id;
-      token.type = existingUser.type;
-      token.user_logo_img = existingUser.logo_img;
+        if (existingUser.is_blocked) {
+          throw new Error(
+            "Conta bloqueada. Entre em contato com o administrador."
+          );
+        }
 
-      token.isSGL = token.type === "SGL";
-      token.isAdmin = existingUser.type === "ADMIN";
-      token.isInvestor = existingUser.type === "INVESTOR";
-      token.isMentor = existingUser.type === "MENTOR";
-      token.isStartup = existingUser.type === "STARTUP";
+        const organization = await prisma.organizations.findFirst({
+          where: { id: Number(existingUser.organization_id) },
+        });
 
-      token.logo_img = organization?.logo_img;
-      token.logo_sidebar = organization?.logo_sidebar;
+        const penultimateAccess = await prisma.user_access.findMany({
+          where: { user_id: Number(token.id) },
+          orderBy: { timestamp: "desc" },
+          take: 2,
+          skip: 1,
+          select: { timestamp: true },
+        });
 
-      token.last_access = penultimateAccess[0]?.timestamp || null;
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.type = existingUser.type!;
+        token.user_logo_img = existingUser.logo_img;
 
-      switch (existingUser.type) {
-        case "STARTUP":
-          token.actor_id = existingUser.startup_id
-            ? Number(existingUser.startup_id)
-            : null;
-          break;
-        case "INVESTOR":
-          token.actor_id = existingUser.investor_id
-            ? Number(existingUser.investor_id)
-            : null;
-          break;
-        case "MENTOR":
-          token.actor_id = existingUser.expert_id
-            ? Number(existingUser.expert_id)
-            : null;
-          break;
-        default:
-          token.actor_id = null;
+        token.isSGL = existingUser.type === "SGL";
+        token.isAdmin = existingUser.type === "ADMIN";
+        token.isInvestor = existingUser.type === "INVESTOR";
+        token.isMentor = existingUser.type === "MENTOR";
+        token.isStartup = existingUser.type === "STARTUP";
+
+        token.logo_img = organization?.logo_img;
+        token.logo_sidebar = organization?.logo_sidebar;
+
+        token.last_access = penultimateAccess[0]?.timestamp || null;
+
+        switch (existingUser.type) {
+          case "STARTUP":
+            token.actor_id = existingUser.startup_id
+              ? Number(existingUser.startup_id)
+              : null;
+            break;
+          case "INVESTOR":
+            token.actor_id = existingUser.investor_id
+              ? Number(existingUser.investor_id)
+              : null;
+            break;
+          case "MENTOR":
+            token.actor_id = existingUser.expert_id
+              ? Number(existingUser.expert_id)
+              : null;
+            break;
+          default:
+            token.actor_id = null;
+        }
       }
 
       return token;

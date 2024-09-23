@@ -31,7 +31,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     };
   }
 
-  const redirectPath = pageRedirect(existingUser.type);
+  const redirectPath = pageRedirect(existingUser.type!);
 
   // if (!existingUser.email_verified) {
   //   const verificationToken = await generateVerificationToken(
@@ -56,7 +56,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
     await prisma.user_access.create({
       data: {
-        user_id: existingUser.id,
+        user_id: existingUser.id!,
       },
     });
 
