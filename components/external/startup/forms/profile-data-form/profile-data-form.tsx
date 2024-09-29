@@ -1,9 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +28,7 @@ export default function ProfileDataForm() {
     try {
       const response = await axios.post(`/api/startup/generate-profile`, {
         params: {
-          codigo_startup: initialData.startupId,
+          startup_id: initialData.startupId,
         },
       });
 
@@ -48,20 +46,6 @@ export default function ProfileDataForm() {
       setIsAIModalOpen(false);
     }
   };
-
-  if (!initialData.startupProfile) {
-    return (
-      <div className="bg-gray-100 font-sans p-4">
-        <div className="bg-gray-300 p-4 rounded-md shadow-sm">
-          <p className="text-left text-gray-500">
-            O perfil da startup ainda não foi gerado. Por favor, certifique-se
-            de que seu cadastro tenha pelo menos 60% de completude e aguarde 24
-            horas para que o perfil seja gerado.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-gray-100 font-sans">
@@ -86,17 +70,29 @@ export default function ProfileDataForm() {
             <Sparkles size={20} />
             ATUALIZAR PERFIL
           </Button>
-          <Button
-            variant="link"
-            className="text-blue-500 hover:text-blue-700 text-xs"
-            onClick={() => setIsModalOpen(true)}
-          >
-            VER PERFIS GERADOS
-          </Button>
+          {initialData.startupProfile && (
+            <Button
+              variant="link"
+              className="text-blue-500 hover:text-blue-700 text-xs"
+              onClick={() => setIsModalOpen(true)}
+            >
+              VER PERFIS GERADOS
+            </Button>
+          )}
         </div>
       </div>
 
-      <StartupProfileMarkDown profileData={initialData.startupProfile} />
+      {!initialData.startupProfile ? (
+        <div className="bg-gray-300 p-4 rounded-md shadow-sm">
+          <p className="text-left text-gray-500">
+            O perfil da startup ainda não foi gerado. Por favor, certifique-se
+            de que seu cadastro tenha pelo menos 60% de completude e aguarde 24
+            horas para que o perfil seja gerado.
+          </p>
+        </div>
+      ) : (
+        <StartupProfileMarkDown profileData={initialData.startupProfile} />
+      )}
 
       <ProfileListModal
         isOpen={isModalOpen}
@@ -109,7 +105,7 @@ export default function ProfileDataForm() {
             <DialogTitle>Analisando dados</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center justify-center p-4">
-            <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+            <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
             <p className="text-center text-gray-600">
               A IA está analisando os dados e formulando o perfil da sua
               startup. Por favor, aguarde um momento...

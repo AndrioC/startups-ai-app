@@ -8,7 +8,7 @@ import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
 
-import { ExpertTable } from "@/app/api/experts/route";
+import { ExpertTable } from "@/app/api/experts/[organization_id]/load-all-experts-by-organization-id/route";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -32,7 +32,7 @@ import {
   getBadgeColorByApprovalStatus,
 } from "@/extras/utils";
 
-export const startupColumns: ColumnDef<ExpertTable, unknown>[] = [
+export const expertColumns: ColumnDef<ExpertTable, unknown>[] = [
   {
     id: "select",
     header: ({ table }) => (

@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 interface Colors {
   [key: string]: string;
 }
@@ -43,4 +45,19 @@ export function createSlug(name: string): string {
     .replace(/\s+/g, "_");
 
   return slug;
+}
+
+export async function urlToBase64(url: string): Promise<string> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    return buffer.toString("base64");
+  } catch (error) {
+    console.error("Error fetching or converting file:", error);
+    throw error;
+  }
 }

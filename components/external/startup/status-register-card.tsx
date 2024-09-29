@@ -1,3 +1,5 @@
+import { Loader2 } from "lucide-react";
+
 interface Props {
   filledPercentages: { [key: string]: number };
   isRefetching: boolean;
@@ -35,8 +37,11 @@ export default function StatusRegisterCard({
 
   if (isRefetching) {
     return (
-      <div className="w-[300px] h-auto bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
-        <div className="text-xs text-center font-bold">Carregando...</div>
+      <div className="w-[300px] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
+        <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+        <div className="text-xs text-center font-bold text-gray-500">
+          Carregando...
+        </div>
       </div>
     );
   }

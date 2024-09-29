@@ -166,9 +166,21 @@ export const ProductServiceDataSchema = () =>
 
 export const DeepTechDataSchema = () =>
   z.object({
-    maturityLevel: z.string().nullable().optional(),
-    hasPatent: z.string().nullable().optional(),
-    patentAndCode: z.string().nullable().optional(),
+    maturityLevel: z
+      .union([z.string(), z.number()])
+      .transform((val) => val?.toString() ?? null)
+      .nullable()
+      .optional(),
+    hasPatent: z
+      .union([z.string(), z.number()])
+      .transform((val) => val?.toString() ?? null)
+      .nullable()
+      .optional(),
+    patentAndCode: z
+      .union([z.string(), z.number()])
+      .transform((val) => val?.toString() ?? null)
+      .nullable()
+      .optional(),
   });
 
 export const GovernanceDataSchema = () =>

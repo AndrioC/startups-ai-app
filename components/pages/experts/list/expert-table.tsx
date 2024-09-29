@@ -11,9 +11,10 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Table as ShadcnTable } from "unstyled-table";
 
-import { ExpertTable } from "@/app/api/experts/route";
+import { ExpertTable } from "@/app/api/experts/[organization_id]/load-all-experts-by-organization-id/route";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -38,34 +39,36 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { startupColumns } from "./columns";
+import { expertColumns } from "./columns";
 
-interface ServerControlledTableProps {
-  expertsCount?: number;
-}
-
-export function ExpertTableComponent({
-  expertsCount,
-}: ServerControlledTableProps) {
+export function ExpertTableComponent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
 
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
 
-  const pageCount = Math.ceil(expertsCount! / Number(pageSize));
-
   const [isPending, startTransition] = React.useTransition();
 
-  const { data, isLoading } = useQuery<ExpertTable[]>({
-    queryKey: ["experts", page, pageSize],
+  const { data, isLoading } = useQuery<{
+    experts: ExpertTable[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  }>({
+    queryKey: ["experts", session?.user?.organization_id, page, pageSize],
     queryFn: () =>
       axios
-        .get(`/api/experts?page=${page}&pageSize=${pageSize}`)
+        .get(
+          `/api/experts/${session?.user?.organization_id}/load-all-experts-by-organization-id?page=${page}&pageSize=${pageSize}`
+        )
         .then((res) => res.data),
     staleTime: 60 * 1000,
     retry: 3,
+    enabled: !!session?.user?.organization_id,
   });
 
   const createQueryString = React.useCallback(
@@ -88,9 +91,9 @@ export function ExpertTableComponent({
   return (
     <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
       <ShadcnTable
-        columns={startupColumns}
-        data={data ?? []}
-        itemsCount={Number(pageSize)}
+        columns={expertColumns}
+        data={data?.experts ?? []}
+        itemsCount={data?.totalCount ?? 0}
         manualPagination
         renders={{
           table: ({ children, tableInstance }) => {
@@ -158,19 +161,19 @@ export function ExpertTableComponent({
               {isLoading ? (
                 Array.from({ length: Number(pageSize) }).map((_, index) => (
                   <TableRow key={index}>
-                    {startupColumns.map((_, columnIndex) => (
+                    {expertColumns.map((_, columnIndex) => (
                       <TableCell key={columnIndex}>
                         <Skeleton className="h-6 w-20" />
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
-              ) : data?.length ? (
+              ) : data?.experts.length ? (
                 children
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={startupColumns.length}
+                    colSpan={expertColumns.length}
                     className="h-24 text-center"
                   >
                     Nenhum resultado encontrado.
@@ -190,7 +193,7 @@ export function ExpertTableComponent({
               <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row">
                 <div className="flex-1 text-sm font-medium">
                   {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                  {pageSize} resultado(s) selecionado(s).
+                  {data?.totalCount ?? 0} resultado(s) selecionado(s).
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
@@ -203,7 +206,7 @@ export function ExpertTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page,
+                              page: "1",
                               pageSize: value,
                             })}`
                           );
@@ -224,7 +227,7 @@ export function ExpertTableComponent({
                     </Select>
                   </div>
                   <div className="text-sm font-medium">
-                    {`Página ${page} de ${pageCount ?? 10}`}
+                    {`Página ${data?.page ?? page} de ${data?.totalPages ?? 1}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -235,13 +238,17 @@ export function ExpertTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: 1,
+                              page: "1",
                               pageSize,
                             })}`
                           );
                         });
                       }}
-                      disabled={Number(page) === 1 || isPending || isLoading}
+                      disabled={
+                        Number(data?.page ?? page) === 1 ||
+                        isPending ||
+                        isLoading
+                      }
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">Primeira página</span>
@@ -254,13 +261,17 @@ export function ExpertTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: Number(page) - 1,
+                              page: (Number(data?.page ?? page) - 1).toString(),
                               pageSize,
                             })}`
                           );
                         });
                       }}
-                      disabled={Number(page) === 1 || isPending || isLoading}
+                      disabled={
+                        Number(data?.page ?? page) === 1 ||
+                        isPending ||
+                        isLoading
+                      }
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                       <span className="sr-only">Página anterior</span>
@@ -273,14 +284,15 @@ export function ExpertTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: Number(page) + 1,
+                              page: (Number(data?.page ?? page) + 1).toString(),
                               pageSize,
                             })}`
                           );
                         });
                       }}
                       disabled={
-                        Number(page) === (pageCount ?? 10) ||
+                        Number(data?.page ?? page) ===
+                          (data?.totalPages ?? 1) ||
                         isPending ||
                         isLoading
                       }
@@ -295,13 +307,14 @@ export function ExpertTableComponent({
                       onClick={() => {
                         router.push(
                           `${pathname}?${createQueryString({
-                            page: pageCount ?? 10,
+                            page: (data?.totalPages ?? 1).toString(),
                             pageSize,
                           })}`
                         );
                       }}
                       disabled={
-                        Number(page) === (pageCount ?? 10) ||
+                        Number(data?.page ?? page) ===
+                          (data?.totalPages ?? 1) ||
                         isPending ||
                         isLoading
                       }

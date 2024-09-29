@@ -7,7 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
 
-import { type StartupTable } from "@/app/api/startup/route";
+import { StartupTable } from "@/app/api/startup/[organization_id]/load-startups-by-organization-id/route";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {

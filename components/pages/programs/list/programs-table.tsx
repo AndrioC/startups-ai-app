@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Loader2,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -201,27 +202,13 @@ export function ProgramsTableComponent() {
             body: ({ children }) => (
               <TableBody>
                 {isLoading || isRefetching ? (
-                  <>
-                    {Array.from({ length: Number(pageSize) }).map(
-                      (_, index) => (
-                        <TableRow key={index}>
-                          {programColumns.map((_, columnIndex) => (
-                            <TableCell key={columnIndex}>
-                              <Skeleton className="h-6 w-20" />
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      )
-                    )}
-                    <TableRow>
-                      <TableCell
-                        colSpan={programColumns.length}
-                        className="h-24 text-center"
-                      >
-                        Carregando dados...
-                      </TableCell>
-                    </TableRow>
-                  </>
+                  <TableRow>
+                    <TableCell colSpan={programColumns.length} className="h-24">
+                      <div className="flex justify-center items-center h-full">
+                        <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 ) : data?.programTable?.length ? (
                   children
                 ) : !isRefetching &&
@@ -235,17 +222,7 @@ export function ProgramsTableComponent() {
                       Nenhum dado encontrado
                     </TableCell>
                   </TableRow>
-                ) : (
-                  Array.from({ length: Number(pageSize) }).map((_, index) => (
-                    <TableRow key={index}>
-                      {programColumns.map((_, columnIndex) => (
-                        <TableCell key={columnIndex}>
-                          <Skeleton className="h-6 w-20" />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                )}
+                ) : null}
               </TableBody>
             ),
             bodyRow: ({ children, row }) => (

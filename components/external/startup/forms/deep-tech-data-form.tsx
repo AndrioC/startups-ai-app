@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +25,7 @@ interface Props {
   data: SelectDataProps;
 }
 export default function DeepTechDataForm({ data }: Props) {
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
   const formSchema = DeepTechDataSchema();
@@ -72,6 +74,7 @@ export default function DeepTechDataForm({ data }: Props) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
+      toast.warning("Nenhuma alteração foi feita!");
       return;
     }
     mutation.mutate(data);
@@ -80,7 +83,7 @@ export default function DeepTechDataForm({ data }: Props) {
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
       try {
-        setIsSubmiting(true);
+        setIsSubmitting(true);
         const response = await axios.patch(
           `/api/startup-form/deep-tech-data/${actorId}`,
           JSON.stringify(data),
@@ -92,14 +95,14 @@ export default function DeepTechDataForm({ data }: Props) {
         );
 
         if (response.status === 201) {
-          setIsSubmiting(false);
+          setIsSubmitting(false);
           refetch();
           return;
         }
       } catch (error) {
         console.log("error: ", error);
       }
-      setIsSubmiting(false);
+      setIsSubmitting(false);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -181,12 +184,22 @@ export default function DeepTechDataForm({ data }: Props) {
           <Button
             type="submit"
             variant="blue"
-            disabled={isSubmiting}
+            disabled={isSubmitting}
             className="px-6 text-white rounded-md"
           >
             Salvar
           </Button>
         </div>
+        {isSubmitting && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70">
+            <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
+              <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+              <div className="text-xs text-center font-bold text-gray-500">
+                Salvando os dados...
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </form>
   );

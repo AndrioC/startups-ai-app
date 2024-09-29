@@ -22,13 +22,13 @@ export default {
             let actor_id;
             switch (user.type) {
               case "STARTUP":
-                actor_id = user.startup_id;
+                actor_id = user?.startup_id;
                 break;
               case "INVESTOR":
-                actor_id = user.investor_id;
+                actor_id = user?.investor_id;
                 break;
               case "MENTOR":
-                actor_id = user.expert_id;
+                actor_id = user?.expert_id;
                 break;
               default:
                 actor_id = null;
@@ -37,8 +37,8 @@ export default {
               id: String(user.id),
               name: user.name,
               email: user.email,
-              organization_id: user.organization_id,
-              type: user.type,
+              organization_id: user.organization_id!,
+              type: user.type!,
               isSGL: user.type === "SGL",
               isAdmin: user.type === "ADMIN",
               isInvestor: user.type === "INVESTOR",

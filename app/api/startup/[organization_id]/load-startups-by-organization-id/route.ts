@@ -22,25 +22,46 @@ export interface StartupTable {
   is_approved: boolean;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { organization_id: string } }
+) {
+  const { organization_id } = params;
+
+  console.log("organization_id", organization_id);
+
+  if (!organization_id) {
+    return NextResponse.json(
+      { error: "Organization ID is required" },
+      { status: 400 }
+    );
+  }
+
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get("page"));
-  const pageSize = Number(url.searchParams.get("pageSize"));
+  const page = Number(url.searchParams.get("page")) || 1;
+  const pageSize = Number(url.searchParams.get("pageSize")) || 10;
 
-  const startups = await prisma.startups.findMany({
-    orderBy: [{ is_approved: "asc" }, { name: "asc" }],
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    include: {
-      vertical: true,
-      country: true,
-      business_model: true,
-      operation_stage: true,
-    },
-  });
+  try {
+    const startups = await prisma.startups.findMany({
+      where: {
+        startup_organizations: {
+          some: {
+            organization_id: Number(organization_id),
+          },
+        },
+      },
+      orderBy: [{ is_approved: "asc" }, { name: "asc" }],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      include: {
+        vertical: true,
+        country: true,
+        business_model: true,
+        operation_stage: true,
+      },
+    });
 
-  const startupTable: StartupTable[] = startups.map((value) => {
-    return {
+    const startupTable: StartupTable[] = startups.map((value) => ({
       id: value.id,
       name: value.name!,
       short_description:
@@ -65,10 +86,35 @@ export async function GET(request: NextRequest) {
       status: value.is_approved ? "approved" : "pending",
       last_twelve_months_revenue: value.last_twelve_months_revenue ?? "-",
       is_approved: value.is_approved,
-    };
-  });
+    }));
 
-  return NextResponse.json(startupTable, { status: 201 });
+    const totalCount = await prisma.startups.count({
+      where: {
+        startup_organizations: {
+          some: {
+            organization_id: Number(organization_id),
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(
+      {
+        startups: startupTable,
+        totalCount,
+        page,
+        pageSize,
+        totalPages: Math.ceil(totalCount / pageSize),
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching startups:", error);
+    return NextResponse.json(
+      { error: "An error occurred while fetching startups" },
+      { status: 500 }
+    );
+  }
 }
 
 function extractFirstWordOperationStage(
@@ -85,6 +131,7 @@ function extractFirstWordOperationStage(
 
   return match[0];
 }
+
 function extractFirstWordVertical(vertical: string | undefined): string {
   if (vertical === undefined) {
     return "-";

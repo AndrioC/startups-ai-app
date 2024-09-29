@@ -15,6 +15,8 @@ import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { AvailableProgramsTab } from "./startup-programs-tabs/available-programs/available-programs";
+import { HistoricalParticipationTab } from "./startup-programs-tabs/historical-participation/historical-participation";
+import StartupDocuments from "./startup-documents";
 
 export interface SelectDataProps {
   country: country[];
@@ -46,7 +48,11 @@ export default function StartupPrograms() {
     }
   }, [isValidTab, router, searchParams]);
 
-  const tabContents = [<AvailableProgramsTab key={"available-programs"} />];
+  const tabContents = [
+    <AvailableProgramsTab key={"available-programs"} />,
+    <HistoricalParticipationTab key={"participation-history"} />,
+    <StartupDocuments key={"startup-documents"} />,
+  ];
 
   const handleTabChange = (id: string) => {
     const selectedTab = tabs.find((tab) => tab.id === id);
@@ -93,4 +99,5 @@ export default function StartupPrograms() {
 const tabs = [
   { id: "available-programs", title: "Programas disponíveis" },
   { id: "participation-history", title: "Histórico de participação" },
+  { id: "startup-documents", title: "Documentos" },
 ];

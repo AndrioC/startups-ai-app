@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { programs } from "@prisma/client";
+import { startup_programs } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -15,6 +15,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Table as ShadcnTable } from "unstyled-table";
 
+import { HistoricalParticipationTable } from "@/app/api/startup/historical-participation/route";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -33,15 +34,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { programColumns } from "./program-columns";
+import { historicalColumns } from "./historical-columns";
 
-export interface ProgramQuery {
-  orderBy: keyof programs;
+export interface HistoricalParticipationQuery {
+  orderBy: keyof startup_programs;
   page: string;
   pageSize: string;
 }
 
-export function AvailableProgramsTab() {
+export function HistoricalParticipationTab() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -55,13 +56,13 @@ export function AvailableProgramsTab() {
     return null;
   }
 
-  const { data, isLoading, isRefetching } = useLoadAllAvailablePrograms(
-    Number(session?.user?.organization_id),
+  const { data, isLoading, isRefetching } = useLoadHistoricalParticipation(
+    Number(session?.user?.actor_id),
     Number(page),
     Number(pageSize)
   );
 
-  const pageCount = Math.ceil(data?.programsCount! / Number(pageSize));
+  const pageCount = data?.pagination.totalPages;
 
   const [isPending, startTransition] = React.useTransition();
 
@@ -85,8 +86,8 @@ export function AvailableProgramsTab() {
   return (
     <div className="flex flex-col h-full w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-10">
       <ShadcnTable
-        columns={programColumns}
-        data={data?.programTable ?? []}
+        columns={historicalColumns}
+        data={data?.data ?? []}
         itemsCount={Number(pageSize)}
         manualPagination
         renders={{
@@ -124,20 +125,21 @@ export function AvailableProgramsTab() {
             <TableBody>
               {isLoading || isRefetching ? (
                 <TableRow>
-                  <TableCell colSpan={programColumns.length} className="h-24">
+                  <TableCell
+                    colSpan={historicalColumns.length}
+                    className="h-24"
+                  >
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : data?.programTable?.length ? (
+              ) : data?.data.length ? (
                 children
-              ) : !isRefetching &&
-                !isLoading &&
-                data?.programTable?.length === 0 ? (
+              ) : !isRefetching && !isLoading && data?.data?.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={programColumns.length}
+                    colSpan={historicalColumns.length}
                     className="h-24 text-center"
                   >
                     Nenhum dado encontrado
@@ -146,7 +148,7 @@ export function AvailableProgramsTab() {
               ) : (
                 Array.from({ length: Number(pageSize) }).map((_, index) => (
                   <TableRow key={index}>
-                    {programColumns.map((_, columnIndex) => (
+                    {historicalColumns.map((_, columnIndex) => (
                       <TableCell key={columnIndex}>
                         <Skeleton className="h-6 w-20" />
                       </TableCell>
@@ -310,21 +312,28 @@ export function AvailableProgramsTab() {
   );
 }
 
-const useLoadAllAvailablePrograms = (
-  organization_id: number,
+const useLoadHistoricalParticipation = (
+  startup_id: number,
   page: number,
   pageSize: number
 ) =>
-  useQuery<any>({
-    queryKey: ["load-all-available-programs"],
+  useQuery<{
+    data: HistoricalParticipationTable[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }>({
+    queryKey: ["load-historical-participation"],
     queryFn: () =>
       axios
         .get(
-          `/api/programs/${organization_id}/load-available-programs?page=${page}&pageSize=${pageSize}`
+          `/api/startup/historical-participation?page=${page}&pageSize=${pageSize}&startup_id=${startup_id}`
         )
         .then((res) => {
           return res.data;
         }),
     staleTime: 5 * 60 * 1000,
-    enabled: !!organization_id,
   });

@@ -10,11 +10,12 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Loader2,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Table as ShadcnTable } from "unstyled-table";
 
-import { StartupTable } from "@/app/api/startup/route";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,31 +40,42 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { StartupTable } from "../../../../app/api/startup/[organization_id]/load-startups-by-organization-id/route";
+
 import { startupColumns } from "./columns";
 
 interface ServerControlledTableProps {
-  startupsCount?: number;
+  initialStartupsCount?: number;
+}
+
+interface ApiResponse {
+  startups: StartupTable[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 export function StartupTableComponent({
-  startupsCount,
+  initialStartupsCount,
 }: ServerControlledTableProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session } = useSession();
   const searchParams = useSearchParams();
 
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
 
-  const pageCount = Math.ceil(startupsCount! / Number(pageSize));
-
   const [isPending, startTransition] = React.useTransition();
 
-  const { data, isLoading } = useQuery<StartupTable[]>({
+  const { data, isLoading } = useQuery<ApiResponse>({
     queryKey: ["startups", page, pageSize],
     queryFn: () =>
       axios
-        .get(`/api/startup?page=${page}&pageSize=${pageSize}`)
+        .get(
+          `/api/startup/${session?.user?.organization_id}/load-startups-by-organization-id?page=${page}&pageSize=${pageSize}`
+        )
         .then((res) => res.data),
     staleTime: 60 * 1000,
     retry: 3,
@@ -90,8 +102,8 @@ export function StartupTableComponent({
     <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
       <ShadcnTable
         columns={startupColumns}
-        data={data ?? []}
-        itemsCount={Number(pageSize)}
+        data={data?.startups ?? []}
+        itemsCount={data?.totalCount ?? initialStartupsCount ?? 0}
         manualPagination
         renders={{
           table: ({ children, tableInstance }) => {
@@ -161,16 +173,14 @@ export function StartupTableComponent({
           body: ({ children }) => (
             <TableBody>
               {isLoading ? (
-                Array.from({ length: Number(pageSize) }).map((_, index) => (
-                  <TableRow key={index}>
-                    {startupColumns.map((_, columnIndex) => (
-                      <TableCell key={columnIndex}>
-                        <Skeleton className="h-6 w-full" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : data?.length ? (
+                <TableRow>
+                  <TableCell colSpan={startupColumns.length} className="h-24">
+                    <div className="flex justify-center items-center h-full">
+                      <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : data?.startups.length ? (
                 children
               ) : (
                 <TableRow>
@@ -210,7 +220,7 @@ export function StartupTableComponent({
               <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row bg-gray-50 px-4 border-t border-gray-200">
                 <div className="flex-1 text-sm font-medium text-gray-700">
                   {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                  {pageSize} linha(s) selecionada(s).
+                  {data?.totalCount ?? 0} linha(s) selecionada(s).
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
@@ -223,7 +233,7 @@ export function StartupTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page,
+                              page: "1",
                               pageSize: value,
                             })}`
                           );
@@ -244,7 +254,7 @@ export function StartupTableComponent({
                     </Select>
                   </div>
                   <div className="text-sm font-medium text-gray-700">
-                    {`Página ${page} de ${pageCount ?? 10}`}
+                    {`Página ${data?.page ?? 1} de ${data?.totalPages ?? 1}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -255,7 +265,7 @@ export function StartupTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: 1,
+                              page: "1",
                               pageSize,
                             })}`
                           );
@@ -274,7 +284,7 @@ export function StartupTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: Number(page) - 1,
+                              page: (Number(page) - 1).toString(),
                               pageSize,
                             })}`
                           );
@@ -293,14 +303,14 @@ export function StartupTableComponent({
                         startTransition(() => {
                           router.push(
                             `${pathname}?${createQueryString({
-                              page: Number(page) + 1,
+                              page: (Number(page) + 1).toString(),
                               pageSize,
                             })}`
                           );
                         });
                       }}
                       disabled={
-                        Number(page) === (pageCount ?? 10) ||
+                        Number(page) === (data?.totalPages ?? 1) ||
                         isPending ||
                         isLoading
                       }
@@ -315,13 +325,13 @@ export function StartupTableComponent({
                       onClick={() => {
                         router.push(
                           `${pathname}?${createQueryString({
-                            page: pageCount ?? 10,
+                            page: (data?.totalPages ?? 1).toString(),
                             pageSize,
                           })}`
                         );
                       }}
                       disabled={
-                        Number(page) === (pageCount ?? 10) ||
+                        Number(page) === (data?.totalPages ?? 1) ||
                         isPending ||
                         isLoading
                       }

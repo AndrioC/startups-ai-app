@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
-import { Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ import { FinanceAndMarketDataSchema } from "@/lib/schemas/schema-startup";
 import InvestmentsContainer from "./investments-container";
 import ValuationListModal from "./valuation-list-modal";
 export default function MarketFinanceDataForm() {
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
@@ -53,6 +53,7 @@ export default function MarketFinanceDataForm() {
   const onSubmit = async (data: z.infer<typeof schemateste>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
+      toast.warning("Nenhuma alteração foi feita!");
       return;
     }
     mutation.mutate(data);
@@ -61,7 +62,7 @@ export default function MarketFinanceDataForm() {
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof schemateste>) => {
       try {
-        setIsSubmiting(true);
+        setIsSubmitting(true);
         const response = await axios.patch(
           `/api/startup-form/market-finance-data/${actorId}`,
           JSON.stringify(data),
@@ -73,13 +74,13 @@ export default function MarketFinanceDataForm() {
         );
 
         if (response.status === 201) {
-          setIsSubmiting(false);
+          setIsSubmitting(false);
           refetch();
         }
       } catch (error) {
         console.log("error: ", error);
       }
-      setIsSubmiting(false);
+      setIsSubmitting(false);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -461,12 +462,22 @@ export default function MarketFinanceDataForm() {
         <Button
           type="submit"
           variant="blue"
-          disabled={isSubmiting}
+          disabled={isSubmitting}
           className="px-6 text-white rounded-md"
         >
           Salvar
         </Button>
       </div>
+      {isSubmitting && (
+        <div className="absolute inset-0 flex justify-center bg-white bg-opacity-70">
+          <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
+            <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
+            <div className="text-xs text-center font-bold text-gray-500">
+              Salvando os dados...
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

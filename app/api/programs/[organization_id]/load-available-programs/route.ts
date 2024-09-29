@@ -5,6 +5,9 @@ import prisma from "@/prisma/client";
 
 const S3_PROGRAMS_EDITAL_FILES = process.env.S3_PROGRAMS_EDITAL_FILES;
 
+const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
+  process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME;
+
 export interface ProgramTable {
   id: number;
   programName: string;
@@ -16,6 +19,7 @@ export interface ProgramTable {
   organization: {
     id: number;
     name: string;
+    logo_img_url: string;
   };
 }
 
@@ -68,6 +72,7 @@ export async function GET(
           select: {
             id: true,
             name: true,
+            logo_img: true,
           },
         },
       },
@@ -88,7 +93,11 @@ export async function GET(
         ? `https://${S3_PROGRAMS_EDITAL_FILES}.s3.amazonaws.com/${value.edital_file}`
         : null,
       isPublished: value.is_published ?? false,
-      organization: value.organization,
+      organization: {
+        id: value.organization.id,
+        name: value.organization.name,
+        logo_img_url: `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${value.organization.logo_img}`,
+      },
     }));
 
     return NextResponse.json({ programTable, programsCount }, { status: 200 });

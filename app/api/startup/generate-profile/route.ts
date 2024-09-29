@@ -1,28 +1,32 @@
-export const maxDuration = 60;
 import { NextRequest, NextResponse } from "next/server";
 
+import { generateM2MToken } from "@/actions/cogtech-api-generate-token";
 import prisma from "@/prisma/client";
+
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const codigo_startup = body.params.codigo_startup;
-  const idioma = "português";
+  const startup_id = body.params.startup_id;
+  const language = "português";
 
-  if (!codigo_startup) {
+  if (!startup_id) {
     return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
   }
 
   const url = new URL(
     "https://api.questbot.cogtech.com.br/api/sgl/gerar_perfil_startup"
   );
-  url.searchParams.append("codigo_startup", codigo_startup.toString());
-  url.searchParams.append("idioma", idioma);
+  url.searchParams.append("codigo_startup", startup_id.toString());
+  url.searchParams.append("idioma", language);
 
   try {
+    const { token } = await generateM2MToken();
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.API_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -41,52 +45,38 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
 
-    try {
-      await prisma.startup_generated_profiles.updateMany({
-        where: {
-          startup_id: Number(codigo_startup),
-          active: true,
-        },
-        data: {
-          active: false,
-        },
-      });
+    await prisma.startup_generated_profiles.updateMany({
+      where: {
+        startup_id: Number(startup_id),
+        active: true,
+      },
+      data: {
+        active: false,
+      },
+    });
 
-      const currentDate = new Date();
+    const currentDate = new Date();
 
-      const newProfile = await prisma.startup_generated_profiles.create({
-        data: {
-          startup_id: Number(codigo_startup),
-          profile: data,
-          active: true,
-          generated_date: currentDate,
-        },
-      });
+    const newProfile = await prisma.startup_generated_profiles.create({
+      data: {
+        startup_id: Number(startup_id),
+        profile: data,
+        active: true,
+        generated_date: currentDate,
+      },
+    });
 
-      return NextResponse.json({
-        status: 200,
-        data: data,
-        message: "Perfil gerado com sucesso!",
-        newProfileId: newProfile.id,
-      });
-    } catch (dbError) {
-      console.error("Error updating database:", dbError);
-      return NextResponse.json(
-        {
-          error:
-            "Perfil gerado, mas ocorreu um erro ao atualizar o banco de dados",
-          details: dbError,
-        },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json({
+      status: 200,
+      data: data,
+      message: "Perfil gerado com sucesso!",
+      newProfileId: newProfile.id,
+    });
   } catch (error) {
-    console.error("Erro ao iniciar geração de perfil:", error);
+    console.error("Erro ao processar a solicitação:", error);
     return NextResponse.json(
-      { error: "Ocorreu um erro ao iniciar a geração do perfil" },
+      { error: "Ocorreu um erro ao processar a solicitação" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
