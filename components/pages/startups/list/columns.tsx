@@ -33,7 +33,7 @@ export const startupColumns: ColumnDef<StartupTable, unknown>[] = [
         onCheckedChange={(value) => {
           table.toggleAllPageRowsSelected(!!value);
         }}
-        aria-label="Select all"
+        aria-label="Select all."
       />
     ),
     cell: ({ row }) => (
