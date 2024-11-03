@@ -134,7 +134,7 @@ export default function FormCompanyDialog({
   const [crop, setCrop] = useState<Crop>({
     unit: "px",
     width: 300,
-    height: 100,
+    height: 200,
     x: 0,
     y: 0,
   });
@@ -195,7 +195,7 @@ export default function FormCompanyDialog({
       try {
         const { width, height } = await verifyImageSize(file);
         const minWidth = type === "logo" ? 300 : 50;
-        const minHeight = type === "logo" ? 100 : 50;
+        const minHeight = type === "logo" ? 200 : 50;
         const maxWidth = type === "logo" ? 600 : 200;
         const maxHeight = type === "logo" ? 500 : 200;
 
@@ -231,7 +231,7 @@ export default function FormCompanyDialog({
             setCrop({
               unit: "px",
               width: type === "logo" ? 300 : 50,
-              height: type === "logo" ? 100 : 50,
+              height: type === "logo" ? 200 : 50,
               x: 0,
               y: 0,
             });
@@ -270,7 +270,7 @@ export default function FormCompanyDialog({
           x: 0,
           y: 0,
           width: cropType === "logo" ? 300 : 50,
-          height: cropType === "logo" ? 100 : 50,
+          height: cropType === "logo" ? 200 : 50,
         };
 
         const imageToUpload = await getCroppedImg(
@@ -503,7 +503,7 @@ export default function FormCompanyDialog({
                         />
                       ) : (
                         <div className="text-gray-400 text-sm">
-                          Escolher arquivo (max 300 x 100)
+                          Escolher arquivo (max 300 x 200)
                         </div>
                       )}
                     </div>
@@ -750,9 +750,9 @@ export default function FormCompanyDialog({
                     onComplete={(c) => setCompletedCrop(c)}
                     aspect={cropType === "logo" ? 3 : 1}
                     minWidth={cropType === "logo" ? 300 : 50}
-                    minHeight={cropType === "logo" ? 100 : 50}
+                    minHeight={cropType === "logo" ? 200 : 50}
                     maxWidth={cropType === "logo" ? 300 : 50}
-                    maxHeight={cropType === "logo" ? 100 : 50}
+                    maxHeight={cropType === "logo" ? 200 : 50}
                   >
                     <img
                       src={cropImage}
@@ -765,7 +765,7 @@ export default function FormCompanyDialog({
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">
                   {cropType === "logo"
-                    ? "Tamanho exato: 300x100"
+                    ? "Tamanho exato: 300x200"
                     : "Tamanho exato: 50x50"}
                 </p>
                 <div className="flex justify-end gap-4">
