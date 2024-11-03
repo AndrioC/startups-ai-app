@@ -36,7 +36,7 @@ const cards = [
     id: 1,
     title: "Empreendedores",
     button_text: "Sou empreendedor",
-    button_link: "https://sgl.startups-globallink.com",
+    button_link: "https://sgl.startupsai.com.br",
     image: startupCardImage,
     bullet_points: [
       { id: 1, title: "Aceleração Gratuita" },
@@ -48,7 +48,7 @@ const cards = [
     id: 2,
     title: "Investidores",
     button_text: "Sou investidor",
-    button_link: "https://sgl.startups-globallink.com",
+    button_link: "https://sgl.startupsai.com.br",
     image: investorCardImage,
     bullet_points: [
       { id: 1, title: "Conexão com Startups" },
@@ -60,7 +60,7 @@ const cards = [
     id: 3,
     title: "Mentores",
     button_text: "Sou mentor",
-    button_link: "https://sgl.startups-globallink.com",
+    button_link: "https://sgl.startupsai.com.br",
     image: mentorCardImage,
     bullet_points: [
       { id: 1, title: "Give back" },
@@ -72,7 +72,7 @@ const cards = [
     id: 4,
     title: "Patrocinadores",
     button_text: "Sou patrocinador",
-    button_link: "https://sgl.startups-globallink.com",
+    button_link: "https://sgl.startupsai.com.br",
     image: sponsorCardImage,
     bullet_points: [
       { id: 1, title: "Visibilidade da marca" },
@@ -192,7 +192,7 @@ export default function ExternalPageSettings() {
     formData.append("page_title", data.pageTitle || "");
     formData.append("link_video", data.linkVideo || "");
     formData.append("free_text", data.freeText || "");
-    const buttonLinkUrl = `https://${subdomain}.startups-globallink.com/auth/login`;
+    const buttonLinkUrl = `https://${subdomain}.startupsai.com.br/auth/login`;
 
     const enabledTabsData = data.enabled_tabs.map((tab) => ({
       tab_number: tab.tab_number,
@@ -331,7 +331,7 @@ export default function ExternalPageSettings() {
   };
 
   const handleCopyLink = () => {
-    const link = `https://${subdomain}.startups-globallink.com`;
+    const link = `https://${subdomain}.startupsai.com.br`;
     navigator.clipboard
       .writeText(link)
       .then(() => {

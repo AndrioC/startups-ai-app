@@ -15,6 +15,8 @@ import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import ProfileListModal from "./profile-list-modal";
 import StartupProfileMarkDown from "./startup-profile-markdown";
 
+const GENERATE_PROFILE_LAMBDA_URL = `${process.env.NEXT_PUBLIC_GENERATE_PROFILE_LAMBDA_URL}/generate-profile`;
+
 export default function ProfileDataForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,11 +28,19 @@ export default function ProfileDataForm() {
     setIsLoading(true);
     setIsAIModalOpen(true);
     try {
-      const response = await axios.post(`/api/startup/generate-profile`, {
-        params: {
-          startup_id: initialData.startupId,
+      const response = await axios.post(
+        GENERATE_PROFILE_LAMBDA_URL,
+        {
+          params: {
+            startup_id: initialData.startupId,
+          },
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Perfil atualizado com sucesso!");

@@ -16,7 +16,7 @@ export default async function middleware(req: NextRequest) {
 
   const fetchUrl = hostname.includes("localhost")
     ? "http://localhost:3000/api/subdomains"
-    : "https://sgl.startups-globallink.com/api/subdomains";
+    : "https://sai.startupsai.com.br/api/subdomains";
 
   const res = await fetch(fetchUrl);
 
@@ -26,7 +26,7 @@ export default async function middleware(req: NextRequest) {
 
   const data: string[] = await res.json();
 
-  const allowedDomains = ["localhost:3000", "startups-globallink.com"];
+  const allowedDomains = ["localhost:3000", "startupsai.com.br"];
   const subdomain = hostname.split(".")[0];
   const isAllowedDomain = allowedDomains.some((domain) =>
     hostname.endsWith(domain)

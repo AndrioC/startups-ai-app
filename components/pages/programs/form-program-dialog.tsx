@@ -448,8 +448,8 @@ export default function FormProgramDialog({
                         </svg>
                         <p className="flex-1 text-gray-500 font-normal">
                           Ao publicar este programa, todas as Startups, que
-                          fazem parte da base da Startups Global Link, serão
-                          notificadas e poderão se inscrever neste programa.
+                          fazem parte da base da Startups AI, serão notificadas
+                          e poderão se inscrever neste programa.
                         </p>
                       </div>
                       <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-r-[16px] border-r-gray-100 border-b-8 border-b-transparent"></div>

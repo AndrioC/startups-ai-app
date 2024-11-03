@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
     const currentDate = new Date();
 
     const result = await prisma.$transaction(async (prisma) => {
-      // Fetch the program to get the organization_id
       const program = await prisma.programs.findUnique({
         where: { id: Number(program_id) },
         select: { organization_id: true },
@@ -29,7 +28,6 @@ export async function POST(request: NextRequest) {
         throw new Error("Program not found");
       }
 
-      // Check if the startup is already related to the organization
       const existingRelation = await prisma.startup_organizations.findFirst({
         where: {
           startup_id: Number(startup_id),

@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
+const SUBSCRIPTION_PROGRAM_LAMBDA_URL = `${process.env.NEXT_PUBLIC_PROGRAM_SUBSCRIPTION_LAMBDA_URL}/program-subscription`;
+
 interface Props {
   program: ProgramTable;
 }
@@ -55,13 +57,29 @@ export default function StartupProgramModal({ program }: Props) {
   } = useQuery<{ data: EligibilityData }>({
     queryKey: ["check-eligibility", startupId, program.id],
     queryFn: async () => {
+      // const response = await axios.post<{ data: EligibilityData }>(
+      //   `/api/startup/check-program-eligibility`,
+      //   {
+      //     params: {
+      //       startup_id: startupId,
+      //       program_id: program.id,
+      //       program_edital: program.editalFileUrl,
+      //     },
+      //   }
+      // );
+
       const response = await axios.post<{ data: EligibilityData }>(
-        `/api/startup/check-program-eligibility`,
+        SUBSCRIPTION_PROGRAM_LAMBDA_URL,
         {
           params: {
             startup_id: startupId,
             program_id: program.id,
             program_edital: program.editalFileUrl,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
         }
       );

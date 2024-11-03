@@ -47,11 +47,11 @@ export default function TermsOfUseDialog({
                 1. Do Objeto
               </h2>
               <p className="mb-4">
-                A Startups Global Link é uma Plataforma de Inteligência
-                Artificial voltada para negócios de Startups. Através de nosso
-                serviço de business-matchmaking, identificamos possibilidades de
-                match com alta taxa de acurácia entre Startups e potenciais
-                clientes (Governos e empresas que adotam a inovação aberta como
+                A Startups AI é uma Plataforma de Inteligência Artificial
+                voltada para negócios de Startups. Através de nosso serviço de
+                business-matchmaking, identificamos possibilidades de match com
+                alta taxa de acurácia entre Startups e potenciais clientes
+                (Governos e empresas que adotam a inovação aberta como
                 estratégia para solucionar seus desafios), investidores,
                 parceiros comerciais, outras startups e especialistas em
                 negócios de Startups que possam ajudá-las a resolver problemas
@@ -62,12 +62,12 @@ export default function TermsOfUseDialog({
                 2. Da Aceitação
               </h2>
               <p className="mb-4">
-                Ao utilizar a Startups Global Link, o usuário aceita
-                integralmente as presentes normas e compromete-se a observá-las,
-                sob o risco de aplicação das penalidades cabíveis. A aceitação
-                deste instrumento é imprescindível para o acesso e a utilização
-                de quaisquer serviços fornecidos pela Startups Global Link. Caso
-                não concorde com as disposições deste instrumento, o usuário não
+                Ao utilizar a Startups AI, o usuário aceita integralmente as
+                presentes normas e compromete-se a observá-las, sob o risco de
+                aplicação das penalidades cabíveis. A aceitação deste
+                instrumento é imprescindível para o acesso e a utilização de
+                quaisquer serviços fornecidos pela Startups AI. Caso não
+                concorde com as disposições deste instrumento, o usuário não
                 deve utilizá-los.
               </p>
 
@@ -75,9 +75,9 @@ export default function TermsOfUseDialog({
                 3. Do Acesso dos Usuários
               </h2>
               <p className="mb-4">
-                A Startups Global Link se compromete a utilizar todas as
-                soluções técnicas à disposição para permitir o acesso ao serviço
-                24 (vinte e quatro) horas por dia, 7 (sete) dias por semana. No
+                A Startups AI se compromete a utilizar todas as soluções
+                técnicas à disposição para permitir o acesso ao serviço 24
+                (vinte e quatro) horas por dia, 7 (sete) dias por semana. No
                 entanto, a navegação na plataforma poderá ser interrompida,
                 limitada ou suspensa para atualizações, modificações ou qualquer
                 ação necessária ao seu bom funcionamento.
@@ -121,9 +121,9 @@ export default function TermsOfUseDialog({
                 5.1 Descrição dos Serviços
               </h3>
               <p className="mb-2">
-                A Startups Global Link disponibiliza um conjunto de
-                funcionalidades e ferramentas para otimizar o uso dos seus
-                serviços de business-matchmaking, incluindo:
+                A Startups AI disponibiliza um conjunto de funcionalidades e
+                ferramentas para otimizar o uso dos seus serviços de
+                business-matchmaking, incluindo:
               </p>
               <ul className="list-disc pl-5 mb-2">
                 <li>Identificação de potenciais clientes para startups.</li>
@@ -148,7 +148,7 @@ export default function TermsOfUseDialog({
                 6.1 Política de Preços
               </h3>
               <p className="mb-2">
-                A Startups Global Link se reserva no direito de reajustar
+                A Startups AI se reserva no direito de reajustar
                 unilateralmente, a qualquer tempo, os valores dos serviços sem
                 consulta ou anuência prévia do usuário. Os valores aplicados são
                 aqueles que estão em vigor no momento do pedido.
@@ -214,7 +214,7 @@ export default function TermsOfUseDialog({
               <p className="mb-2">
                 Em caso de dúvidas, sugestões ou problemas, o usuário pode
                 entrar em contato com o suporte através do e-mail
-                suporte@startupsgloballink.com.
+                suporte@startupsai.com.br
               </p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
                 8.2 Horário de Atendimento
@@ -247,9 +247,7 @@ export default function TermsOfUseDialog({
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
                 9.2 Responsabilidades da Plataforma
               </h3>
-              <p className="mb-4">
-                É de responsabilidade da Startups Global Link:
-              </p>
+              <p className="mb-4">É de responsabilidade da Startups AI:</p>
               <ul className="list-disc pl-5 mb-4">
                 <li>Indicar as características dos serviços oferecidos.</li>
                 <li>Informações divulgadas por ela na plataforma.</li>
@@ -265,10 +263,10 @@ export default function TermsOfUseDialog({
                 10.1 Propriedade Intelectual
               </h3>
               <p className="mb-2">
-                Os conteúdos e ativos de propriedade intelectual da Startups
-                Global Link são protegidos pelas leis de direitos autorais e de
-                propriedade industrial. O uso da plataforma é pessoal e
-                intransferível, sendo vedado qualquer uso não autorizado.
+                Os conteúdos e ativos de propriedade intelectual da Startups AI
+                são protegidos pelas leis de direitos autorais e de propriedade
+                industrial. O uso da plataforma é pessoal e intransferível,
+                sendo vedado qualquer uso não autorizado.
               </p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
                 10.2 Licença de Uso
@@ -284,9 +282,9 @@ export default function TermsOfUseDialog({
                 11. Das Sanções
               </h2>
               <p className="mb-4">
-                A Startups Global Link poderá, a qualquer momento, advertir,
-                suspender ou cancelar a conta do usuário que violar qualquer
-                dispositivo deste Termo ou tiver comportamento fraudulento.
+                A Startups AI poderá, a qualquer momento, advertir, suspender ou
+                cancelar a conta do usuário que violar qualquer dispositivo
+                deste Termo ou tiver comportamento fraudulento.
               </p>
 
               <h2 className="text-base font-semibold mb-2 text-gray-800">
@@ -294,9 +292,8 @@ export default function TermsOfUseDialog({
               </h2>
               <p className="mb-4">
                 A não observância das obrigações pactuadas neste Termo poderá
-                ensejar a imediata rescisão unilateral por parte da Startups
-                Global Link e o bloqueio de todos os serviços prestados ao
-                usuário.
+                ensejar a imediata rescisão unilateral por parte da Startups AI
+                e o bloqueio de todos os serviços prestados ao usuário.
               </p>
 
               <h2 className="text-base font-semibold mb-2 text-gray-800">
@@ -304,7 +301,7 @@ export default function TermsOfUseDialog({
               </h2>
               <p className="mb-4">
                 Os itens descritos neste instrumento poderão sofrer alterações
-                unilateralmente e a qualquer tempo pela Startups Global Link. As
+                unilateralmente e a qualquer tempo pela Startups AI. As
                 alterações serão informadas na plataforma, cabendo ao usuário
                 optar por aceitar o novo conteúdo ou cancelar o uso dos
                 serviços.
@@ -315,7 +312,7 @@ export default function TermsOfUseDialog({
               </h2>
               <p className="mb-4">
                 O usuário deve consentir com as disposições contidas na Política
-                de Privacidade da Startups Global Link.
+                de Privacidade da Startups AI.
               </p>
 
               <h2 className="text-base font-semibold mb-2 text-gray-800">
