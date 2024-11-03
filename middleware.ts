@@ -11,14 +11,27 @@ const protectedRoutes = ["/management", "/startup", "/mentor", "/investor"];
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const session = await auth();
-
   const hostname = req.headers.get("host") || "";
 
-  const fetchUrl = hostname.includes("localhost")
+  const timestamp = Date.now();
+  const baseUrl = hostname.includes("localhost")
     ? "http://localhost:3000/api/subdomains"
     : "https://sai.startupsai.com.br/api/subdomains";
 
-  const res = await fetch(fetchUrl, { next: { revalidate: 0 } });
+  const fetchUrl = `${baseUrl}?t=${timestamp}`;
+
+  const res = await fetch(fetchUrl, {
+    cache: "no-store",
+    headers: {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+    next: {
+      revalidate: 0,
+      tags: ["subdomains"],
+    },
+  });
 
   if (!res.ok) {
     return new Response("Failed to fetch subdomains", { status: 500 });
@@ -174,7 +187,7 @@ export default async function middleware(req: NextRequest) {
       : NextResponse.next();
   }
 
-  const htmlResponse = `
+  const notFoundHTML = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -231,7 +244,7 @@ export default async function middleware(req: NextRequest) {
     </html>
   `;
 
-  return new Response(htmlResponse, {
+  return new Response(notFoundHTML, {
     status: 404,
     headers: {
       "Content-Type": "text/html",
