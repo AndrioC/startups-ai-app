@@ -18,7 +18,7 @@ export default async function middleware(req: NextRequest) {
     ? "http://localhost:3000/api/subdomains"
     : "https://sai.startupsai.com.br/api/subdomains";
 
-  const res = await fetch(fetchUrl);
+  const res = await fetch(fetchUrl, { next: { revalidate: 0 } });
 
   if (!res.ok) {
     return new Response("Failed to fetch subdomains", { status: 500 });
