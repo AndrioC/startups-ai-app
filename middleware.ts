@@ -21,12 +21,7 @@ export default async function middleware(req: NextRequest) {
   const fetchUrl = `${baseUrl}?t=${timestamp}`;
 
   const res = await fetch(fetchUrl, {
-    cache: "no-store",
-    headers: {
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      Pragma: "no-cache",
-      Expires: "0",
-    },
+    cache: "no-cache",
     next: {
       revalidate: 0,
       tags: ["subdomains"],
