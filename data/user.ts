@@ -12,12 +12,12 @@ export const getUserByEmail = async (email: string, slug: string) => {
 
     const userOrganization = await prisma.user_organizations.findFirst({
       where: {
-        user: {
-          email: whereUser.email,
-        },
         organization_id: whereUser.organization_id,
+        user: {
+          email,
+        },
       },
-      select: {
+      include: {
         user: {
           select: {
             id: true,

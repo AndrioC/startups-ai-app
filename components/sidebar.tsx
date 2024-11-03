@@ -98,7 +98,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
 
   const getFilteredMenus = () => {
     return menus.filter(
-      (menu) => menu.key !== "companies" || session?.user?.isSGL === true
+      (menu) => menu.key !== "companies" || session?.user?.isSAI === true
     );
   };
 

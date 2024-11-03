@@ -39,7 +39,7 @@ export default {
               email: user.email,
               organization_id: user.organization_id!,
               type: user.type!,
-              isSGL: user.type === "SGL",
+              isSAI: user.type === "SAI",
               isAdmin: user.type === "ADMIN",
               isInvestor: user.type === "INVESTOR",
               isMentor: user.type === "MENTOR",

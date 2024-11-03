@@ -254,7 +254,7 @@ enum UserType {
   MENTOR
   INVESTOR
   ADMIN
-  SGL
+  SAI
 }
 
 model user {

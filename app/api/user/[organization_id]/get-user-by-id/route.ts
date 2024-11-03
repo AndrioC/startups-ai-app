@@ -48,7 +48,7 @@ export async function GET(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (user.type === UserType.SGL || user.type === UserType.ADMIN) {
+    if (user.type === UserType.SAI || user.type === UserType.ADMIN) {
       const userOrganization = await prisma.user_organizations.findFirst({
         where: {
           user_id: Number(userId),

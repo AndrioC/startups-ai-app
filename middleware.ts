@@ -102,7 +102,7 @@ export default async function middleware(req: NextRequest) {
 
     if (req.nextUrl.pathname === "/auth/login" && session?.user) {
       let redirectTo;
-      if (session.user.isSGL || session.user.isAdmin) {
+      if (session.user.isSAI || session.user.isAdmin) {
         redirectTo = "/management/home";
       } else if (session.user.isInvestor) {
         redirectTo = "/investor";
@@ -124,13 +124,13 @@ export default async function middleware(req: NextRequest) {
     if (session?.user) {
       if (req.nextUrl.pathname.startsWith("/management")) {
         if (req.nextUrl.pathname.startsWith("/management/companies")) {
-          if (!session.user.isSGL) {
+          if (!session.user.isSAI) {
             return new Response(accessDeniedHTML, {
               status: 403,
               headers: { "Content-Type": "text/html" },
             });
           }
-        } else if (!session.user.isSGL && !session.user.isAdmin) {
+        } else if (!session.user.isSAI && !session.user.isAdmin) {
           return new Response(accessDeniedHTML, {
             status: 403,
             headers: { "Content-Type": "text/html" },

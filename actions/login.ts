@@ -77,7 +77,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
 export const pageRedirect = (type: UserType): string => {
   switch (type) {
-    case UserType.SGL:
+    case UserType.SAI:
       return "/management/home";
     case UserType.ADMIN:
       return "/management/home";

@@ -7,7 +7,7 @@ declare module "next-auth" {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
-    isSGL: boolean;
+    isSAI: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
@@ -22,7 +22,7 @@ declare module "next-auth" {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
-    isSGL: boolean;
+    isSAI: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;
@@ -39,7 +39,7 @@ declare module "next-auth/jwt" {
     organization_id: number;
     type: UserType;
     isAdmin: boolean;
-    isSGL: boolean;
+    isSAI: boolean;
     isInvestor: boolean;
     isMentor: boolean;
     isStartup: boolean;

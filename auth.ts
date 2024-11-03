@@ -73,7 +73,7 @@ export const {
           ? `https://${S3_USERS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.user_logo_img}`
           : null;
 
-        session.user.isSGL = token.type === "SGL";
+        session.user.isSAI = token.type === "SAI";
         session.user.isAdmin = token.type === "ADMIN";
         session.user.isInvestor = token.type === "INVESTOR";
         session.user.isMentor = token.type === "MENTOR";
@@ -137,7 +137,7 @@ export const {
         token.type = existingUser.type!;
         token.user_logo_img = existingUser.logo_img;
 
-        token.isSGL = existingUser.type === "SGL";
+        token.isSAI = existingUser.type === "SAI";
         token.isAdmin = existingUser.type === "ADMIN";
         token.isInvestor = existingUser.type === "INVESTOR";
         token.isMentor = existingUser.type === "MENTOR";
