@@ -7,9 +7,9 @@ interface SpinnerProps {
 
 export default function Spinner({ isLoading, children }: SpinnerProps) {
   return (
-    <div className="relative border-radius-md flex flex-col items-center justify-center h-full">
+    <div className="relative">
       {isLoading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-transparent">
+        <div className="absolute inset-0 z-50 flex justify-center bg-transparent">
           <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-gray-900"></div>
         </div>
       )}

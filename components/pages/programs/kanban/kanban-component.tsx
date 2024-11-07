@@ -1,5 +1,4 @@
-"use client";
-
+import React from "react";
 import { Fragment, useState } from "react";
 import {
   Dialog,
@@ -17,13 +16,12 @@ import { useSession } from "next-auth/react";
 import { Rule } from "@/actions/rules";
 import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
 import { Button } from "@/components/ui/button";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../../../ui/tooltip";
+} from "@/components/ui/tooltip";
 
 import AddRulesComponent from "./add-rules-component";
 import ProfileUpdatedInfo from "./profile-updated-info";
@@ -87,10 +85,10 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
   };
 
   return (
-    <div className="flex bg-[#FCFCFC] min-h-screen">
-      <div className="flex h-full overflow-x-auto custom-scrollbar w-[1100px] pl-5 pr-5">
-        <div className="flex gap-4 h-full mb-5">
-          <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragEnd}>
+    <div className="min-h-screen bg-[#FCFCFC]">
+      <div className="overflow-x-auto">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="flex justify-start gap-4 pt-4 pb-4 w-full">
             {kanbanData
               ?.sort((a, b) => a.kanban_position - b.kanban_position)
               .map((list) => (
@@ -102,7 +100,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`bg-[#F0F2F5] rounded-lg shadow-md w-[300px] max-h-[900px] p-4 ${
+                      className={`bg-[#F0F2F5] rounded-lg shadow-md w-[300px] flex-shrink-0 p-4 ${
                         snapshot.isDraggingOver ? "bg-blue-100" : ""
                       }`}
                     >
@@ -130,12 +128,12 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className={`bg-white rounded-md shadow-md w-[250px] h-[60px] mb-3 flex items-center justify-between ${
+                                className={`bg-white rounded-md shadow-md w-full mb-3 flex items-center justify-between ${
                                   snapshot.isDragging ? "bg-gray-200" : ""
                                 }`}
                               >
                                 <div
-                                  className="rounded-l-md w-2 h-full"
+                                  className="rounded-l-md w-2 h-[60px]"
                                   style={{ backgroundColor: list.kanban_color }}
                                 ></div>
                                 <div className="flex flex-col w-full p-2">
@@ -197,24 +195,22 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                   )}
                 </Droppable>
               ))}
-          </DragDropContext>
-          <ProfileUpdatedInfo
-            isOpen={isUpdateModalOpen}
-            setIsOpen={setIsUpdateModalOpen}
-            selectedStartup={selectedStartup}
-            refetch={refetch}
-          />
-        </div>
+            <Button
+              className="bg-[#F5F7FA] h-fit text-[#747D8C] px-4 py-2 rounded-lg shadow-md hover:bg-[#eaebec] flex-shrink-0 whitespace-nowrap"
+              onClick={() => setIsModalOpen(true)}
+            >
+              + Adicionar nova lista
+            </Button>
+          </div>
+        </DragDropContext>
       </div>
 
-      <div className="flex flex-col ml-2">
-        <Button
-          className="bg-[#F5F7FA] w-[160px] text-[#747D8C] px-4 py-2 rounded-lg shadow-md mb-4 hover:bg-[#eaebec]"
-          onClick={() => setIsModalOpen(true)}
-        >
-          + Adicionar nova lista
-        </Button>
-      </div>
+      <ProfileUpdatedInfo
+        isOpen={isUpdateModalOpen}
+        setIsOpen={setIsUpdateModalOpen}
+        selectedStartup={selectedStartup}
+        refetch={refetch}
+      />
 
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog
@@ -234,7 +230,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
             <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto custom-scrollbar">
+          <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <TransitionChild
                 as={Fragment}
@@ -264,14 +260,14 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       onClick={addNewList}
                     >
                       Adicionar Lista
                     </button>
                     <button
                       type="button"
-                      className="inline-flex justify-center ml-4 px-4 py-2 text-sm text-gray-700 font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      className="inline-flex justify-center ml-4 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                       onClick={() => setIsModalOpen(false)}
                     >
                       Cancelar
