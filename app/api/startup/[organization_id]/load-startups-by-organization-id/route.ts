@@ -28,8 +28,6 @@ export async function GET(
 ) {
   const { organization_id } = params;
 
-  console.log("organization_id", organization_id);
-
   if (!organization_id) {
     return NextResponse.json(
       { error: "Organization ID is required" },

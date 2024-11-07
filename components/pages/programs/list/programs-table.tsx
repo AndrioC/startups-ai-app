@@ -406,15 +406,28 @@ const useListPrograms = (
   programEndDate?: Date
 ) =>
   useQuery<{ programTable: ProgramTable[]; programsCount: number }>({
-    queryKey: ["list-programs-by-organization-id", organization_id],
+    queryKey: [
+      "list-programs-by-organization-id",
+      organization_id,
+      page,
+      pageSize,
+      programName,
+      programStartDate?.toISOString(),
+      programEndDate?.toISOString(),
+    ],
     queryFn: () =>
       axios
         .get(
-          `/api/programs/${organization_id}/list?page=${page}&pageSize=${pageSize}&programName=${programName}&programStartDate=${programStartDate}&programEndDate=${programEndDate}`
+          `/api/programs/${organization_id}/list?` +
+            new URLSearchParams({
+              page: page.toString(),
+              pageSize: pageSize.toString(),
+              programName: programName || "",
+              programStartDate: programStartDate?.toISOString() || "",
+              programEndDate: programEndDate?.toISOString() || "",
+            }).toString()
         )
-        .then((res) => {
-          return res.data;
-        }),
+        .then((res) => res.data),
     staleTime: 5 * 60 * 1000,
     enabled: !!organization_id,
   });
