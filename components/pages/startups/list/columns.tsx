@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   BusinessModelColors,
-  getBadgeColorByApprovalStatus,
   getBadgeColorByBusinessModel,
 } from "@/extras/utils";
 
@@ -115,29 +114,6 @@ export const startupColumns: ColumnDef<StartupTable, unknown>[] = [
     accessorKey: "last_twelve_months_revenue",
     header: "Fat. Ult. 12 meses",
     enableColumnFilter: false,
-  },
-  {
-    id: "Status",
-    accessorKey: "status",
-    header: "Status",
-    enableColumnFilter: false,
-
-    cell: ({ row }) => {
-      const startup = row.original;
-
-      return (
-        <Badge
-          className="w-[60px] flex items-center justify-center"
-          color={
-            getBadgeColorByApprovalStatus(
-              startup.status
-            ) as BusinessModelColors[keyof BusinessModelColors]
-          }
-        >
-          {startup.status}
-        </Badge>
-      );
-    },
   },
   {
     id: "actions",
