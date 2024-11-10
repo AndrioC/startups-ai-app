@@ -37,7 +37,7 @@ const cards = [
     id: 1,
     title: "Empreendedores",
     button_text: "Sou empreendedor",
-    button_link: "https://sgl.startupsai.com.br",
+    button_link: "https://sai.startupsai.com.br",
     image: startupCardImage,
     bullet_points: [
       { id: 1, title: "Aceleração Gratuita" },
@@ -49,7 +49,7 @@ const cards = [
     id: 2,
     title: "Investidores",
     button_text: "Sou investidor",
-    button_link: "https://sgl.startupsai.com.br",
+    button_link: "https://sai.startupsai.com.br",
     image: investorCardImage,
     bullet_points: [
       { id: 1, title: "Conexão com Startups" },
@@ -61,7 +61,7 @@ const cards = [
     id: 3,
     title: "Mentores",
     button_text: "Sou mentor",
-    button_link: "https://sgl.startupsai.com.br",
+    button_link: "https://sai.startupsai.com.br",
     image: mentorCardImage,
     bullet_points: [
       { id: 1, title: "Give back" },
@@ -73,7 +73,7 @@ const cards = [
     id: 4,
     title: "Patrocinadores",
     button_text: "Sou patrocinador",
-    button_link: "https://sgl.startupsai.com.br",
+    button_link: "https://sai.startupsai.com.br",
     image: sponsorCardImage,
     bullet_points: [
       { id: 1, title: "Visibilidade da marca" },
