@@ -41,7 +41,6 @@ export async function GET(
       where: {
         organization_id: orgId,
         is_deleted: false,
-        is_approved: true,
       },
       select: { created_at: true, country_id: true },
     });
