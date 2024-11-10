@@ -329,7 +329,6 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="flex gap-10 mt-5">
             <div className="flex flex-col w-1/2">
               <label htmlFor="subscriptionNumber" className="flex items-center">
-                <span className="text-red-500">*</span>
                 <span className="text-gray-500">CNPJ</span>
               </label>
               <input
@@ -346,15 +345,15 @@ export default function GeneralDataForm({ data }: Props) {
             </div>
             <div className="flex flex-col w-1/2">
               <label htmlFor="foundationDate" className="flex items-center">
-                <span className="text-red-500">*</span>
                 <span className="text-gray-500">Data fundação</span>
               </label>
               <Controller
                 control={control}
                 name="foundationDate"
+                defaultValue={null}
                 render={({ field }) => (
                   <DatePicker
-                    onChange={(newValue: Date | undefined) => {
+                    onChange={(newValue: Date | undefined | null) => {
                       field.onChange(newValue);
                     }}
                     value={field.value}
@@ -372,7 +371,6 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="flex gap-10 mt-5">
             <div className="flex flex-col w-full">
               <label htmlFor="referenceLink" className="flex items-center">
-                <span className="text-red-500">*</span>
                 <span className="text-gray-500">Site</span>
               </label>
               <input

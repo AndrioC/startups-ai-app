@@ -21,19 +21,24 @@ export const GeneralDataSchema = () =>
     subscriptionNumber: z
       .string()
       .nullable()
-      .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(3, "Este campo é obrigatório!")),
+      .transform((v) => (v === null ? "" : v)),
     foundationDate: z.preprocess(
       (val: any) => (val ? new Date(val) : val),
-      z.date({
-        required_error: "Este campo é obrigatório!",
-      })
+      z
+        .date({
+          required_error: "Este campo é obrigatório!",
+        })
+        .nullable()
+        .optional()
     ),
     referenceLink: z
       .string()
       .nullable()
-      .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(3, "Este campo é obrigatório!")),
+      .optional()
+      .refine(
+        (val) => !val || val.length >= 3,
+        "O site deve ter pelo menos 3 caracteres"
+      ),
     loadPitchDeck: z
       .union([z.string(), z.instanceof(File), z.undefined()])
       .refine(
