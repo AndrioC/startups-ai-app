@@ -1,3 +1,4 @@
+import { UserType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/prisma/client";
@@ -55,6 +56,9 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           user: {
+            where: {
+              AND: [{ type: UserType.ADMIN }],
+            },
             select: {
               name: true,
               email: true,
