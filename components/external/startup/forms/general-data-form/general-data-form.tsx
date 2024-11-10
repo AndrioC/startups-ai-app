@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Upload } from "lucide-react";
 import Image from "next/image";
 import { z } from "zod";
 
@@ -399,52 +399,60 @@ export default function GeneralDataForm({ data }: Props) {
                 name="loadPitchDeck"
                 control={control}
                 render={({ field: { ref, name, onBlur, onChange } }) => (
-                  <div className="flex items-center space-x-2 flex-grow">
-                    <input
-                      type="file"
-                      ref={ref}
-                      name={name}
-                      id={name}
-                      onBlur={onBlur}
-                      accept=".pdf"
-                      style={{ display: "none" }}
-                      onChange={(e) => {
-                        const selectedFile = e.target.files?.[0];
-                        setLocalPitchDeckFile(selectedFile || null);
-                        onChange(selectedFile);
-                      }}
-                    />
-                    <div className="relative flex items-center space-x-2 font-medium flex-grow">
-                      <span
-                        className="text-blue-500 cursor-pointer truncate flex-grow"
-                        title={
-                          localPitchDeckFile
-                            ? localPitchDeckFile.name
-                            : pitchDeckFile || ""
-                        }
-                        onClick={() =>
-                          window.open(
-                            localPitchDeckFile
-                              ? URL.createObjectURL(localPitchDeckFile)
-                              : pitchDeckFile,
-                            "_blank"
-                          )
-                        }
-                      >
-                        {truncateFileName(
-                          localPitchDeckFile
-                            ? localPitchDeckFile.name
-                            : pitchDeckFile || "Selecionar arquivo",
-                          30
-                        )}
-                      </span>
-                      <button
-                        type="button"
-                        className="flex items-center justify-center w-9 h-9 bg-gray-500 rounded-full cursor-pointer"
-                        onClick={() => document.getElementById(name)?.click()}
-                      >
-                        <FaEdit className="text-white" />
-                      </button>
+                  <div className="flex-grow">
+                    <div className="flex items-center border rounded-lg p-2 bg-white">
+                      <input
+                        type="file"
+                        ref={ref}
+                        name={name}
+                        id={name}
+                        onBlur={onBlur}
+                        accept=".pdf"
+                        className="hidden"
+                        onChange={(e) => {
+                          const selectedFile = e.target.files?.[0];
+                          setLocalPitchDeckFile(selectedFile || null);
+                          onChange(selectedFile);
+                        }}
+                      />
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <div className="flex items-center gap-2 flex-grow">
+                          <span
+                            className="text-blue-500 cursor-pointer truncate hover:underline"
+                            title={
+                              localPitchDeckFile
+                                ? localPitchDeckFile.name
+                                : getFileNameFromUrl(pitchDeckFile)
+                            }
+                            onClick={() => {
+                              const fileUrl = localPitchDeckFile
+                                ? URL.createObjectURL(localPitchDeckFile)
+                                : pitchDeckFile;
+                              if (fileUrl) window.open(fileUrl, "_blank");
+                            }}
+                          >
+                            {truncateFileName(
+                              localPitchDeckFile
+                                ? localPitchDeckFile.name
+                                : getFileNameFromUrl(pitchDeckFile) ||
+                                    "Selecionar arquivo",
+                              30
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() =>
+                              document.getElementById(name)?.click()
+                            }
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                          >
+                            <Upload className="w-4 h-4 text-gray-500" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -758,3 +766,12 @@ export default function GeneralDataForm({ data }: Props) {
     </form>
   );
 }
+
+const getFileNameFromUrl = (url: string | null | undefined): string => {
+  if (!url) return "";
+  try {
+    return url.split("/").pop() || "";
+  } catch (error) {
+    return "";
+  }
+};
