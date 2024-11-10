@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/prisma/client";
 
+export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export interface HistoricalParticipationTable {

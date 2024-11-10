@@ -27,7 +27,7 @@ export default function Pagination({
   if (pageCount <= 1) return null;
 
   const changePage = (page: number) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
     router.push("?" + params.toString());
   };
