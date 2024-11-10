@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx ts-node --project tsconfig.scripts.json scripts/pre-push.ts
