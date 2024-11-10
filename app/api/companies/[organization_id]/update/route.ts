@@ -138,6 +138,12 @@ export async function PATCH(
                 email_verified: new Date(),
                 is_blocked: user.is_blocked,
                 blocked_at: user.is_blocked ? new Date() : null,
+                user_organizations: {
+                  create: {
+                    organization_id: Number(companyId),
+                    joined_at: new Date(),
+                  },
+                },
               },
             });
           }

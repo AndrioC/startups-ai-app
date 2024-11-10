@@ -148,6 +148,8 @@ export async function POST(
           type: data.registerUserType,
           hashed_password: hashedPassword,
           accepted_terms: data.registerUserTerms,
+          accepted_terms_date: new Date(),
+          email_verified: new Date(),
         },
       });
 
