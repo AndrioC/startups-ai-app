@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pre-push": "NODE_OPTIONS='--loader ts-node/esm' npx ts-node-esm --project tsconfig.scripts.json scripts/pre-push.ts",
+    "pre-push": "ts-node --project tsconfig.scripts.json scripts/pre-push.ts",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -83,7 +83,7 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.0.1",
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "husky": "^9.1.6",
