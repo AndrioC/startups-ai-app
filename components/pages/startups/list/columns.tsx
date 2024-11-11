@@ -1,23 +1,11 @@
 "use client";
 
 import { Badge, Tooltip } from "@radix-ui/themes";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
 
 import { StartupTable } from "@/app/api/startup/[organization_id]/load-startups-by-organization-id/route";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   BusinessModelColors,
   getBadgeColorByBusinessModel,
@@ -115,57 +103,4 @@ export const startupColumns: ColumnDef<StartupTable, unknown>[] = [
     header: "Fat. Ult. 12 meses",
     enableColumnFilter: false,
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const startup = row.original;
-      return <StartupActionsDropdown startup={startup} />;
-    },
-  },
 ];
-
-const StartupActionsDropdown = ({ startup }: { startup: StartupTable }) => {
-  const queryClient = useQueryClient();
-  const approvalValue = startup.is_approved ? false : true;
-  const onSubmit = async () => {
-    mutation.mutate();
-  };
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      axios.patch(`/api/startup/update-startup-status/${startup.id}`, {
-        is_approved: approvalValue,
-      }),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["startups"] });
-    },
-  });
-
-  return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            aria-label="Open menu"
-            variant="ghost"
-            className="h-8 w-8 p-0"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            className="cursor-pointer text-blue-500 hover:text-blue-700"
-            role="button"
-            onClick={() => onSubmit()}
-          >
-            {startup.is_approved ? "Reprove" : "Approve"}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
-  );
-};

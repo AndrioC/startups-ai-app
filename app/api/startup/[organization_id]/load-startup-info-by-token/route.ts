@@ -30,6 +30,7 @@ export interface StartupTab extends startups {
   country: string;
   operation_stage: string;
   maturity_level: string;
+  generated_profile?: string;
 }
 
 export async function GET(
@@ -52,7 +53,8 @@ export async function GET(
           v.name_pt AS vertical,
           c.name_pt AS country,
           os.name_pt AS operation_stage,
-          ml.name_pt AS maturity_level
+          ml.name_pt AS maturity_level,
+          sgp.profile AS generated_profile
         FROM 
           startups s
         LEFT JOIN
@@ -65,6 +67,8 @@ export async function GET(
           operational_stage os ON s.operation_stage_id = os.id
         LEFT JOIN
           maturity_level ml ON s.maturity_level_id = ml.id
+        LEFT JOIN
+          startup_generated_profiles sgp ON s.id = sgp.startup_id AND sgp.active = true
         WHERE 
           encode(digest(CAST(s.id AS text), 'sha1'), 'hex') = ${token}
       ),
@@ -124,7 +128,7 @@ export async function GET(
         startup_investiments_rounds sir
     `;
 
-    if (!startup) {
+    if (!startup || startup.length === 0) {
       return NextResponse.json({ error: "Startup not found" }, { status: 404 });
     }
 
@@ -259,7 +263,7 @@ export async function GET(
     };
 
     const profile: Block = {
-      startupProfile: startup[0].startup_profile,
+      startupProfile: startup[0].generated_profile,
     };
 
     const blocks: { [key: string]: Block } = {

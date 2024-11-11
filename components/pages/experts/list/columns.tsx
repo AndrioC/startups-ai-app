@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { SiLinkedin } from "react-icons/si";
 import { Badge, Tooltip } from "@radix-ui/themes";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
@@ -122,22 +120,6 @@ export const expertColumns: ColumnDef<ExpertTable, unknown>[] = [
 
 const StartupActionsDropdown = ({ expert }: { expert: ExpertTable }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const approvalValue = expert.is_approved ? false : true;
-  const onSubmit = async () => {
-    mutation.mutate();
-  };
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      axios.patch(`/api/experts/${expert.id}`, {
-        is_approved: approvalValue,
-      }),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["experts"] });
-    },
-  });
 
   return (
     <>
@@ -152,21 +134,14 @@ const StartupActionsDropdown = ({ expert }: { expert: ExpertTable }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            className="cursor-pointer text-blue-500 hover:text-blue-700"
-            role="button"
-            onClick={() => onSubmit()}
-          >
-            {expert.is_approved ? "Reprove" : "Approve"}
-          </DropdownMenuItem>
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="cursor-pointer text-blue-500 hover:text-blue-700"
             role="button"
             onClick={() => setIsDialogOpen(true)}
           >
-            Details
+            Detalhes
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
