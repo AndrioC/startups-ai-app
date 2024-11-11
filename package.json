@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pre-push": "npx ts-node --project tsconfig.scripts.json scripts/pre-push.ts",
+    "pre-push": "npx ts-node-esm --project tsconfig.scripts.json scripts/pre-push.ts",
     "prepare": "husky install"
   },
   "dependencies": {
