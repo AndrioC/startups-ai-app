@@ -13,11 +13,9 @@ export interface ExpertTable {
   company: string | null;
   experience_with_startups_en: string;
   experience_with_startups_pt: string;
-  is_approved: boolean;
   country: string;
   country_flag: string;
   state_city: string;
-  status: string;
 }
 
 export async function GET(
@@ -46,7 +44,7 @@ export async function GET(
             },
           },
         },
-        orderBy: [{ is_approved: "asc" }, { name: "asc" }],
+        orderBy: [{ name: "asc" }],
         skip: (page - 1) * pageSize,
         take: pageSize,
         include: {
@@ -73,11 +71,9 @@ export async function GET(
         company: value.company,
         experience_with_startups_en: value.experience_with_startups_en ?? "-",
         experience_with_startups_pt: value.experience_with_startups_pt ?? "-",
-        is_approved: value.is_approved,
         country: value.country?.name_en ?? "-",
         country_flag: `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country?.code}.svg`,
         state_city: value?.state_city ?? "-",
-        status: value.is_approved ? "approved" : "pending",
       };
     });
 

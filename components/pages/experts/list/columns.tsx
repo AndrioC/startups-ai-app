@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { SiLinkedin } from "react-icons/si";
-import { Badge, Tooltip } from "@radix-ui/themes";
+import { Tooltip } from "@radix-ui/themes";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { type ColumnDef } from "unstyled-table";
@@ -25,10 +25,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  BusinessModelColors,
-  getBadgeColorByApprovalStatus,
-} from "@/extras/utils";
 
 export const expertColumns: ColumnDef<ExpertTable, unknown>[] = [
   {
@@ -85,29 +81,6 @@ export const expertColumns: ColumnDef<ExpertTable, unknown>[] = [
     accessorKey: "state_city",
     header: "Cidade/Estado",
     enableColumnFilter: false,
-  },
-  {
-    id: "Status",
-    accessorKey: "status",
-    header: "Status",
-    enableColumnFilter: false,
-
-    cell: ({ row }) => {
-      const expert = row.original;
-
-      return (
-        <Badge
-          className="w-[60px] flex items-center justify-center"
-          color={
-            getBadgeColorByApprovalStatus(
-              expert.status
-            ) as BusinessModelColors[keyof BusinessModelColors]
-          }
-        >
-          {expert.status}
-        </Badge>
-      );
-    },
   },
   {
     id: "actions",

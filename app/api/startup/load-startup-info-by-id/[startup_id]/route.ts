@@ -57,13 +57,11 @@ export interface StartupTable {
   business_model_code: string;
   operation_stage: string;
   country_flag: string;
-  status: string;
   short_description: string;
   value_proposal: string;
   problem_that_is_solved: string;
   competitive_differentiator: string;
   last_twelve_months_revenue: string;
-  is_approved: boolean;
 }
 
 export async function GET(
