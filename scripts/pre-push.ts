@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { ChalkInstance } from "chalk";
 import { execSync } from "child_process";
 
 type CommandStatus = "pending" | "success" | "error";
@@ -28,17 +28,28 @@ class PrePushCheck {
     },
   ];
 
-  private executeCommand(command: Command): void {
+  private async getChalk(): Promise<ChalkInstance> {
+    const { default: chalk } = await import("chalk");
+    return chalk;
+  }
+
+  private async executeCommand(
+    command: Command,
+    chalk: ChalkInstance
+  ): Promise<void> {
     try {
+      console.log(chalk.cyan(`\nExecutando: ${command.title}`));
       execSync(command.command, { stdio: "inherit" });
       command.status = "success";
+      console.log(chalk.green(`✓ ${command.title} concluído com sucesso`));
     } catch (error) {
       command.status = "error";
+      console.error(chalk.red(`✗ Falha ao executar: ${command.title}`));
       throw new Error(`Falha ao executar: ${command.title}`);
     }
   }
 
-  private getStatusIcon(status: CommandStatus): string {
+  private getStatusIcon(status: CommandStatus, chalk: ChalkInstance): string {
     switch (status) {
       case "success":
         return chalk.green("✓");
@@ -49,27 +60,28 @@ class PrePushCheck {
     }
   }
 
-  private logStatus(): void {
+  private async logStatus(chalk: ChalkInstance): Promise<void> {
     console.clear();
     console.log(chalk.blue("\n🚀 Status das Verificações:\n"));
 
-    this.commands.forEach((cmd) => {
-      const icon = this.getStatusIcon(cmd.status);
+    for (const cmd of this.commands) {
+      const icon = this.getStatusIcon(cmd.status, chalk);
       console.log(`${icon} ${cmd.title}`);
-    });
+    }
   }
 
   public async run(): Promise<void> {
+    const chalk = await this.getChalk();
     console.log(chalk.blue("\n🔍 Iniciando verificações pre-push..."));
 
     try {
       for (const command of this.commands) {
-        this.logStatus();
+        await this.logStatus(chalk);
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        this.executeCommand(command);
+        await this.executeCommand(command, chalk);
       }
 
-      this.logStatus();
+      await this.logStatus(chalk);
       console.log(
         chalk.green(
           "\n✅ Todas as verificações passaram! Continuando com o push..."
@@ -77,7 +89,7 @@ class PrePushCheck {
       );
       process.exit(0);
     } catch (error) {
-      this.logStatus();
+      await this.logStatus(chalk);
       console.error(chalk.red("\n❌ Verificações falharam. Push cancelado."));
       if (error instanceof Error) {
         console.error(chalk.red(`\nErro: ${error.message}`));

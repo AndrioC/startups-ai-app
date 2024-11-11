@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist/scripts"
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["scripts/**/*"],
-  "exclude": ["node_modules", ".next", "dist"]
+  "include": ["scripts/**/*"]
 }
