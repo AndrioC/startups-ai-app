@@ -87,6 +87,25 @@ export async function POST(
             })
           ),
         });
+
+        const newUsers = await prismaClient.user.findMany({
+          where: {
+            email: {
+              in: companyData.users.map((user) => user.email),
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        await prismaClient.user_organizations.createMany({
+          data: newUsers.map((user) => ({
+            user_id: user.id,
+            organization_id: Number(company.id),
+            joined_at: new Date(),
+          })),
+        });
       }
 
       return company;
