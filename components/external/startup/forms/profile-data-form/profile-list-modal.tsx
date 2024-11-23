@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export default function ProfileListModal({ isOpen, onClose }: Props) {
+  const t = useTranslations("startupForm.profileDataForm");
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [updatingProfileId, setUpdatingProfileId] = useState<number | null>(
@@ -49,7 +51,7 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
+    return date.toLocaleDateString("en-US", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -73,14 +75,14 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
       );
 
       if (response.status === 201) {
-        toast.success("Perfil ativado com sucesso!");
+        toast.success(t("updateProfileFunction.successMessage"));
         await refetch();
       } else {
-        toast.error("Erro ao ativar o perfil. Por favor, tente novamente.");
+        toast.error(t("updateProfileFunction.errorMessage"));
       }
     } catch (error) {
-      console.error("Erro ao atualizar perfil:", error);
-      toast.error("Erro ao ativar o perfil. Por favor, tente novamente.");
+      console.error(t("updateProfileFunction.errorMessage"), error);
+      toast.error(t("updateProfileFunction.errorMessage"));
     } finally {
       setIsLoading(false);
       setUpdatingProfileId(null);
@@ -92,7 +94,7 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
       <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {selectedProfile ? "Visualizar Perfil" : "Perfis Gerados"}
+            {selectedProfile ? "View Profile" : "Generated Profiles"}
           </DialogTitle>
         </DialogHeader>
         {selectedProfile ? (
@@ -101,8 +103,8 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ordem</TableHead>
-                <TableHead>Data de Criação</TableHead>
+                <TableHead>Order</TableHead>
+                <TableHead>Creation Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead></TableHead>
               </TableRow>
@@ -121,7 +123,7 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
                     className="cursor-pointer"
                     onClick={() => handleProfileClick(profile)}
                   >
-                    {profile.active ? "Ativo" : "Inativo"}
+                    {profile.active ? "Active" : "Inactive"}
                   </TableCell>
                   <TableCell>
                     <Button
@@ -145,10 +147,10 @@ export default function ProfileListModal({ isOpen, onClose }: Props) {
                       {updatingProfileId === profile.id ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Ativando...
+                          Activating...
                         </>
                       ) : (
-                        "Ativar"
+                        "Activate"
                       )}
                     </Button>
                   </TableCell>

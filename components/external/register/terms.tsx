@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +20,7 @@ export default function TermsOfUseDialog({
 }: Props) {
   const [canAgree, setCanAgree] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("terms");
 
   const handleScroll = () => {
     if (contentRef.current) {
@@ -36,303 +38,210 @@ export default function TermsOfUseDialog({
         <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[90vh] w-[60vw] translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg shadow-lg focus:outline-none">
           <div className="p-6">
             <Dialog.Title className="text-lg font-semibold mb-4 text-gray-800">
-              Termos e Condições Gerais de Uso
+              {t("title")}
             </Dialog.Title>
             <div
               ref={contentRef}
               onScroll={handleScroll}
               className="mt-4 max-h-[60vh] overflow-y-auto pr-4 text-gray-700"
             >
+              {/* Object Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                1. Do Objeto
+                {t("sections.object.title")}
               </h2>
-              <p className="mb-4">
-                A Startups AI é uma Plataforma de Inteligência Artificial
-                voltada para negócios de Startups. Através de nosso serviço de
-                business-matchmaking, identificamos possibilidades de match com
-                alta taxa de acurácia entre Startups e potenciais clientes
-                (Governos e empresas que adotam a inovação aberta como
-                estratégia para solucionar seus desafios), investidores,
-                parceiros comerciais, outras startups e especialistas em
-                negócios de Startups que possam ajudá-las a resolver problemas
-                do negócio.
-              </p>
+              <p className="mb-4">{t("sections.object.content")}</p>
 
+              {/* Acceptance Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                2. Da Aceitação
+                {t("sections.acceptance.title")}
               </h2>
-              <p className="mb-4">
-                Ao utilizar a Startups AI, o usuário aceita integralmente as
-                presentes normas e compromete-se a observá-las, sob o risco de
-                aplicação das penalidades cabíveis. A aceitação deste
-                instrumento é imprescindível para o acesso e a utilização de
-                quaisquer serviços fornecidos pela Startups AI. Caso não
-                concorde com as disposições deste instrumento, o usuário não
-                deve utilizá-los.
-              </p>
+              <p className="mb-4">{t("sections.acceptance.content")}</p>
 
+              {/* User Access Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                3. Do Acesso dos Usuários
+                {t("sections.userAccess.title")}
               </h2>
-              <p className="mb-4">
-                A Startups AI se compromete a utilizar todas as soluções
-                técnicas à disposição para permitir o acesso ao serviço 24
-                (vinte e quatro) horas por dia, 7 (sete) dias por semana. No
-                entanto, a navegação na plataforma poderá ser interrompida,
-                limitada ou suspensa para atualizações, modificações ou qualquer
-                ação necessária ao seu bom funcionamento.
-              </p>
+              <p className="mb-4">{t("sections.userAccess.content")}</p>
 
+              {/* Registration Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                4. Do Cadastro
+                {t("sections.registration.title")}
               </h2>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                4.1 Requisitos
+                {t("sections.registration.requirements.title")}
               </h3>
               <p className="mb-2">
-                Para acessar as funcionalidades da plataforma, é necessário
-                realizar um cadastro prévio, fornecendo dados completos,
-                recentes e válidos. O usuário compromete-se a manter seus dados
-                atualizados e verídicos. Menores de 18 anos devem obter
-                consentimento de seus responsáveis legais para utilizar a
-                plataforma.
+                {t("sections.registration.requirements.content")}
               </p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                4.2 Processo de Cadastro
+                {t("sections.registration.process.title")}
               </h3>
               <p className="mb-4">
-                Ao se cadastrar, o usuário deverá informar dados completos,
-                recentes e válidos, sendo de sua exclusiva responsabilidade
-                manter referidos dados atualizados, bem como o usuário se
-                compromete com a veracidade dos dados fornecidos. O usuário
-                deverá fornecer um endereço de e-mail válido, através do qual a
-                plataforma realizará todas as comunicações necessárias. Após a
-                confirmação do cadastro, o usuário possuirá um login e uma senha
-                pessoal, que assegura ao usuário o acesso individual à
-                plataforma. Desta forma, compete ao usuário exclusivamente a
-                manutenção de referida senha de maneira confidencial e segura,
-                evitando o acesso indevido às informações pessoais.
+                {t("sections.registration.process.content")}
               </p>
 
+              {/* Services Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                5. Dos Serviços
+                {t("sections.services.title")}
               </h2>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                5.1 Descrição dos Serviços
+                {t("sections.services.description.title")}
               </h3>
               <p className="mb-2">
-                A Startups AI disponibiliza um conjunto de funcionalidades e
-                ferramentas para otimizar o uso dos seus serviços de
-                business-matchmaking, incluindo:
+                {t("sections.services.description.content")}
               </p>
               <ul className="list-disc pl-5 mb-2">
-                <li>Identificação de potenciais clientes para startups.</li>
-                <li>Conexão com investidores.</li>
-                <li>Estabelecimento de parcerias comerciais.</li>
-                <li>Acesso a especialistas em negócios de startups.</li>
+                {t
+                  .raw("sections.services.description.list")
+                  .map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))}
               </ul>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                5.2 Utilização dos Serviços
+                {t("sections.services.usage.title")}
               </h3>
-              <p className="mb-4">
-                Os serviços oferecidos estão descritos na plataforma com o maior
-                grau de exatidão possível. Antes de finalizar a contratação de
-                qualquer serviço, o usuário deverá se informar sobre as suas
-                especificações e sobre a sua destinação.
-              </p>
+              <p className="mb-4">{t("sections.services.usage.content")}</p>
 
+              {/* Prices Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                6. Dos Preços
+                {t("sections.prices.title")}
               </h2>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                6.1 Política de Preços
+                {t("sections.prices.policy.title")}
               </h3>
-              <p className="mb-2">
-                A Startups AI se reserva no direito de reajustar
-                unilateralmente, a qualquer tempo, os valores dos serviços sem
-                consulta ou anuência prévia do usuário. Os valores aplicados são
-                aqueles que estão em vigor no momento do pedido.
-              </p>
+              <p className="mb-2">{t("sections.prices.policy.content")}</p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                6.2 Forma de Pagamento
+                {t("sections.prices.payment.title")}
               </h3>
-              <p className="mb-2">
-                Na contratação de determinado serviço, a plataforma poderá
-                solicitar as informações financeiras do usuário, como CPF,
-                endereço de cobrança e dados de cartões. Ao inserir referidos
-                dados, o usuário concorda que sejam cobrados, de acordo com a
-                forma de pagamento que venha a ser escolhida, os preços então
-                vigentes e informados no momento da contratação. Referidos dados
-                financeiros poderão ser armazenados para facilitar acessos e
-                contratações futuras.
-              </p>
+              <p className="mb-2">{t("sections.prices.payment.content")}</p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                6.3 Renovação de Serviços
+                {t("sections.prices.renewal.title")}
               </h3>
-              <p className="mb-4">
-                A contratação dos serviços poderá ser renovada automaticamente
-                pela plataforma, independentemente de comunicação ao usuário,
-                mediante cobrança periódica da mesma forma de pagamento indicada
-                pelo usuário quando da contratação do serviço.
-              </p>
+              <p className="mb-4">{t("sections.prices.renewal.content")}</p>
 
+              {/* Cancellation Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                7. Do Cancelamento
+                {t("sections.cancellation.title")}
               </h2>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                7.1 Política de Cancelamento
+                {t("sections.cancellation.policy.title")}
               </h3>
               <p className="mb-2">
-                O usuário poderá cancelar a contratação dos serviços de acordo
-                com os termos definidos no momento de sua contratação. Ainda, o
-                usuário poderá cancelar os serviços em até 7 (sete) dias após a
-                contratação, mediante contato com a plataforma, de acordo com o
-                Código de Defesa do Consumidor (Lei nº 8.078/90).
+                {t("sections.cancellation.policy.content")}
               </p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                7.2 Motivos para Cancelamento
+                {t("sections.cancellation.reasons.title")}
               </h3>
-              <p className="mb-4">O serviço poderá ser cancelado por:</p>
+              <p className="mb-2">
+                {t("sections.cancellation.reasons.content")}
+              </p>
               <ul className="list-disc pl-5 mb-4">
-                <li>
-                  Parte do usuário: nessas condições, os serviços somente
-                  cessarão quando concluído o ciclo vigente ao tempo do
-                  cancelamento.
-                </li>
-                <li>
-                  Violação dos Termos de Uso: os serviços serão cessados
-                  imediatamente.
-                </li>
+                {t
+                  .raw("sections.cancellation.reasons.list")
+                  .map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))}
               </ul>
 
+              {/* Support Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                8. Do Suporte
+                {t("sections.support.title")}
               </h2>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                8.1 Contato para Suporte
+                {t("sections.support.contact.title")}
+              </h3>
+              <p className="mb-2">{t("sections.support.contact.content")}</p>
+              <h3 className="text-sm font-semibold mb-1 text-gray-800">
+                {t("sections.support.hours.title")}
+              </h3>
+              <p className="mb-4">{t("sections.support.hours.content")}</p>
+
+              {/* Responsibilities Section */}
+              <h2 className="text-base font-semibold mb-2 text-gray-800">
+                {t("sections.responsibilities.title")}
+              </h2>
+              <h3 className="text-sm font-semibold mb-1 text-gray-800">
+                {t("sections.responsibilities.user.title")}
               </h3>
               <p className="mb-2">
-                Em caso de dúvidas, sugestões ou problemas, o usuário pode
-                entrar em contato com o suporte através do e-mail
-                suporte@startupsai.com.br
+                {t("sections.responsibilities.user.content")}
               </p>
-              <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                8.2 Horário de Atendimento
-              </h3>
-              <p className="mb-4">
-                O serviço de atendimento ao usuário estará disponível de segunda
-                a sexta-feira, das 9h às 18h.
-              </p>
-
-              <h2 className="text-base font-semibold mb-2 text-gray-800">
-                9. Das Responsabilidades
-              </h2>
-              <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                9.1 Responsabilidades do Usuário
-              </h3>
-              <p className="mb-2">É de responsabilidade do usuário:</p>
               <ul className="list-disc pl-5 mb-2">
-                <li>
-                  A correta utilização da plataforma, prezando pela boa
-                  convivência e respeito entre os usuários.
-                </li>
-                <li>
-                  O cumprimento das regras dispostas neste Termo e na legislação
-                  aplicável.
-                </li>
-                <li>
-                  A proteção dos dados de acesso à sua conta (login e senha).
-                </li>
+                {t
+                  .raw("sections.responsibilities.user.list")
+                  .map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))}
               </ul>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                9.2 Responsabilidades da Plataforma
-              </h3>
-              <p className="mb-4">É de responsabilidade da Startups AI:</p>
-              <ul className="list-disc pl-5 mb-4">
-                <li>Indicar as características dos serviços oferecidos.</li>
-                <li>Informações divulgadas por ela na plataforma.</li>
-                <li>
-                  Atividades ilícitas praticadas através da sua plataforma.
-                </li>
-              </ul>
-
-              <h2 className="text-base font-semibold mb-2 text-gray-800">
-                10. Dos Direitos Autorais
-              </h2>
-              <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                10.1 Propriedade Intelectual
+                {t("sections.responsibilities.platform.title")}
               </h3>
               <p className="mb-2">
-                Os conteúdos e ativos de propriedade intelectual da Startups AI
-                são protegidos pelas leis de direitos autorais e de propriedade
-                industrial. O uso da plataforma é pessoal e intransferível,
-                sendo vedado qualquer uso não autorizado.
+                {t("sections.responsibilities.platform.content")}
+              </p>
+              <ul className="list-disc pl-5 mb-4">
+                {t
+                  .raw("sections.responsibilities.platform.list")
+                  .map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))}
+              </ul>
+
+              {/* Copyright Section */}
+              <h2 className="text-base font-semibold mb-2 text-gray-800">
+                {t("sections.copyright.title")}
+              </h2>
+              <h3 className="text-sm font-semibold mb-1 text-gray-800">
+                {t("sections.copyright.intellectual.title")}
+              </h3>
+              <p className="mb-2">
+                {t("sections.copyright.intellectual.content")}
               </p>
               <h3 className="text-sm font-semibold mb-1 text-gray-800">
-                10.2 Licença de Uso
+                {t("sections.copyright.license.title")}
               </h3>
-              <p className="mb-4">
-                Este Termo de Uso concede aos usuários uma licença não
-                exclusiva, não transferível e não sublicenciável, para acessar e
-                fazer uso da plataforma e dos serviços e produtos por ela
-                disponibilizados.
-              </p>
+              <p className="mb-4">{t("sections.copyright.license.content")}</p>
 
+              {/* Sanctions Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                11. Das Sanções
+                {t("sections.sanctions.title")}
               </h2>
-              <p className="mb-4">
-                A Startups AI poderá, a qualquer momento, advertir, suspender ou
-                cancelar a conta do usuário que violar qualquer dispositivo
-                deste Termo ou tiver comportamento fraudulento.
-              </p>
+              <p className="mb-4">{t("sections.sanctions.content")}</p>
 
+              {/* Termination Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                12. Da Rescisão
+                {t("sections.termination.title")}
               </h2>
-              <p className="mb-4">
-                A não observância das obrigações pactuadas neste Termo poderá
-                ensejar a imediata rescisão unilateral por parte da Startups AI
-                e o bloqueio de todos os serviços prestados ao usuário.
-              </p>
+              <p className="mb-4">{t("sections.termination.content")}</p>
 
+              {/* Changes Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                13. Das Alterações
+                {t("sections.changes.title")}
               </h2>
-              <p className="mb-4">
-                Os itens descritos neste instrumento poderão sofrer alterações
-                unilateralmente e a qualquer tempo pela Startups AI. As
-                alterações serão informadas na plataforma, cabendo ao usuário
-                optar por aceitar o novo conteúdo ou cancelar o uso dos
-                serviços.
-              </p>
+              <p className="mb-4">{t("sections.changes.content")}</p>
 
+              {/* Privacy Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                14. Da Política de Privacidade
+                {t("sections.privacy.title")}
               </h2>
-              <p className="mb-4">
-                O usuário deve consentir com as disposições contidas na Política
-                de Privacidade da Startups AI.
-              </p>
+              <p className="mb-4">{t("sections.privacy.content")}</p>
 
+              {/* Jurisdiction Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
-                15. Do Foro
+                {t("sections.jurisdiction.title")}
               </h2>
-              <p className="mb-4">
-                Para a solução de controvérsias decorrentes deste instrumento,
-                será aplicado integralmente o Direito brasileiro. Os eventuais
-                litígios deverão ser apresentados no foro da comarca onde se
-                encontra a sede da empresa.
-              </p>
+              <p className="mb-4">{t("sections.jurisdiction.content")}</p>
             </div>
           </div>
+
+          {/* Footer Buttons */}
           <div className="flex justify-end space-x-2 p-4 bg-gray-100 rounded-b-lg">
             <Button
               onClick={() => setIsOpen(false)}
               variant="outline"
               className="bg-white text-gray-700 border border-gray-300 font-medium px-4 py-2 rounded-md hover:bg-gray-50"
             >
-              FECHAR
+              {t("closeButton")}
             </Button>
             <Button
               onClick={() => {
@@ -342,9 +251,11 @@ export default function TermsOfUseDialog({
               disabled={!canAgree}
               className="bg-blue-500 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
             >
-              CONCORDAR
+              {t("agreeButton")}
             </Button>
           </div>
+
+          {/* Close Button */}
           <Dialog.Close asChild>
             <button
               className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"

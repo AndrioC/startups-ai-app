@@ -16,6 +16,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import LoadingSpinner from "@/components/loading-spinner";
 
@@ -42,7 +43,19 @@ export interface SelectDataProps {
 export default function StartupForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations("startupForm");
   const tabQuery = searchParams.get("subTab");
+
+  const tabs = [
+    { id: "general-data", title: t("sub-tabs.generalData") },
+    { id: "team", title: t("sub-tabs.team") },
+    { id: "product-service", title: t("sub-tabs.productService") },
+    { id: "deeptech", title: t("sub-tabs.deepTech") },
+    { id: "governance", title: t("sub-tabs.governance") },
+    { id: "market-finance", title: t("sub-tabs.marketFinance") },
+    { id: "matchmaking", title: t("sub-tabs.matchmaking"), disabled: true },
+    { id: "profile", title: t("sub-tabs.profile"), icon: Sparkles },
+  ];
 
   const defaultTab = "general-data";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery && !tab.disabled);
@@ -127,17 +140,6 @@ export default function StartupForm() {
     </div>
   );
 }
-
-const tabs = [
-  { id: "general-data", title: "Dados gerais" },
-  { id: "team", title: "Equipe" },
-  { id: "product-service", title: "Produto e serviço" },
-  { id: "deeptech", title: "DeepTech" },
-  { id: "governance", title: "Governança" },
-  { id: "market-finance", title: "Mercado e Finança" },
-  { id: "matchmaking", title: "Matchmaking", disabled: true },
-  { id: "profile", title: "Perfil", icon: Sparkles },
-];
 
 const useSelectData = () =>
   useQuery<SelectDataProps>({

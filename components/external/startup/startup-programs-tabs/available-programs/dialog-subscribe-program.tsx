@@ -5,6 +5,7 @@ import axios from "axios";
 import { AlertCircle, CheckCircle, Loader2, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { ProgramTable } from "@/app/api/programs/[organization_id]/load-available-programs/route";
 import TextMarkdown from "@/components/text-markdown";
@@ -33,6 +34,7 @@ interface EligibilityData {
 }
 
 export default function StartupProgramModal({ program }: Props) {
+  const t = useTranslations("programForm.availablePrograms.modal");
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
@@ -57,17 +59,6 @@ export default function StartupProgramModal({ program }: Props) {
   } = useQuery<{ data: EligibilityData }>({
     queryKey: ["check-eligibility", startupId, program.id],
     queryFn: async () => {
-      // const response = await axios.post<{ data: EligibilityData }>(
-      //   `/api/startup/check-program-eligibility`,
-      //   {
-      //     params: {
-      //       startup_id: startupId,
-      //       program_id: program.id,
-      //       program_edital: program.editalFileUrl,
-      //     },
-      //   }
-      // );
-
       const response = await axios.post<{ data: EligibilityData }>(
         SUBSCRIPTION_PROGRAM_LAMBDA_URL,
         {
@@ -104,21 +95,21 @@ export default function StartupProgramModal({ program }: Props) {
       });
 
       if (response.status === 200) {
-        toast.success("Inscrição realizada com sucesso!", {
+        toast.success(t("subscriptionSuccess"), {
           autoClose: 2000,
           position: "top-center",
         });
 
         refetch();
       } else {
-        toast.error("Erro na inscrição!", {
+        toast.error(t("subscriptionError"), {
           autoClose: 5000,
           position: "top-center",
         });
       }
     } catch (error) {
       console.error("Erro ao realizar inscrição:", error);
-      toast.error("Erro na inscrição!", {
+      toast.error(t("subscriptionError"), {
         autoClose: 5000,
         position: "top-center",
       });
@@ -140,7 +131,7 @@ export default function StartupProgramModal({ program }: Props) {
           onClick={() => handleOpenChange(true)}
           className="bg-white text-blue-600 border border-blue-600 shadow uppercase hover:bg-blue-50 transition-colors duration-300 ease-in-out"
         >
-          VER ELEGIBILIDADE
+          {t("seeElegibility")}
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -151,7 +142,7 @@ export default function StartupProgramModal({ program }: Props) {
       >
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="text-base font-medium text-[#747D8C]">
-            Inscreva-se no programa abaixo e aproveite esta grande oportunidade
+            {t("title")}
           </DialogTitle>
         </DialogHeader>
         <Separator className="w-full flex-shrink-0" />
@@ -160,13 +151,11 @@ export default function StartupProgramModal({ program }: Props) {
             <div className="flex items-center justify-center h-full">
               <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
               <span className="ml-2 text-[#2292EA]">
-                Verificando elegibilidade...
+                {t("checkingEligibility")}
               </span>
             </div>
           ) : error ? (
-            <div className="text-red-500">
-              Erro ao verificar elegibilidade. Por favor, tente novamente.
-            </div>
+            <div className="text-red-500">{t("errorChecking")}</div>
           ) : (
             <div className="space-y-4">
               <div className="flex items-center justify-between space-x-4">
@@ -194,16 +183,14 @@ export default function StartupProgramModal({ program }: Props) {
                         : "text-red-500"
                     }
                   />
-                  {data?.data?.is_eligible
-                    ? "Sua Startup está elegível para este programa"
-                    : "Sua Startup não está elegível para este programa"}
+                  {data?.data?.is_eligible ? t("eligible") : t("notEligible")}
                 </Button>
               </div>
               {!data?.data?.is_eligible &&
                 data?.data?.justification_eligibility && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Motivo da inelegibilidade</AlertTitle>
+                    <AlertTitle>{t("ineligibilityReason")}</AlertTitle>
                     <AlertDescription>
                       {data.data.justification_eligibility}
                     </AlertDescription>
@@ -218,10 +205,10 @@ export default function StartupProgramModal({ program }: Props) {
                     <CheckCircle className="h-4 w-4 text-green-600 mt-1 mr-3 flex-shrink-0" />
                     <div className="flex flex-col mt-1">
                       <AlertTitle className="text-green-800 font-semibold">
-                        Já inscrito
+                        {t("alreadySubscribed.title")}
                       </AlertTitle>
                       <AlertDescription className="text-green-700">
-                        Sua startup já está inscrita neste programa.
+                        {t("alreadySubscribed.description")}
                       </AlertDescription>
                     </div>
                   </div>
@@ -229,12 +216,12 @@ export default function StartupProgramModal({ program }: Props) {
               )}
               <div className="flex items-center w-full font-medium text-[#747D8C] text-base gap-10">
                 <h3>{program.organization.name}</h3>
-                <p>
-                  Inscrições de {startDate} a {endDate}
-                </p>
+                <p>{t("registrationPeriod", { startDate, endDate })}</p>
               </div>
               <div className="text-[#747D8C] text-base">
-                <h4 className="font-semibold mb-2">Descrição do programa</h4>
+                <h4 className="font-semibold mb-2">
+                  {t("programDescription")}
+                </h4>
                 <p className="text-sm text-justify leading-relaxed">
                   {program.description}
                 </p>
@@ -244,9 +231,7 @@ export default function StartupProgramModal({ program }: Props) {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Sparkles size={20} className="text-blue-500" />
-                    <h4 className="font-semibold">
-                      Principais tópicos do Edital
-                    </h4>
+                    <h4 className="font-semibold">{t("mainTopics")}</h4>
                   </div>
                   {program.editalFileUrl ? (
                     <a
@@ -255,11 +240,11 @@ export default function StartupProgramModal({ program }: Props) {
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-800 underline"
                     >
-                      Leia o Edital deste programa
+                      {t("readNotice")}
                     </a>
                   ) : (
                     <span className="text-sm text-red-500 font-bold">
-                      Edital não disponível
+                      {t("noticeUnavailable")}
                     </span>
                   )}
                 </div>
@@ -290,10 +275,10 @@ export default function StartupProgramModal({ program }: Props) {
               ) : isEnrolled ? (
                 <div className="flex items-center gap-2">
                   <CheckCircle size={16} />
-                  INSCRITO
+                  {t("subscribed")}
                 </div>
               ) : (
-                "INSCREVER AGORA"
+                t("subscribe")
               )}
             </Button>
           </div>

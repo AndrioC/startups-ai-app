@@ -1,5 +1,6 @@
 "use client";
-import { LogOutIcon, UserIcon } from "lucide-react";
+import { useState } from "react";
+import { LogOutIcon, Settings, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -15,6 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 
+import SettingsModal from "./settings-modal";
+
 interface HeaderProps {
   logoAlt: string;
   userName: string;
@@ -25,6 +28,7 @@ export default function HeaderExternalStartupComponent({
   userName,
 }: HeaderProps) {
   const router = useRouter();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const { initialData } = useFormStartupDataState();
 
@@ -67,6 +71,13 @@ export default function HeaderExternalStartupComponent({
               <span>{userName}</span>
             </DropdownMenuItem>
             <DropdownMenuItem
+              className="flex items-center cursor-pointer hover:bg-gray-100"
+              onSelect={() => setIsSettingsOpen(true)}
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
               className="flex items-center text-red-600 cursor-pointer hover:bg-red-100"
               onSelect={handleLogout}
             >
@@ -76,6 +87,10 @@ export default function HeaderExternalStartupComponent({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </header>
   );
 }

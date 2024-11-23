@@ -1,14 +1,15 @@
+import { Language } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { updateProfileUpdated } from "@/actions/update-profile-updated";
 import { updateStartupFilledPercentage } from "@/actions/update-startup-filled-percentage";
 import { updateStartupKanban } from "@/actions/update-startup-kanban";
 import { uploadFileToS3 } from "@/actions/upload-s3";
+import { auth } from "@/auth";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 import prisma from "@/prisma/client";
-
-const formSchema = GeneralDataSchema();
 
 const STARTUPS_LOGO_BUCKET = process.env
   .S3_STARTUP_LOGO_IMGS_BUCKET_NAME as string;
@@ -19,7 +20,19 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { startup_id: string } }
 ) {
+  const session = await auth();
+  const locale = session?.user?.language === Language.PT_BR ? "pt-br" : "en";
+
+  const messages = (await import(`@/translation/${locale}.json`)).default;
+  const t = await getTranslations({
+    locale,
+    messages,
+  });
+
+  const tValidation = (key: string) => t(`startupForm.generalDataForm.${key}`);
+
   try {
+    const formSchema = GeneralDataSchema(tValidation);
     const formData = await request.formData();
     const dataString = formData.get("data") as string;
     const data = JSON.parse(dataString) as z.infer<typeof formSchema>;

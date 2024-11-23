@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { programColumns } from "./program-columns";
+import { useProgramColumns } from "./program-columns";
 
 export interface ProgramQuery {
   orderBy: keyof programs;
@@ -42,6 +43,7 @@ export interface ProgramQuery {
 }
 
 export function AvailableProgramsTab() {
+  const t = useTranslations("programForm.availablePrograms.table");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -81,6 +83,8 @@ export function AvailableProgramsTab() {
     },
     [searchParams]
   );
+
+  const programColumns = useProgramColumns();
 
   return (
     <div className="flex flex-col h-full w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-10">
@@ -140,7 +144,7 @@ export function AvailableProgramsTab() {
                     colSpan={programColumns.length}
                     className="h-24 text-center"
                   >
-                    Nenhum dado encontrado
+                    {t("noDataFound")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -173,7 +177,7 @@ export function AvailableProgramsTab() {
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
                     <span className="text-sm font-medium">
-                      Resultados por página
+                      {t("resultsPerPage")}
                     </span>
                     <Select
                       value={pageSize}
@@ -202,7 +206,7 @@ export function AvailableProgramsTab() {
                     </Select>
                   </div>
                   <div className="text-sm font-medium">
-                    {`Página ${page} de ${pageCount ?? 10}`}
+                    {`${t("page")} ${page} ${t("of")} ${pageCount ?? 10}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -227,7 +231,7 @@ export function AvailableProgramsTab() {
                       }
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Primeira página</span>
+                      <span className="sr-only">{t("firstPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -251,7 +255,7 @@ export function AvailableProgramsTab() {
                       }
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Página anterior</span>
+                      <span className="sr-only">{t("previousPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -275,7 +279,7 @@ export function AvailableProgramsTab() {
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Próxima página</span>
+                      <span className="sr-only">{t("nextPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -297,7 +301,7 @@ export function AvailableProgramsTab() {
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Última página</span>
+                      <span className="sr-only">{t("lastPage")}</span>
                     </Button>
                   </div>
                 </div>

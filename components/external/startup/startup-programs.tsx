@@ -13,6 +13,7 @@ import {
 } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { AvailableProgramsTab } from "./startup-programs-tabs/available-programs/available-programs";
 import { HistoricalParticipationTab } from "./startup-programs-tabs/historical-participation/historical-participation";
@@ -31,9 +32,16 @@ export interface SelectDataProps {
 }
 
 export default function StartupPrograms() {
+  const t = useTranslations("programForm");
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabQuery = searchParams.get("subTab");
+
+  const tabs = [
+    { id: "available-programs", title: t("availablePrograms.title") },
+    { id: "participation-history", title: t("participationHistory.title") },
+    { id: "startup-documents", title: t("documents.title") },
+  ];
 
   const defaultTab = "available-programs";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery);
@@ -95,9 +103,3 @@ export default function StartupPrograms() {
     </div>
   );
 }
-
-const tabs = [
-  { id: "available-programs", title: "Programas disponíveis" },
-  { id: "participation-history", title: "Histórico de participação" },
-  { id: "startup-documents", title: "Documentos" },
-];

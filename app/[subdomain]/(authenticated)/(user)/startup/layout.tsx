@@ -2,18 +2,29 @@ import { ToastContainer } from "react-toastify";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
 
 import AuthProvider from "@/app/api/auth/Provider";
 import QueryClientProvider from "@/app/QueryClientProvider";
 import { auth } from "@/auth";
 
 import "react-toastify/dist/ReactToastify.css";
-//import "@/styles/custom.css";
-//import "@/styles/global.css";
 import "@/app/globals.css";
-// import "@/app/theme-config.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+type Language = "PT_BR" | "EN";
+
+const getLocaleFromLanguage = (language: Language | undefined): string => {
+  switch (language) {
+    case "PT_BR":
+      return "pt-br";
+    case "EN":
+      return "en";
+    default:
+      return "pt-br";
+  }
+};
 
 export const metadata: Metadata = {
   title: "Startups AI",
@@ -22,6 +33,7 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
 };
+
 export default async function RootLayout({
   children,
 }: {
@@ -33,16 +45,23 @@ export default async function RootLayout({
     return null;
   }
 
+  const locale = getLocaleFromLanguage(session?.user?.language as Language);
+  const messages = await import(`@/translation/${locale}.json`).then(
+    (module) => module.default
+  );
+
   return (
     <AuthProvider session={session}>
-      <html lang="en">
+      <html lang={locale}>
         <body className={inter.className}>
-          <main className="min-h-screen">
-            <QueryClientProvider>
-              <Theme>{children}</Theme>
-              <ToastContainer />
-            </QueryClientProvider>
-          </main>
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <main className="min-h-screen">
+              <QueryClientProvider>
+                <Theme>{children}</Theme>
+                <ToastContainer />
+              </QueryClientProvider>
+            </main>
+          </NextIntlClientProvider>
         </body>
       </html>
     </AuthProvider>

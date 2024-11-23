@@ -1,20 +1,38 @@
 "use server";
 
 import { UserType } from "@prisma/client";
+import { cookies } from "next/headers";
 import { AuthError } from "next-auth";
+import { createTranslator } from "next-intl";
 import * as z from "zod";
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
-import { LoginSchema } from "@/lib/schemas/schema";
+import { LoginSchemaServer } from "@/lib/schemas/schema";
+import prisma from "@/prisma/client";
 
-import prisma from "../prisma/client";
+const locales = ["pt-br", "en"];
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
-  const validatedFields = LoginSchema.safeParse(values);
+async function getServerTranslations() {
+  const cookieStore = cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "pt-br";
+
+  const validLocale = locales.includes(locale) ? locale : "pt-br";
+
+  const messages = (await import(`@/translation/${validLocale}.json`)).default;
+
+  return createTranslator({ locale: validLocale, messages });
+}
+
+export async function login(
+  values: z.infer<ReturnType<typeof LoginSchemaServer>>
+) {
+  const t = await getServerTranslations();
+
+  const validatedFields = LoginSchemaServer(t).safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: t("server.login.invalidFields") };
   }
 
   const { email, password, slug } = validatedFields.data;
@@ -22,29 +40,16 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   const existingUser = await getUserByEmail(email, values.slug);
 
   if (!existingUser || !existingUser.email || !existingUser.hashed_password) {
-    return { error: "E-mail não existe!" };
+    return { error: t("server.login.emailNotExists") };
   }
 
   if (existingUser.is_blocked) {
     return {
-      error: "Conta bloqueada. Entre em contato com o administrador.",
+      error: t("server.login.accountBlocked"),
     };
   }
 
   const redirectPath = pageRedirect(existingUser.type!);
-
-  // if (!existingUser.email_verified) {
-  //   const verificationToken = await generateVerificationToken(
-  //     existingUser.email
-  //   );
-
-  //   await sendVerificationEmail(
-  //     verificationToken.email,
-  //     verificationToken.token
-  //   );
-
-  //   return { success: "Confirmation email sent!" };
-  // }
 
   try {
     await signIn("credentials", {
@@ -60,20 +65,26 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       },
     });
 
-    return { success: "Logged in successfully!", redirectPath };
+    return {
+      success: t("server.login.successLogin"),
+      redirectPath,
+    };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid credentials!" };
+          return { error: t("server.login.invalidCredentials") };
         default:
-          return { error: "Something went wrong!" };
+          return { error: t("server.login.genericError") };
       }
     }
 
-    return { success: "Logged successfully!", redirectPath };
+    return {
+      success: t("server.login.successLogin"),
+      redirectPath,
+    };
   }
-};
+}
 
 export const pageRedirect = (type: UserType): string => {
   switch (type) {

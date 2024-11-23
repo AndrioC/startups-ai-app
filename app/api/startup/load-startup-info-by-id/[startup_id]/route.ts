@@ -143,7 +143,7 @@ export async function GET(
     startupName: startup?.name,
     country: startup?.country_id?.toString(),
     vertical: startup?.vertical_id?.toString(),
-    verticalText: startup?.vertical?.name_pt,
+    verticalText: startup?.vertical,
     stateAndCity: startup?.state_city,
     operationalStage: startup?.operation_stage_id?.toString(),
     businessModel: startup?.business_model_id?.toString(),

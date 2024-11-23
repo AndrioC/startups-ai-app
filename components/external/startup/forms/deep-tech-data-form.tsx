@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ interface Props {
   data: SelectDataProps;
 }
 export default function DeepTechDataForm({ data }: Props) {
+  const t = useTranslations("startupForm.deepTechForm");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
@@ -48,11 +50,11 @@ export default function DeepTechDataForm({ data }: Props) {
   const yesNoData = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yesQuestion"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("noQuestion"),
     },
   ];
 
@@ -74,7 +76,7 @@ export default function DeepTechDataForm({ data }: Props) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
-      toast.warning("Nenhuma alteração foi feita!");
+      toast.warning(t("noChanges"));
       return;
     }
     mutation.mutate(data);
@@ -118,16 +120,14 @@ export default function DeepTechDataForm({ data }: Props) {
           <div className="flex gap-10 mt-10">
             <div>
               <label htmlFor="maturityLevel" className="flex items-center mt-5">
-                <span className="text-gray-500">
-                  Nível de maturidade tecnológica
-                </span>
+                <span className="text-gray-500">{t("maturityLevel")}</span>
               </label>
               <select
                 id="maturityLevel"
                 {...register("maturityLevel")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedTrlData.map((option: any) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -142,14 +142,14 @@ export default function DeepTechDataForm({ data }: Props) {
             </div>
             <div>
               <label htmlFor="hasPatent" className="flex items-center mt-5">
-                <span className="text-gray-500">Possui patente?</span>
+                <span className="text-gray-500">{t("hasPatent")}</span>
               </label>
               <select
                 id="hasPatent"
                 {...register("hasPatent")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -165,7 +165,7 @@ export default function DeepTechDataForm({ data }: Props) {
           </div>
           <div>
             <label htmlFor="patentAndCode" className="flex items-center mt-5">
-              <span className="text-gray-500">Descrição da(s) patente(s)</span>
+              <span className="text-gray-500">{t("patentDescription")}</span>
             </label>
             <textarea
               id="patentAndCode"
@@ -187,7 +187,7 @@ export default function DeepTechDataForm({ data }: Props) {
             disabled={isSubmitting}
             className="px-6 text-white rounded-md"
           >
-            Salvar
+            {t("saveButton")}
           </Button>
         </div>
         {isSubmitting && (
@@ -195,7 +195,7 @@ export default function DeepTechDataForm({ data }: Props) {
             <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
               <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
               <div className="text-xs text-center font-bold text-gray-500">
-                Salvando os dados...
+                {t("savingData")}
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import HeaderExternalStartupComponent from "@/components/external/startup/header";
 import StartupDataCard from "@/components/external/startup/startup-data-card";
@@ -17,6 +18,7 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { FormStartupProvider } from "@/contexts/FormStartupContext";
 
 export default function StartupPage() {
+  const t = useTranslations("startupForm");
   const { data: session, status } = useSession();
   const { subdomain } = useParams();
   const searchParams = useSearchParams();
@@ -91,7 +93,7 @@ export default function StartupPage() {
                             : "text-gray-500"
                         }`}
                       >
-                        {tab === "register" ? "Cadastro" : "Programas"}
+                        {t(`tabs.${tab}`)}
                       </button>
                       {tabQuery === tab && (
                         <motion.div

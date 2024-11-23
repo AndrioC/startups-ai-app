@@ -89,6 +89,8 @@ export const {
           : null;
 
         session.user.last_access = token?.last_access;
+
+        session.user.language = token?.language;
       }
 
       return session;
@@ -147,6 +149,8 @@ export const {
         token.logo_sidebar = organization?.logo_sidebar;
 
         token.last_access = penultimateAccess[0]?.timestamp || null;
+
+        token.language = existingUser.language;
 
         switch (existingUser.type) {
           case "STARTUP":

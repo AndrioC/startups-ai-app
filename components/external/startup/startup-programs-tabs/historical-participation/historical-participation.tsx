@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { HistoricalParticipationTable } from "@/app/api/startup/historical-participation/route";
@@ -34,7 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { historicalColumns } from "./historical-columns";
+import { useHistoricalColumns } from "./historical-columns";
 
 export interface HistoricalParticipationQuery {
   orderBy: keyof startup_programs;
@@ -43,6 +44,7 @@ export interface HistoricalParticipationQuery {
 }
 
 export function HistoricalParticipationTab() {
+  const t = useTranslations("programForm.participationHistory.table");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -83,6 +85,7 @@ export function HistoricalParticipationTab() {
     [searchParams]
   );
 
+  const historicalColumns = useHistoricalColumns();
   return (
     <div className="flex flex-col h-full w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-10">
       <ShadcnTable
@@ -142,7 +145,7 @@ export function HistoricalParticipationTab() {
                     colSpan={historicalColumns.length}
                     className="h-24 text-center"
                   >
-                    Nenhum dado encontrado
+                    {t("noDataFound")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -175,7 +178,7 @@ export function HistoricalParticipationTab() {
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
                     <span className="text-sm font-medium">
-                      Resultados por página
+                      {t("resultsPerPage")}
                     </span>
                     <Select
                       value={pageSize}
@@ -204,7 +207,7 @@ export function HistoricalParticipationTab() {
                     </Select>
                   </div>
                   <div className="text-sm font-medium">
-                    {`Página ${page} de ${pageCount ?? 10}`}
+                    {`${t("page")} ${page} ${t("of")} ${pageCount ?? 10}`}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -229,7 +232,7 @@ export function HistoricalParticipationTab() {
                       }
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Primeira página</span>
+                      <span className="sr-only">{t("firstPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -253,7 +256,7 @@ export function HistoricalParticipationTab() {
                       }
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Página anterior</span>
+                      <span className="sr-only">{t("previousPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -277,7 +280,7 @@ export function HistoricalParticipationTab() {
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Próxima página</span>
+                      <span className="sr-only">{t("nextPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -299,7 +302,7 @@ export function HistoricalParticipationTab() {
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Última página</span>
+                      <span className="sr-only">{t("lastPage")}</span>
                     </Button>
                   </div>
                 </div>

@@ -4,10 +4,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Language } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
@@ -25,11 +28,13 @@ interface Props {
   data: SelectDataProps;
 }
 export default function ProductServiceDataForm({ data }: Props) {
+  const t = useTranslations("startupForm.productServiceForm");
+  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
 
   const { initialData, refetch, actorId } = useFormStartupDataState();
-  const formSchema = ProductServiceDataSchema();
+  const formSchema = ProductServiceDataSchema(t);
 
   const {
     register,
@@ -44,7 +49,10 @@ export default function ProductServiceDataForm({ data }: Props) {
   const serviceProductData: ValueProps[] = data.service_products.map(
     (value) => ({
       ...value,
-      label: value.name_pt,
+      label:
+        session?.user?.language === Language.PT_BR
+          ? value.name_pt
+          : value.name_en,
     })
   );
 
@@ -52,17 +60,17 @@ export default function ProductServiceDataForm({ data }: Props) {
     {
       id: 1,
       value: "none",
-      label: "Nenhuma",
+      label: t("odsOptions.none"),
     },
     {
       id: 2,
       value: "1 or more",
-      label: "1 ou mais",
+      label: t("odsOptions.oneOrMore"),
     },
     {
       id: 3,
       value: "i don't know",
-      label: "Não sei",
+      label: t("odsOptions.dontKnow"),
     },
   ];
 
@@ -99,7 +107,7 @@ export default function ProductServiceDataForm({ data }: Props) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
-      toast.warning("Nenhuma alteração foi feita!");
+      toast.warning(t("noChanges"));
       return;
     }
     mutation.mutate(data);
@@ -147,10 +155,7 @@ export default function ProductServiceDataForm({ data }: Props) {
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Escolha a opção que melhor descreve o que é comercializado na
-                  sua Startup
-                </span>
+                <span className="text-gray-500">{t("productService")}</span>
               </label>
               <div className="h-[80px] w-[600px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between bg-red-200">
                 <div>
@@ -204,14 +209,14 @@ export default function ProductServiceDataForm({ data }: Props) {
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">ODS atendidas</span>
+                <span className="text-gray-500">{t("odsGoals")}</span>
               </label>
               <select
                 id="quantityOdsGoals"
                 {...register("quantityOdsGoals")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedSdGoals.map(
                   (option: { id: number; label: string; value: string }) => (
                     <option key={option.id} value={option.value}>
@@ -233,9 +238,7 @@ export default function ProductServiceDataForm({ data }: Props) {
               className="flex items-center mt-5"
             >
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">
-                Problemas e soluções que a Startup resolve
-              </span>
+              <span className="text-gray-500">{t("problems")}</span>
             </label>
             <textarea
               id="problemThatIsSolved"
@@ -252,7 +255,7 @@ export default function ProductServiceDataForm({ data }: Props) {
           <div>
             <label htmlFor="competitors" className="flex items-center mt-5">
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">Lista de concorrentes</span>
+              <span className="text-gray-500">{t("competitors")}</span>
             </label>
             <textarea
               id="competitors"
@@ -272,10 +275,7 @@ export default function ProductServiceDataForm({ data }: Props) {
               className="flex items-center mt-5"
             >
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">
-                Quais são os diferenciais competitivos em relação aos seus
-                concorrentes?
-              </span>
+              <span className="text-gray-500">{t("differentials")}</span>
             </label>
             <textarea
               id="competitiveDifferentiator"
@@ -297,7 +297,7 @@ export default function ProductServiceDataForm({ data }: Props) {
             disabled={isSubmitting}
             className="px-6 text-white rounded-md"
           >
-            Salvar
+            {t("saveButton")}
           </Button>
         </div>
         {isSubmitting && (
@@ -305,7 +305,7 @@ export default function ProductServiceDataForm({ data }: Props) {
             <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
               <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
               <div className="text-xs text-center font-bold text-gray-500">
-                Salvando os dados...
+                {t("savingData")}
               </div>
             </div>
           </div>

@@ -3,9 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 import LoadingSpinner from "@/components/loading-spinner";
+import SelectLanguage from "@/components/select-language";
 
 import { LogoImage } from "../login/logo-image";
 
@@ -13,6 +15,7 @@ import { RegisterForm } from "./register-form";
 
 export default function RegisterComponent() {
   const { subdomain } = useParams();
+  const t = useTranslations("register");
 
   const { data, isLoading, isError } = useLogoOrganization(subdomain as string);
 
@@ -21,15 +24,16 @@ export default function RegisterComponent() {
   }
 
   if (isError) {
-    return <div>Error loading organization data</div>;
+    return <div>{t("loadingError")}</div>;
   }
 
   const logoUrl = data?.logoImgUrl || logoPlaceholder.src;
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA]">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
+      <SelectLanguage />
       <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
-        Crie sua conta agora mesmo!
+        {t("pageTitle")}
       </h1>
 
       <div className="bg-white shadow-lg rounded-lg w-full max-w-[660px] flex flex-col items-center md:p-8">

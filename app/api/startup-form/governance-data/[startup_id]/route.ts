@@ -1,18 +1,31 @@
+import { Language } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { updateProfileUpdated } from "@/actions/update-profile-updated";
 import { updateStartupFilledPercentage } from "@/actions/update-startup-filled-percentage";
 import { updateStartupKanban } from "@/actions/update-startup-kanban";
+import { auth } from "@/auth";
 import { GovernanceDataSchema } from "@/lib/schemas/schema-startup";
 import prisma from "@/prisma/client";
-
-const formSchema = GovernanceDataSchema();
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { startup_id: string } }
 ) {
+  const session = await auth();
+  const locale = session?.user?.language === Language.PT_BR ? "pt-br" : "en";
+
+  const messages = (await import(`@/translation/${locale}.json`)).default;
+  const t = await getTranslations({
+    locale,
+    messages,
+  });
+
+  const tValidation = (key: string) => t(`startupForm.governanceForm.${key}`);
+  const formSchema = GovernanceDataSchema(tValidation);
+
   const data = (await request.json()) as z.infer<typeof formSchema>;
 
   await prisma.$transaction(async (prisma) => {

@@ -8,16 +8,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { GovernanceDataSchema } from "@/lib/schemas/schema-startup";
 export default function GovernanceDataForm() {
+  const t = useTranslations("startupForm.governanceForm");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
-  const formSchema = GovernanceDataSchema();
+  const formSchema = GovernanceDataSchema(t);
 
   const {
     register,
@@ -32,18 +34,18 @@ export default function GovernanceDataForm() {
   const yesNoData = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yesQuestion"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("noQuestion"),
     },
   ];
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
-      toast.warning("Nenhuma alteração foi feita!");
+      toast.warning(t("noChanges"));
       return;
     }
     mutation.mutate(data);
@@ -92,8 +94,7 @@ export default function GovernanceDataForm() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  A empresa está oficialmente registrada em seu país com um
-                  contrato social?
+                  {t("isStartupOfficiallyRegistered")}
                 </span>
               </label>
               <select
@@ -101,7 +102,7 @@ export default function GovernanceDataForm() {
                 {...register("isStartupOfficiallyRegistered")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -121,7 +122,7 @@ export default function GovernanceDataForm() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Existe um Acordo de Sócios assinados pelos sócios?
+                  {t("isTherePartnersAgreementSigned")}
                 </span>
               </label>
               <select
@@ -129,7 +130,7 @@ export default function GovernanceDataForm() {
                 {...register("isTherePartnersAgreementSigned")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -148,16 +149,14 @@ export default function GovernanceDataForm() {
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  A Startup possui uma assessoria jurídica?
-                </span>
+                <span className="text-gray-500">{t("haveLegalAdvice")}</span>
               </label>
               <select
                 id="haveLegalAdvice"
                 {...register("haveLegalAdvice")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -177,7 +176,7 @@ export default function GovernanceDataForm() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  A Startup possui uma assessoria contábil?
+                  {t("haveAccountingConsultancy")}
                 </span>
               </label>
               <select
@@ -185,7 +184,7 @@ export default function GovernanceDataForm() {
                 {...register("haveAccountingConsultancy")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -205,8 +204,7 @@ export default function GovernanceDataForm() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Todas as relações com Clientes, Fornecedores, Parceiros e
-                  Funcionários estão devidamente registrados em contrato?
+                  {t("relationshipsRegisteredInContract")}
                 </span>
               </label>
               <select
@@ -214,7 +212,7 @@ export default function GovernanceDataForm() {
                 {...register("relationshipsRegisteredInContract")}
                 className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -236,7 +234,7 @@ export default function GovernanceDataForm() {
             disabled={isSubmitting}
             className="px-6 text-white rounded-md"
           >
-            Salvar
+            {t("saveButton")}
           </Button>
         </div>
         {isSubmitting && (
@@ -244,7 +242,7 @@ export default function GovernanceDataForm() {
             <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
               <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
               <div className="text-xs text-center font-bold text-gray-500">
-                Salvando os dados...
+                {t("savingData")}
               </div>
             </div>
           </div>

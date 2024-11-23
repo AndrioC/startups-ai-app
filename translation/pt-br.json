@@ -1,0 +1,537 @@
+{
+  "auth": {
+    "welcome": "Bem-vindo de volta!",
+    "loginSuccess": "Login realizado com sucesso. Redirecionando...",
+    "loginError": "Tivemos um problema ao fazer login",
+    "error": "Algo deu errado",
+    "emailPlaceholder": "Digite seu e-mail",
+    "passwordPlaceholder": "Digite sua senha",
+    "register": "Cadastrar",
+    "forgotPassword": "Esqueci minha senha",
+    "signIn": "Entrar",
+    "validation": {
+      "required": "Este campo é obrigatório!",
+      "invalidEmail": "E-mail não é válido!",
+      "minPassword": "A senha deve ter pelo menos 6 caracteres!"
+    }
+  },
+
+  "register": {
+    "pageTitle": "Crie sua conta agora mesmo!",
+    "loadingError": "Erro ao carregar dados da organização",
+    "formTitle": "Digite seus dados para criar um conta de acesso.",
+    "namePlaceholder": "Digite seu nome",
+    "emailPlaceholder": "Digite seu e-mail",
+    "passwordPlaceholder": "Digite sua senha",
+    "confirmPasswordPlaceholder": "Confirmar senha",
+    "userTypePlaceholder": "Selecione uma opção",
+    "termsText": "Eu aceito os",
+    "termsLink": "termos de uso",
+    "haveAccount": "Já possuo conta",
+    "submit": "Cadastrar",
+    "successMessage": "Usuário criado com sucesso!",
+    "errorMessage": "Tivemos um problema ao criar seu e-mail:",
+    "unexpectedError": "Ocorreu um erro inesperado.",
+    "userTypes": {
+      "STARTUP": "Startup",
+      "MENTOR": "Mentor",
+      "INVESTOR": "Investidor"
+    },
+    "validation": {
+      "required": "Campo obrigatório!",
+      "minNameLength": "O nome deve ter pelo menos 5 caracteres!",
+      "invalidEmail": "Por favor, insira um endereço de e-mail válido.",
+      "minPasswordLength": "A senha deve ter pelo menos 6 caracteres!",
+      "minConfirmPasswordLength": "A confirmação da senha deve ter pelo menos 6 caracteres!",
+      "mustAcceptTerms": "Você deve aceitar os termos.",
+      "passwordsNotMatch": "As senhas não são idênticas"
+    }
+  },
+
+  "terms": {
+    "title": "Termos e Condições Gerais de Uso",
+    "closeButton": "FECHAR",
+    "agreeButton": "CONCORDAR",
+    "sections": {
+      "object": {
+        "title": "1. Do Objeto",
+        "content": "A Startups AI é uma Plataforma de Inteligência Artificial voltada para negócios de Startups. Através de nosso serviço de business-matchmaking, identificamos possibilidades de match com alta taxa de acurácia entre Startups e potenciais clientes (Governos e empresas que adotam a inovação aberta como estratégia para solucionar seus desafios), investidores, parceiros comerciais, outras startups e especialistas em negócios de Startups que possam ajudá-las a resolver problemas do negócio."
+      },
+      "acceptance": {
+        "title": "2. Da Aceitação",
+        "content": "Ao utilizar a Startups AI, o usuário aceita integralmente as presentes normas e compromete-se a observá-las, sob o risco de aplicação das penalidades cabíveis. A aceitação deste instrumento é imprescindível para o acesso e a utilização de quaisquer serviços fornecidos pela Startups AI. Caso não concorde com as disposições deste instrumento, o usuário não deve utilizá-los."
+      },
+      "userAccess": {
+        "title": "3. Do Acesso dos Usuários",
+        "content": "A Startups AI se compromete a utilizar todas as soluções técnicas à disposição para permitir o acesso ao serviço 24 (vinte e quatro) horas por dia, 7 (sete) dias por semana. No entanto, a navegação na plataforma poderá ser interrompida, limitada ou suspensa para atualizações, modificações ou qualquer ação necessária ao seu bom funcionamento."
+      },
+      "registration": {
+        "title": "4. Do Cadastro",
+        "requirements": {
+          "title": "4.1 Requisitos",
+          "content": "Para acessar as funcionalidades da plataforma, é necessário realizar um cadastro prévio, fornecendo dados completos, recentes e válidos. O usuário compromete-se a manter seus dados atualizados e verídicos. Menores de 18 anos devem obter consentimento de seus responsáveis legais para utilizar a plataforma."
+        },
+        "process": {
+          "title": "4.2 Processo de Cadastro",
+          "content": "Ao se cadastrar, o usuário deverá informar dados completos, recentes e válidos, sendo de sua exclusiva responsabilidade manter referidos dados atualizados, bem como o usuário se compromete com a veracidade dos dados fornecidos. O usuário deverá fornecer um endereço de e-mail válido, através do qual a plataforma realizará todas as comunicações necessárias. Após a confirmação do cadastro, o usuário possuirá um login e uma senha pessoal, que assegura ao usuário o acesso individual à plataforma. Desta forma, compete ao usuário exclusivamente a manutenção de referida senha de maneira confidencial e segura, evitando o acesso indevido às informações pessoais."
+        }
+      },
+      "services": {
+        "title": "5. Dos Serviços",
+        "description": {
+          "title": "5.1 Descrição dos Serviços",
+          "content": "A Startups AI disponibiliza um conjunto de funcionalidades e ferramentas para otimizar o uso dos seus serviços de business-matchmaking, incluindo:",
+          "list": [
+            "Identificação de potenciais clientes para startups.",
+            "Conexão com investidores.",
+            "Estabelecimento de parcerias comerciais.",
+            "Acesso a especialistas em negócios de startups."
+          ]
+        },
+        "usage": {
+          "title": "5.2 Utilização dos Serviços",
+          "content": "Os serviços oferecidos estão descritos na plataforma com o maior grau de exatidão possível. Antes de finalizar a contratação de qualquer serviço, o usuário deverá se informar sobre as suas especificações e sobre a sua destinação."
+        }
+      },
+      "prices": {
+        "title": "6. Dos Preços",
+        "policy": {
+          "title": "6.1 Política de Preços",
+          "content": "A Startups AI se reserva no direito de reajustar unilateralmente, a qualquer tempo, os valores dos serviços sem consulta ou anuência prévia do usuário. Os valores aplicados são aqueles que estão em vigor no momento do pedido."
+        },
+        "payment": {
+          "title": "6.2 Forma de Pagamento",
+          "content": "Na contratação de determinado serviço, a plataforma poderá solicitar as informações financeiras do usuário, como CPF, endereço de cobrança e dados de cartões. Ao inserir referidos dados, o usuário concorda que sejam cobrados, de acordo com a forma de pagamento que venha a ser escolhida, os preços então vigentes e informados no momento da contratação. Referidos dados financeiros poderão ser armazenados para facilitar acessos e contratações futuras."
+        },
+        "renewal": {
+          "title": "6.3 Renovação de Serviços",
+          "content": "A contratação dos serviços poderá ser renovada automaticamente pela plataforma, independentemente de comunicação ao usuário, mediante cobrança periódica da mesma forma de pagamento indicada pelo usuário quando da contratação do serviço."
+        }
+      },
+      "cancellation": {
+        "title": "7. Do Cancelamento",
+        "policy": {
+          "title": "7.1 Política de Cancelamento",
+          "content": "O usuário poderá cancelar a contratação dos serviços de acordo com os termos definidos no momento de sua contratação. Ainda, o usuário poderá cancelar os serviços em até 7 (sete) dias após a contratação, mediante contato com a plataforma, de acordo com o Código de Defesa do Consumidor (Lei nº 8.078/90)."
+        },
+        "reasons": {
+          "title": "7.2 Motivos para Cancelamento",
+          "content": "O serviço poderá ser cancelado por:",
+          "list": [
+            "Parte do usuário: nessas condições, os serviços somente cessarão quando concluído o ciclo vigente ao tempo do cancelamento.",
+            "Violação dos Termos de Uso: os serviços serão cessados imediatamente."
+          ]
+        }
+      },
+      "support": {
+        "title": "8. Do Suporte",
+        "contact": {
+          "title": "8.1 Contato para Suporte",
+          "content": "Em caso de dúvidas, sugestões ou problemas, o usuário pode entrar em contato com o suporte através do e-mail suporte@startupsai.com.br"
+        },
+        "hours": {
+          "title": "8.2 Horário de Atendimento",
+          "content": "O serviço de atendimento ao usuário estará disponível de segunda a sexta-feira, das 9h às 18h."
+        }
+      },
+      "responsibilities": {
+        "title": "9. Das Responsabilidades",
+        "user": {
+          "title": "9.1 Responsabilidades do Usuário",
+          "content": "É de responsabilidade do usuário:",
+          "list": [
+            "A correta utilização da plataforma, prezando pela boa convivência e respeito entre os usuários.",
+            "O cumprimento das regras dispostas neste Termo e na legislação aplicável.",
+            "A proteção dos dados de acesso à sua conta (login e senha)."
+          ]
+        },
+        "platform": {
+          "title": "9.2 Responsabilidades da Plataforma",
+          "content": "É de responsabilidade da Startups AI:",
+          "list": [
+            "Indicar as características dos serviços oferecidos.",
+            "Informações divulgadas por ela na plataforma.",
+            "Atividades ilícitas praticadas através da sua plataforma."
+          ]
+        }
+      },
+      "copyright": {
+        "title": "10. Dos Direitos Autorais",
+        "intellectual": {
+          "title": "10.1 Propriedade Intelectual",
+          "content": "Os conteúdos e ativos de propriedade intelectual da Startups AI são protegidos pelas leis de direitos autorais e de propriedade industrial. O uso da plataforma é pessoal e intransferível, sendo vedado qualquer uso não autorizado."
+        },
+        "license": {
+          "title": "10.2 Licença de Uso",
+          "content": "Este Termo de Uso concede aos usuários uma licença não exclusiva, não transferível e não sublicenciável, para acessar e fazer uso da plataforma e dos serviços e produtos por ela disponibilizados."
+        }
+      },
+      "sanctions": {
+        "title": "11. Das Sanções",
+        "content": "A Startups AI poderá, a qualquer momento, advertir, suspender ou cancelar a conta do usuário que violar qualquer dispositivo deste Termo ou tiver comportamento fraudulento."
+      },
+      "termination": {
+        "title": "12. Da Rescisão",
+        "content": "A não observância das obrigações pactuadas neste Termo poderá ensejar a imediata rescisão unilateral por parte da Startups AI e o bloqueio de todos os serviços prestados ao usuário."
+      },
+      "changes": {
+        "title": "13. Das Alterações",
+        "content": "Os itens descritos neste instrumento poderão sofrer alterações unilateralmente e a qualquer tempo pela Startups AI. As alterações serão informadas na plataforma, cabendo ao usuário optar por aceitar o novo conteúdo ou cancelar o uso dos serviços."
+      },
+      "privacy": {
+        "title": "14. Da Política de Privacidade",
+        "content": "O usuário deve consentir com as disposições contidas na Política de Privacidade da Startups AI."
+      },
+      "jurisdiction": {
+        "title": "15. Do Foro",
+        "content": "Para a solução de controvérsias decorrentes deste instrumento, será aplicado integralmente o Direito brasileiro. Os eventuais litígios deverão ser apresentados no foro da comarca onde se encontra a sede da empresa."
+      }
+    }
+  },
+
+  "server": {
+    "login": {
+      "invalidFields": "Campos inválidos!",
+      "emailNotExists": "E-mail não existe!",
+      "accountBlocked": "Conta bloqueada. Entre em contato com o administrador.",
+      "invalidCredentials": "Credenciais inválidas!",
+      "genericError": "Algo deu errado!",
+      "successLogin": "Login realizado com sucesso!"
+    }
+  },
+
+  "startupForm": {
+    "loading": "Carregando",
+    "tabs": {
+      "register": "Cadastro",
+      "programs": "Programas"
+    },
+    "sub-tabs": {
+      "generalData": "Dados gerais",
+      "team": "Equipe",
+      "productService": "Produto e serviço",
+      "deepTech": "DeepTech",
+      "governance": "Governança",
+      "marketFinance": "Mercado e Finança",
+      "matchmaking": "Matchmaking",
+      "profile": "Perfil"
+    },
+    "statusRegisterCard": {
+      "loading": "Carregando...",
+      "status": {
+        "complete": "Seu cadastro está completo!",
+        "almostComplete": "Seu cadastro está quase completo!",
+        "incomplete": "Seu cadastro está incompleto!"
+      }
+    },
+    "startupDataCard": {
+      "title": "DADOS DA STARTUP",
+      "responsibleData": "DADOS DO RESPONSÁVEL",
+      "images": {
+        "startupLogo": "Logo da Startup"
+      },
+      "placeholders": {
+        "emptyField": "-"
+      }
+    },
+    "startupMatchesCard": {
+      "title": "MATCHES",
+      "images": {
+        "matchesArrow": "matches"
+      },
+      "noMatches": "Nenhum match encontrado!",
+      "dateFormat": {
+        "match": "{{percentage}}% - {{date}}"
+      }
+    },
+    "generalDataForm": {
+      "noChanges": "Nenhuma alteração foi feita!",
+      "pitchDeckNotAvailable": "Esta opção ainda não está disponível! Em breve você poderá usá-la!",
+      "selectFile": "Selecionar arquivo",
+      "selectOption": "Selecione uma opção",
+      "yesQuestion": "Sim",
+      "noQuestion": "Não",
+      "saveButton": "Salvar",
+      "savingData": "Salvando os dados...",
+      "startupName": "Nome",
+      "country": "País",
+      "vertical": "Vertical",
+      "stateAndCity": "Cidade/Estado",
+      "operationalStage": "Estágio de Operação",
+      "businessModel": "Modelo de Negócio",
+      "subscriptionNumber": "CNPJ",
+      "foundationDate": "Data de Fundação",
+      "referenceLink": "Site",
+      "pitchDeck": "Pitchdeck",
+      "generatePitchDeck": "Gerar Pitchdeck",
+      "seeGeneratedPitchDeck": "Ver Pitchdecks Gerados",
+      "logo": "Logo",
+      "challenges": "Marque todos os desafios que sua startup enfrenta neste momento",
+      "objectives": "Quais são as conexões desejadas da startup no programa?",
+      "connections": "Fazer conexões apenas no país de origem da minha startup?",
+      "valueProposal": "Proposta de Valor",
+      "valueProposalMaxLength": "(máx. 200 caracteres)",
+      "shortDescription": "Descrição da Startup",
+      "shortDescriptionSubtitle": "(Descreva sua startup com o máximo de detalhes possível)",
+      "validation": {
+        "required": "Este campo é obrigatório!",
+        "websiteMinLength": "O site deve ter pelo menos 3 caracteres",
+        "fileTooLarge": "Arquivo muito grande!"
+      }
+    },
+    "teamDataForm": {
+      "selectOption": "Selecione uma opção",
+      "noChanges": "Nenhuma alteração foi feita!",
+      "savingData": "Salvando os dados...",
+      "saveButton": "Salvar",
+      "responsible": "Responsável",
+      "team": "Equipe",
+      "partners": "Sócios",
+      "mainResponsibleName": "Nome do responsável pela Startup",
+      "contactNumber": "Telefone do responsável pela Startup",
+      "mainResponsibleEmail": "E-mail do responsável pela Startup",
+      "employeesQuantity": "Quantos funcionários trabalham na Startup?",
+      "fullTimeEmployeesQuantity": "Quantas pessoas da equipe estão 100% envolvidas na Startup?",
+      "partnersDescription": "Adicione todas as pessoas e empresas que fazem parte do Captable da sociedade.",
+      "partnersAddButton": "+ Adicionar Sócio",
+      "employeesRange": {
+        "1-5": "1 a 5",
+        "6-10": "6 a 10",
+        "11-30": "11 a 30",
+        "31-50": "31 a 50",
+        "moreThan50": "Mais de 50"
+      },
+      "partnersForm": {
+        "selectOption": "Selecione uma opção",
+        "yesQuestion": "Sim",
+        "noQuestion": "Não",
+        "name": "Nome",
+        "phone": "Telefone",
+        "email": "E-mail",
+        "role": "Cargo",
+        "founder": "Fundador?",
+        "dedication": "Dedicação",
+        "captable": "% Captable",
+        "firstBusiness": "Primeiro negócio?",
+        "linkedinLattes": "Linkedin ou Lattes",
+        "experienceOrFormation": "Experiência ou formação na área da startup?",
+        "experienceAndFormationComplementary": "A formação e a área de atuação dos sócios são complementares?"
+      },
+      "validation": {
+        "required": "Este campo é obrigatório!",
+        "invalidEmail": "E-mail não é válido!",
+        "minNumber": "Deve ser pelo menos 1",
+        "minEmployees": "Deve ter pelo menos um funcionário",
+        "percentageRange": "Valor deve ser entre 0 e 100!"
+      }
+    },
+    "productServiceForm": {
+      "selectOption": "Selecione uma opção",
+      "noChanges": "Nenhuma alteração foi feita!",
+      "savingData": "Salvando os dados...",
+      "saveButton": "Salvar",
+      "productService": "Escolha a opção que melhor descreve o que é comercializado na sua Startup",
+      "odsGoals": "ODS atendidas",
+      "problems": "Problemas e soluções que a Startup resolve",
+      "competitors": "Lista de concorrentes",
+      "differentials": "Quais são os diferenciais competitivos em relação aos seus concorrentes?",
+      "odsOptions": {
+        "none": "Nenhuma",
+        "oneOrMore": "1 ou mais",
+        "dontKnow": "Não sei"
+      },
+      "validation": {
+        "required": "Este campo é obrigatório!",
+        "selectAtLeastOne": "Selecione pelo menos um campo"
+      }
+    },
+    "deepTechForm": {
+      "selectOption": "Selecione uma opção",
+      "noChanges": "Nenhuma alteração foi feita!",
+      "savingData": "Salvando os dados...",
+      "saveButton": "Salvar",
+      "yesQuestion": "Sim",
+      "noQuestion": "Não",
+      "maturityLevel": "Nível de maturidade tecnológica",
+      "hasPatent": "Possui patente?",
+      "patentDescription": "Descrição da(s) patente(s)"
+    },
+    "governanceForm": {
+      "selectOption": "Selecione uma opção",
+      "noChanges": "Nenhuma alteração foi feita!",
+      "savingData": "Salvando os dados...",
+      "saveButton": "Salvar",
+      "yesQuestion": "Sim",
+      "noQuestion": "Não",
+      "isStartupOfficiallyRegistered": "A empresa está oficialmente registrada em seu país com um contrato social?",
+      "isTherePartnersAgreementSigned": "Existe um Acordo de Sócios assinados pelos sócios?",
+      "haveLegalAdvice": "A Startup possui uma assessoria jurídica?",
+      "haveAccountingConsultancy": "A Startup possui uma assessoria contábil?",
+      "relationshipsRegisteredInContract": "Todas as relações com Clientes, Fornecedores, Parceiros e Funcionários estão devidamente registrados em contrato?",
+      "validation": {
+        "required": "Este campo é obrigatório!"
+      }
+    },
+    "marketFinanceForm": {
+      "selectOption": "Selecione uma opção",
+      "noChanges": "Nenhuma alteração foi feita!",
+      "savingData": "Salvando os dados...",
+      "saveButton": "Salvar",
+      "yesQuestion": "Sim",
+      "noQuestion": "Não",
+      "marketSection": {
+        "title": "Mercado",
+        "generateValuation": {
+          "label": "Gerar valuation",
+          "disabled": "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
+        },
+        "viewGeneratedValuations": {
+          "label": "Ver valuations gerados"
+        },
+        "payingCostumers": "Quantos clientes pagantes possui?",
+        "activeCustomers": "Total de clientes ativos"
+      },
+      "revenueSection": {
+        "title": "Faturamento",
+        "alreadyEarningLabel": "Já estou faturando",
+        "lastMonthRevenueLabel": "Qual foi o faturamento do último mês?",
+        "last6MonthsRevenueLabel": "Qual foi o faturamento dos últimos 6 meses?",
+        "last12MonthsRevenueLabel": "Qual foi o faturamento dos últimos 12 meses?",
+        "saasCurrentRRMLabel": "Em caso de SaaS, informe o RRM atual"
+      },
+      "investmentsSection": {
+        "title": "Investimentos",
+        "hasOpenRoundLabel": "Existe uma rodada de investimento em aberto",
+        "roundInvestmentAmountLabel": "Qual o valor a ser captado?",
+        "equityPercentageLabel": "Qual percentual de equity a ser distribuído?",
+        "currentStartupValuationLabel": "Qual o valuation atual da Startup?",
+        "roundStartDateLabel": "Início da rodada",
+        "roundEndDateLabel": "Fim da rodada",
+        "addRoundButton": "+ Adicionar Rodada"
+      },
+      "receivedInvestmentsSection": {
+        "title": "Investimentos recebidos"
+      },
+      "investmentsContainer": {
+        "roundLabel": "Rodada",
+        "roundStartDateLabel": "Início da rodada",
+        "roundEndDateLabel": "Fim da rodada",
+        "totalInvestmentCollectedLabel": "Total dos investimentos captados",
+        "equityPercentageDistributedLabel": "Percentual de equities distribuídos",
+        "investorsQuantityLabel": "Quantos investidores possuem?",
+        "investorsLabel": "Ventures e/ou investidores da rodada"
+      },
+      "validation": {
+        "required": "Este campo é obrigatório!",
+        "invalidField": "Este campo é inválido!"
+      }
+    },
+    "profileDataForm": {
+      "aiGeneratedStartupProfileTitle": "Perfil da Startup gerado pela I.A",
+      "profileUpdateInstructions": "Mantenha o Perfil de sua Startup sempre atualizado para melhorar a nota e para facilitar a busca por investidores.",
+      "updateProfileButton": {
+        "label": "Atualizar perfil",
+        "loading": "Analisando Dados..."
+      },
+      "viewGeneratedProfilesButton": {
+        "label": "Ver perfis gerados"
+      },
+      "noProfileGenerated": {
+        "message": "O perfil da startup ainda não foi gerado. Por favor, certifique-se de que seu cadastro tenha pelo menos 60% de completude e aguarde 24 horas para que o perfil seja gerado."
+      },
+      "aiAnalysisMessage": "A IA está analisando os dados e formulando o perfil da sua startup. Por favor, aguarde um momento...",
+      "updateProfileFunction": {
+        "successMessage": "Perfil atualizado com sucesso!",
+        "errorMessage": "Erro ao atualizar o perfil. Por favor, tente novamente."
+      },
+      "profileListModal": {
+        "viewProfileTitle": "Visualizar Perfil",
+        "generatedProfilesTitle": "Perfis Gerados",
+        "orderColumn": "Ordem",
+        "creationDateColumn": "Data de Criação",
+        "statusColumn": "Status",
+        "activateButton": {
+          "label": "Ativar",
+          "loading": "Ativando..."
+        }
+      }
+    },
+    "settings": {
+      "title": "Configurações",
+      "languageSetting": {
+        "label": "Idioma",
+        "portugueseLanguage": "Português (Brasil)",
+        "englishLanguage": "Inglês"
+      },
+      "saving": "Salvando...",
+      "cancelButton": "Cancelar",
+      "saveChanges": "Salvar Alterações",
+      "updateSuccess": "Suas configurações foram atualizadas.",
+      "updateError": "Falha ao salvar as configurações. Por favor, tente novamente."
+    }
+  },
+
+  "programForm": {
+    "availablePrograms": {
+      "title": "Programas disponíveis",
+      "table": {
+        "noDataFound": "Nenhum dado encontrado",
+        "nameColumn": "Nome",
+        "startDateColumn": "Início do programa",
+        "endDateColumn": "Fim do programa",
+        "fileColumn": "Edital",
+        "seeElegibility": "Ver elegibilidade",
+        "seeFile": "Ver edital",
+        "fileNotAvailable": "Edital não disponível",
+        "resultsPerPage": "Resultados por página",
+        "page": "Página",
+        "of": "de"
+      },
+      "modal": {
+        "title": "Inscreva-se no programa abaixo e aproveite esta grande oportunidade",
+        "checkingEligibility": "Verificando elegibilidade...",
+        "errorChecking": "Erro ao verificar elegibilidade. Por favor, tente novamente.",
+        "eligible": "Sua Startup está elegível para este programa",
+        "notEligible": "Sua Startup não está elegível para este programa",
+        "ineligibilityReason": "Motivo da inelegibilidade",
+        "alreadySubscribed": {
+          "title": "Já inscrito",
+          "description": "Sua startup já está inscrita neste programa."
+        },
+        "registrationPeriod": "Inscrições de {startDate} a {endDate}",
+        "programDescription": "Descrição do programa",
+        "mainTopics": "Principais tópicos do Edital",
+        "readNotice": "Leia o Edital deste programa",
+        "noticeUnavailable": "Edital não disponível",
+        "subscribe": "Inscrever-se agora",
+        "subscribed": "Inscrito",
+        "subscriptionSuccess": "Inscrição realizada com sucesso!",
+        "subscriptionError": "Erro na inscrição!"
+      }
+    },
+    "participationHistory": {
+      "title": "Histórico de participação",
+      "table": {
+        "noDataFound": "Nenhum dado encontrado",
+        "nameColumn": "Nome do programa",
+        "subscriptionDate": "Data inscrição",
+        "startDateColumn": "Início do programa",
+        "endDateColumn": "Fim do programa",
+        "firstPage": "Primeira página",
+        "previousPage": "Pagina anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Ultima página",
+        "resultsPerPage": "Resultados por página",
+        "page": "Página",
+        "of": "de"
+      }
+    },
+    "documents": {
+      "title": "Documentos",
+      "titleConstruction": "Documentos em Construção",
+      "subtitle": "Estamos trabalhando duro para trazer a você uma experiência incrível de gerenciamento de documentos. Fique ligado!",
+      "planning": "Planejamento",
+      "development": "Desenvolvimento"
+    }
+  }
+}

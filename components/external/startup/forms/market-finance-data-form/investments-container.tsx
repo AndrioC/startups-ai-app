@@ -7,12 +7,20 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
-import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 import { DatePicker } from "@/components/ui/date-picker";
-import { InvestmentSchema } from "@/lib/schemas/schema-startup";
 
-type Investiment = z.infer<typeof InvestmentSchema>;
+import { Button } from "../../../../ui/button";
+
+interface Investment {
+  roundInvestmentStartDate: Date;
+  roundInvestmentEndDate: Date;
+  collectedTotal: string;
+  equityDistributedPercent: string;
+  investorsQuantity: string;
+  investors: string;
+}
 
 type Props = {
   control: any;
@@ -20,7 +28,7 @@ type Props = {
   remove: (index: number) => void;
   index: number;
   errors: FieldErrors<{
-    investments: Investiment[];
+    investments: Investment[];
   }>;
 };
 
@@ -31,11 +39,12 @@ export default function InvestmentsContainer({
   index,
   errors,
 }: Props) {
+  const t = useTranslations("startupForm.marketFinanceForm");
   return (
     <div className="mb-4 border p-4 rounded-lg">
       <div className="flex flex-col w-full gap-2">
         <div className="mb-2 font-semibold text-gray-400">
-          {index + 1}ª Rodada.
+          {index + 1}ª {t("investmentsContainer.roundLabel")}.
         </div>
         <div className="flex flex-col gap-5">
           <div className="flex gap-5">
@@ -45,7 +54,9 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Início da rodada</span>
+                <span className="text-gray-500">
+                  {t("investmentsContainer.roundStartDateLabel")}
+                </span>
               </label>
               <Controller
                 control={control}
@@ -74,7 +85,9 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Fim da rodada</span>
+                <span className="text-gray-500">
+                  {t("investmentsContainer.roundEndDateLabel")}
+                </span>
               </label>
               <Controller
                 control={control}
@@ -101,7 +114,7 @@ export default function InvestmentsContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Total dos investimentos captados
+                  {t("investmentsContainer.totalInvestmentCollectedLabel")}
                 </span>
               </label>
               <input
@@ -125,7 +138,7 @@ export default function InvestmentsContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Percentual de equities distribuídos
+                  {t("investmentsContainer.equityPercentageDistributedLabel")}
                 </span>
               </label>
               <input
@@ -150,7 +163,7 @@ export default function InvestmentsContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Quantos investidores possuem?
+                  {t("investmentsContainer.investorsQuantityLabel")}
                 </span>
               </label>
               <input
@@ -174,7 +187,7 @@ export default function InvestmentsContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Ventures e/ou investidores da rodada
+                  {t("investmentsContainer.investorsLabel")}
                 </span>
               </label>
               <input
@@ -192,13 +205,14 @@ export default function InvestmentsContainer({
           </div>
         </div>
         <div className="flex justify-end">
-          <button
+          <Button
+            variant="ghost"
             type="button"
             className="text-gray-400 hover:text-gray-500"
             onClick={() => remove(index)}
           >
             <FaTrash />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

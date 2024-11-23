@@ -1,0 +1,537 @@
+{
+  "auth": {
+    "welcome": "Welcome back!",
+    "loginSuccess": "Login successful. Redirecting...",
+    "loginError": "We had a problem logging in",
+    "error": "Something went wrong",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "register": "Register",
+    "forgotPassword": "Forgot password",
+    "signIn": "Sign In",
+    "validation": {
+      "required": "This field is required!",
+      "invalidEmail": "Email is not valid!",
+      "minPassword": "Password must be at least 6 characters long!"
+    }
+  },
+
+  "register": {
+    "pageTitle": "Create your account now!",
+    "loadingError": "Error loading organization data",
+    "formTitle": "Enter your information to create an access account.",
+    "namePlaceholder": "Enter your name",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "userTypePlaceholder": "Select an option",
+    "termsText": "I accept the",
+    "termsLink": "terms of use",
+    "haveAccount": "I already have an account",
+    "submit": "Register",
+    "successMessage": "User created successfully!",
+    "errorMessage": "We had a problem creating your email:",
+    "unexpectedError": "An unexpected error occurred.",
+    "userTypes": {
+      "STARTUP": "Startup",
+      "MENTOR": "Mentor",
+      "INVESTOR": "Investor"
+    },
+    "validation": {
+      "required": "This field is required!",
+      "minNameLength": "Name must be at least 5 characters long!",
+      "invalidEmail": "Please enter a valid email address.",
+      "minPasswordLength": "Password must be at least 6 characters long!",
+      "minConfirmPasswordLength": "Password confirmation must be at least 6 characters long!",
+      "mustAcceptTerms": "You must accept the terms.",
+      "passwordsNotMatch": "Passwords do not match"
+    }
+  },
+
+  "terms": {
+    "title": "General Terms and Conditions of Use",
+    "closeButton": "CLOSE",
+    "agreeButton": "AGREE",
+    "sections": {
+      "object": {
+        "title": "1. Object",
+        "content": "Startups AI is an Artificial Intelligence Platform focused on Startup businesses. Through our business-matchmaking service, we identify high-accuracy match possibilities between Startups and potential clients (Governments and companies that adopt open innovation as a strategy to solve their challenges), investors, business partners, other startups and Startup business experts who can help them solve business problems."
+      },
+      "acceptance": {
+        "title": "2. Acceptance",
+        "content": "By using Startups AI, the user fully accepts these rules and commits to observe them, under risk of applicable penalties. The acceptance of this instrument is essential for accessing and using any services provided by Startups AI. If you do not agree with the provisions of this instrument, you should not use them."
+      },
+      "userAccess": {
+        "title": "3. User Access",
+        "content": "Startups AI commits to using all available technical solutions to allow access to the service 24 (twenty-four) hours a day, 7 (seven) days a week. However, platform navigation may be interrupted, limited or suspended for updates, modifications or any action necessary for its proper functioning."
+      },
+      "registration": {
+        "title": "4. Registration",
+        "requirements": {
+          "title": "4.1 Requirements",
+          "content": "To access platform functionalities, prior registration is required, providing complete, recent and valid data. The user commits to keeping their data updated and truthful. Minors under 18 must obtain consent from their legal guardians to use the platform."
+        },
+        "process": {
+          "title": "4.2 Registration Process",
+          "content": "When registering, the user must provide complete, recent and valid data, being solely responsible for keeping said data updated, and the user commits to the truthfulness of the provided data. The user must provide a valid email address, through which the platform will conduct all necessary communications. After registration confirmation, the user will have a personal login and password, which ensures individual access to the platform. Thus, the user is exclusively responsible for maintaining said password confidentially and securely, avoiding unauthorized access to personal information."
+        }
+      },
+      "services": {
+        "title": "5. Services",
+        "description": {
+          "title": "5.1 Services Description",
+          "content": "Startups AI provides a set of features and tools to optimize the use of its business-matchmaking services, including:",
+          "list": [
+            "Identification of potential clients for startups",
+            "Connection with investors",
+            "Establishment of business partnerships",
+            "Access to startup business experts"
+          ]
+        },
+        "usage": {
+          "title": "5.2 Service Usage",
+          "content": "The services offered are described on the platform with the highest possible degree of accuracy. Before finalizing any service contracting, the user should inform themselves about its specifications and purpose."
+        }
+      },
+      "prices": {
+        "title": "6. Prices",
+        "policy": {
+          "title": "6.1 Pricing Policy",
+          "content": "Startups AI reserves the right to unilaterally adjust service values at any time without prior consultation or consent from the user. The applied values are those in effect at the time of order."
+        },
+        "payment": {
+          "title": "6.2 Payment Method",
+          "content": "When contracting a service, the platform may request user financial information, such as tax ID, billing address, and card details. By entering said data, the user agrees to be charged according to the chosen payment method at the prices current and informed at the time of contracting. Said financial data may be stored to facilitate future access and contracting."
+        },
+        "renewal": {
+          "title": "6.3 Service Renewal",
+          "content": "Service contracting may be automatically renewed by the platform, regardless of communication to the user, through periodic charging of the same payment method indicated by the user when contracting the service."
+        }
+      },
+      "cancellation": {
+        "title": "7. Cancellation",
+        "policy": {
+          "title": "7.1 Cancellation Policy",
+          "content": "The user may cancel service contracting according to the terms defined at the time of contracting. Additionally, the user may cancel services within 7 (seven) days after contracting, through contact with the platform, in accordance with consumer protection laws."
+        },
+        "reasons": {
+          "title": "7.2 Reasons for Cancellation",
+          "content": "The service may be cancelled by:",
+          "list": [
+            "User's part: under these conditions, services will only cease when the current cycle at the time of cancellation is completed",
+            "Terms of Use Violation: services will be immediately terminated"
+          ]
+        }
+      },
+      "support": {
+        "title": "8. Support",
+        "contact": {
+          "title": "8.1 Support Contact",
+          "content": "For questions, suggestions or problems, the user can contact support through the email support@startupsai.com.br"
+        },
+        "hours": {
+          "title": "8.2 Service Hours",
+          "content": "User support service is available Monday to Friday, from 9am to 6pm."
+        }
+      },
+      "responsibilities": {
+        "title": "9. Responsibilities",
+        "user": {
+          "title": "9.1 User Responsibilities",
+          "content": "The user is responsible for:",
+          "list": [
+            "Correct use of the platform, ensuring good coexistence and respect among users",
+            "Compliance with the rules set forth in these Terms and applicable legislation",
+            "Protection of account access data (login and password)"
+          ]
+        },
+        "platform": {
+          "title": "9.2 Platform Responsibilities",
+          "content": "Startups AI is responsible for:",
+          "list": [
+            "Indicating the characteristics of offered services",
+            "Information disclosed by it on the platform",
+            "Illicit activities carried out through its platform"
+          ]
+        }
+      },
+      "copyright": {
+        "title": "10. Copyright",
+        "intellectual": {
+          "title": "10.1 Intellectual Property",
+          "content": "Startups AI's intellectual property contents and assets are protected by copyright and industrial property laws. Platform use is personal and non-transferable, with any unauthorized use being prohibited."
+        },
+        "license": {
+          "title": "10.2 Usage License",
+          "content": "These Terms of Use grant users a non-exclusive, non-transferable and non-sublicensable license to access and make use of the platform and services and products made available by it."
+        }
+      },
+      "sanctions": {
+        "title": "11. Sanctions",
+        "content": "Startups AI may, at any time, warn, suspend or cancel the account of users who violate any provision of these Terms or engage in fraudulent behavior."
+      },
+      "termination": {
+        "title": "12. Termination",
+        "content": "Non-compliance with the obligations agreed in these Terms may result in immediate unilateral termination by Startups AI and blocking of all services provided to the user."
+      },
+      "changes": {
+        "title": "13. Changes",
+        "content": "The items described in this instrument may be unilaterally changed at any time by Startups AI. Changes will be informed on the platform, and it is up to the user to choose to accept the new content or cancel the use of services."
+      },
+      "privacy": {
+        "title": "14. Privacy Policy",
+        "content": "The user must consent to the provisions contained in Startups AI's Privacy Policy."
+      },
+      "jurisdiction": {
+        "title": "15. Jurisdiction",
+        "content": "For the resolution of disputes arising from this instrument, Brazilian Law will be fully applied. Any litigation must be presented in the jurisdiction where the company's headquarters is located."
+      }
+    }
+  },
+
+  "server": {
+    "login": {
+      "invalidFields": "Invalid fields!",
+      "emailNotExists": "Email does not exist!",
+      "accountBlocked": "Account blocked. Please contact the administrator.",
+      "invalidCredentials": "Invalid credentials!",
+      "genericError": "Something went wrong!",
+      "successLogin": "Logged in successfully!"
+    }
+  },
+
+  "startupForm": {
+    "loading": "Loading",
+    "tabs": {
+      "register": "Register",
+      "programs": "Programs"
+    },
+    "sub-tabs": {
+      "generalData": "General Data",
+      "team": "Team",
+      "productService": "Product and Service",
+      "deepTech": "DeepTech",
+      "governance": "Governance",
+      "marketFinance": "Market and Finance",
+      "matchmaking": "Matchmaking",
+      "profile": "Profile"
+    },
+    "statusRegisterCard": {
+      "loading": "Loading...",
+      "status": {
+        "complete": "Your registration is complete!",
+        "almostComplete": "Your registration is almost complete!",
+        "incomplete": "Your registration is incomplete!"
+      }
+    },
+    "startupDataCard": {
+      "title": "STARTUP DATA",
+      "responsibleData": "CONTACT PERSON DATA",
+      "images": {
+        "startupLogo": "Startup Logo"
+      },
+      "placeholders": {
+        "emptyField": "-"
+      }
+    },
+    "startupMatchesCard": {
+      "title": "MATCHES",
+      "images": {
+        "matchesArrow": "matches"
+      },
+      "noMatches": "No matches found!",
+      "dateFormat": {
+        "match": "{{percentage}}% - {{date}}"
+      }
+    },
+    "generalDataForm": {
+      "noChanges": "No changes were made!",
+      "pitchDeckNotAvailable": "This option is not available yet! You'll be able to use it soon!",
+      "selectFile": "Select file",
+      "selectOption": "Select an option",
+      "yesQuestion": "Yes",
+      "noQuestion": "No",
+      "saveButton": "Save",
+      "savingData": "Saving data...",
+      "startupName": "Name",
+      "country": "Country",
+      "vertical": "Vertical",
+      "stateAndCity": "City/State",
+      "operationalStage": "Operational Stage",
+      "businessModel": "Business Model",
+      "subscriptionNumber": "Registration Number",
+      "foundationDate": "Foundation Date",
+      "referenceLink": "Website",
+      "pitchDeck": "Pitchdeck",
+      "generatePitchDeck": "Generate Pitch Deck",
+      "seeGeneratedPitchDeck": "See Generated Pitch Decks",
+      "logo": "Logo",
+      "challenges": "Mark all the challenges your startup is currently facing",
+      "objectives": "What are the desired startup connections in the program?",
+      "connections": "Make connections only in my startup's country of origin?",
+      "valueProposal": "Value Proposition",
+      "valueProposalMaxLength": "(max 200 characters)",
+      "shortDescription": "Startup Description",
+      "shortDescriptionSubtitle": "(Describe your startup in as much detail as possible)",
+      "validation": {
+        "required": "This field is required!",
+        "websiteMinLength": "The website must have at least 3 characters",
+        "fileTooLarge": "File is too large!"
+      }
+    },
+    "teamDataForm": {
+      "selectOption": "Select an option",
+      "noChanges": "No changes were made!",
+      "savingData": "Saving data...",
+      "saveButton": "Save",
+      "responsible": "Responsible",
+      "team": "Team",
+      "partners": "Partners",
+      "mainResponsibleName": "Startup's responsible name",
+      "contactNumber": "Startup's responsible phone",
+      "mainResponsibleEmail": "Startup's responsible email",
+      "employeesQuantity": "How many employees work at the Startup?",
+      "fullTimeEmployeesQuantity": "How many team members are 100% involved in the Startup?",
+      "partnersDescription": "Add all people and companies that are part of the society's Captable.",
+      "partnersAddButton": "+ Add Partner",
+      "employeesRange": {
+        "1-5": "1 to 5",
+        "6-10": "6 to 10",
+        "11-30": "11 to 30",
+        "31-50": "31 to 50",
+        "moreThan50": "More than 50"
+      },
+      "partnersForm": {
+        "selectOption": "Select an option",
+        "yesQuestion": "Yes",
+        "noQuestion": "No",
+        "name": "Name",
+        "phone": "Phone",
+        "email": "E-mail",
+        "role": "Role",
+        "founder": "Founder?",
+        "dedication": "Dedication",
+        "captable": "% Captable",
+        "firstBusiness": "First business?",
+        "linkedinLattes": "LinkedIn or Lattes",
+        "experienceOrFormation": "Experience or education in the startup's field?",
+        "experienceAndFormationComplementary": "Are the partners' education and area of expertise complementary?"
+      },
+      "validation": {
+        "required": "This field is required!",
+        "invalidEmail": "Invalid email!",
+        "minNumber": "Must be at least 1",
+        "minEmployees": "Must have at least one employee",
+        "percentageRange": "Value must be between 0 and 100!"
+      }
+    },
+    "productServiceForm": {
+      "selectOption": "Select an option",
+      "noChanges": "No changes were made!",
+      "savingData": "Saving data...",
+      "saveButton": "Save",
+      "productService": "Choose the option that best describes what is marketed in your Startup",
+      "odsGoals": "SDGs addressed",
+      "problems": "Problems and solutions that the Startup solves",
+      "competitors": "List of competitors",
+      "differentials": "What are the competitive advantages over your competitors?",
+      "odsOptions": {
+        "none": "None",
+        "oneOrMore": "1 or more",
+        "dontKnow": "I don't know"
+      },
+      "validation": {
+        "required": "This field is required!",
+        "selectAtLeastOne": "Select at least one field"
+      }
+    },
+    "deepTechForm": {
+      "selectOption": "Select an option",
+      "noChanges": "No changes were made!",
+      "savingData": "Saving data...",
+      "saveButton": "Save",
+      "yesQuestion": "Yes",
+      "noQuestion": "No",
+      "maturityLevel": "Technology maturity level",
+      "hasPatent": "Has patent?",
+      "patentDescription": "Patent(s) description"
+    },
+    "governanceForm": {
+      "selectOption": "Select an option",
+      "noChanges": "No changes were made!",
+      "savingData": "Saving data...",
+      "saveButton": "Save",
+      "yesQuestion": "Yes",
+      "noQuestion": "No",
+      "isStartupOfficiallyRegistered": "Is the company officially registered in your country with a social contract?",
+      "isTherePartnersAgreementSigned": "Is there a Partners Agreement signed by the partners?",
+      "haveLegalAdvice": "Does the Startup have legal advice?",
+      "haveAccountingConsultancy": "Does the Startup have an accounting consultancy?",
+      "relationshipsRegisteredInContract": "Are all relationships with Clients, Suppliers, Partners and Employees properly registered in the contract?",
+      "validation": {
+        "required": "This field is required!"
+      }
+    },
+    "marketFinanceForm": {
+      "selectOption": "Select an option",
+      "noChanges": "No changes were made!",
+      "savingData": "Saving data...",
+      "saveButton": "Save",
+      "yesQuestion": "Yes",
+      "noQuestion": "No",
+      "marketSection": {
+        "title": "Market",
+        "generateValuation": {
+          "label": "Generate Valuation",
+          "disabled": "This option is not available yet! You'll be able to use it soon!"
+        },
+        "viewGeneratedValuations": {
+          "label": "View Generated Valuations"
+        },
+        "payingCostumers": "How many paying customers do you have?",
+        "activeCustomers": "Total active customers"
+      },
+      "revenueSection": {
+        "title": "Revenue",
+        "alreadyEarningLabel": "I'm already earning",
+        "lastMonthRevenueLabel": "What was last month's revenue?",
+        "last6MonthsRevenueLabel": "What was the revenue for the last 6 months?",
+        "last12MonthsRevenueLabel": "What was the revenue for the last 12 months?",
+        "saasCurrentRRMLabel": "For SaaS, inform the current MRR"
+      },
+      "investmentsSection": {
+        "title": "Investments",
+        "hasOpenRoundLabel": "There is an open investment round",
+        "roundInvestmentAmountLabel": "What is the amount to be raised?",
+        "equityPercentageLabel": "What percentage of equity will be distributed?",
+        "currentStartupValuationLabel": "What is the current Startup valuation?",
+        "roundStartDateLabel": "Round start date",
+        "roundEndDateLabel": "Round end date",
+        "addRoundButton": "+ Add Round"
+      },
+      "receivedInvestmentsSection": {
+        "title": "Received Investments"
+      },
+      "investmentsContainer": {
+        "roundLabel": "Round",
+        "roundStartDateLabel": "Round start date",
+        "roundEndDateLabel": "Round end date",
+        "totalInvestmentCollectedLabel": "Total investments collected",
+        "equityPercentageDistributedLabel": "Percentage of equity distributed",
+        "investorsQuantityLabel": "How many investors do you have?",
+        "investorsLabel": "Ventures and/or round investors"
+      },
+      "validation": {
+        "required": "This field is required!",
+        "invalidField": "This field is invalid!"
+      }
+    },
+    "profileDataForm": {
+      "aiGeneratedStartupProfileTitle": "AI-Generated Startup Profile",
+      "profileUpdateInstructions": "Keep your Startup Profile up-to-date to improve your score and make it easier for investors to find you.",
+      "updateProfileButton": {
+        "label": "Update Profile",
+        "loading": "Analyzing Data..."
+      },
+      "viewGeneratedProfilesButton": {
+        "label": "View Generated Profiles"
+      },
+      "noProfileGenerated": {
+        "message": "The startup profile has not yet been generated. Please ensure your registration is at least 60% complete and wait 24 hours for the profile to be generated."
+      },
+      "aiAnalysisMessage": "The AI is analyzing the data and formulating the profile of your startup. Please wait a moment...",
+      "updateProfileFunction": {
+        "successMessage": "Profile updated successfully!",
+        "errorMessage": "Error updating the profile. Please try again."
+      },
+      "profileListModal": {
+        "viewProfileTitle": "View Profile",
+        "generatedProfilesTitle": "Generated Profiles",
+        "orderColumn": "Order",
+        "creationDateColumn": "Creation Date",
+        "statusColumn": "Status",
+        "activateButton": {
+          "label": "Activate",
+          "loading": "Activating..."
+        }
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "languageSetting": {
+        "label": "Language",
+        "portugueseLanguage": "Portuguese (Brazil)",
+        "englishLanguage": "English"
+      },
+      "saving": "Saving...",
+      "cancelButton": "Cancel",
+      "saveChanges": "Save Changes",
+      "updateSuccess": "Your settings has been updated.",
+      "updateError": "Failed to save settings. Please try again."
+    }
+  },
+
+  "programForm": {
+    "availablePrograms": {
+      "title": "Available Programs",
+      "table": {
+        "noDataFound": "No data found",
+        "nameColumn": "Name",
+        "startDateColumn": "Program Start Date",
+        "endDateColumn": "Program End Date",
+        "fileColumn": "Public notice",
+        "seeFile": "View Notice",
+        "fileNotAvailable": "File not available",
+        "resultsPerPage": "Results per Page",
+        "page": "Page",
+        "of": "of"
+      },
+      "modal": {
+        "title": "Subscribe to the program below and take advantage of this great opportunity",
+        "checkingEligibility": "Checking eligibility...",
+        "seeElegibility": "See Eligibility",
+        "errorChecking": "Error checking eligibility. Please try again.",
+        "eligible": "Your Startup is eligible for this program",
+        "notEligible": "Your Startup is not eligible for this program",
+        "ineligibilityReason": "Reason for ineligibility",
+        "alreadySubscribed": {
+          "title": "Already subscribed",
+          "description": "Your startup is already subscribed to this program."
+        },
+        "registrationPeriod": "Registration from {startDate} to {endDate}",
+        "programDescription": "Program description",
+        "mainTopics": "Main topics of the Notice",
+        "readNotice": "Read the Notice for this program",
+        "noticeUnavailable": "Notice not available",
+        "subscribe": "Subscribe now",
+        "subscribed": "Subscribed",
+        "subscriptionSuccess": "Subscription successful!",
+        "subscriptionError": "Subscription error!"
+      }
+    },
+    "participationHistory": {
+      "title": "Participation History",
+      "table": {
+        "noDataFound": "No data found",
+        "nameColumn": "Program Name",
+        "subscriptionDate": "Subscription Date",
+        "startDateColumn": "Program Start Date",
+        "endDateColumn": "Program End Date",
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page",
+        "resultsPerPage": "Results per Page",
+        "page": "Page",
+        "of": "of"
+      }
+    },
+    "documents": {
+      "title": "Documents",
+      "titleConstruction": "Documents in Construction",
+      "subtitle": "We are working hard to bring you an amazing document management experience. Stay tuned!",
+      "planning": "Planning",
+      "development": "Development"
+    }
+  }
+}

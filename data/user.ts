@@ -32,6 +32,7 @@ export const getUserByEmail = async (email: string, slug: string) => {
             startup_id: true,
             investor_id: true,
             expert_id: true,
+            language: true,
           },
         },
       },

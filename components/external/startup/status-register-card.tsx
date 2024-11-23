@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
   filledPercentages: { [key: string]: number };
@@ -9,6 +10,8 @@ export default function StatusRegisterCard({
   filledPercentages,
   isRefetching,
 }: Props) {
+  const t = useTranslations("startupForm");
+
   const totalBlocks = Object.keys(filledPercentages).length;
   const totalPercentage = Object.values(filledPercentages).reduce(
     (sum, val) => sum + val,
@@ -24,13 +27,19 @@ export default function StatusRegisterCard({
 
   const getStatusTextAndColor = (average: number) => {
     if (average === 100)
-      return { text: "Seu cadastro está completo!", color: "text-green-500" };
+      return {
+        text: t("statusRegisterCard.status.complete"),
+        color: "text-green-500",
+      };
     if (average >= 50)
       return {
-        text: "Seu cadastro está quase completo!",
+        text: t("statusRegisterCard.status.almostComplete"),
         color: "text-yellow-500",
       };
-    return { text: "Seu cadastro está incompleto!", color: "text-red-500" };
+    return {
+      text: t("statusRegisterCard.status.incomplete"),
+      color: "text-red-500",
+    };
   };
 
   const status = getStatusTextAndColor(averagePercentage);
@@ -40,7 +49,7 @@ export default function StatusRegisterCard({
       <div className="w-[300px] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
         <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
         <div className="text-xs text-center font-bold text-gray-500">
-          Carregando...
+          {t("statusRegisterCard.loading")}
         </div>
       </div>
     );

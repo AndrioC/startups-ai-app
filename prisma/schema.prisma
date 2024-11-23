@@ -257,6 +257,11 @@ enum UserType {
   SAI
 }
 
+enum Language {
+  EN
+  PT_BR
+}
+
 model user {
   id                  Int       @id @default(autoincrement())
   organization_id     Int
@@ -275,6 +280,7 @@ model user {
   created_at          DateTime  @default(now())
   updated_at          DateTime  @default(now())
   email_verified      DateTime?
+  language            Language  @default(PT_BR)
 
   //relacionamentos
   organizations                                   organizations?                                    @relation(fields: [organization_id], references: [id])

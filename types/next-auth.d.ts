@@ -16,6 +16,7 @@ declare module "next-auth" {
     logo_img?: string | null;
     logo_sidebar?: string | null;
     last_access?: Date | null;
+    language?: string;
   }
 
   interface User {
@@ -31,6 +32,7 @@ declare module "next-auth" {
     logo_img?: string | null;
     logo_sidebar?: string | null;
     last_access?: Date | null;
+    language?: string;
   }
 }
 
@@ -48,5 +50,6 @@ declare module "next-auth/jwt" {
     logo_img?: string | null;
     logo_sidebar?: string | null;
     last_access?: Date | null;
+    language?: string;
   }
 }

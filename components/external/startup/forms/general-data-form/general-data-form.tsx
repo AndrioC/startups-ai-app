@@ -4,11 +4,14 @@ import { Controller, useForm } from "react-hook-form";
 import { FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Language } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { Loader2, Sparkles, Upload } from "lucide-react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import selectImagePlaceHolder from "@/assets/img/select-image-placeholder.png";
@@ -34,6 +37,8 @@ interface Props {
 }
 
 export default function GeneralDataForm({ data }: Props) {
+  const t = useTranslations("startupForm.generalDataForm");
+  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const queryClient = useQueryClient();
@@ -53,38 +58,53 @@ export default function GeneralDataForm({ data }: Props) {
 
   const { initialData, pitchDeckFile, logoFile, refetch, actorId } =
     useFormStartupDataState();
-  const formSchema = GeneralDataSchema();
+  const formSchema = GeneralDataSchema(t);
 
   const countriesData: ValueProps[] = data.country.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }));
 
   const verticalData: ValueProps[] = data.vertical.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }));
 
   const operationalStageData: ValueProps[] = data.operational_stage.map(
     (value) => ({
       ...value,
-      label: value.name_pt,
+      label:
+        session?.user?.language === Language.PT_BR
+          ? value.name_pt
+          : value.name_en,
     })
   );
 
   const challengesData: ValueProps[] = data.challenges.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }));
 
   const makeConnectionsOriginCountry = [
-    { id: "yes", label: "Sim" },
-    { id: "no", label: "Não" },
+    { id: "yes", label: t("yesQuestion") },
+    { id: "no", label: t("noQuestion") },
   ];
 
   const startupsObjectivesData: ValueProps[] = data.objectives.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }));
 
   const sortedCountriesData = countriesData
@@ -121,7 +141,7 @@ export default function GeneralDataForm({ data }: Props) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
-      toast.warning("Nenhuma alteração foi feita!");
+      toast.warning("noChanges");
       return;
     }
     mutation.mutate(data);
@@ -182,9 +202,7 @@ export default function GeneralDataForm({ data }: Props) {
   };
 
   const handleGeneratePitchDeckClick = () => {
-    toast.info(
-      "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
-    );
+    toast.info(t("pitchDeckNotAvailable"));
   };
 
   return (
@@ -195,7 +213,7 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="startupName" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Nome</span>
+                <span className="text-gray-500">{t("startupName")}</span>
               </label>
               <input
                 id="startupName"
@@ -212,7 +230,7 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="country" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">País</span>
+                <span className="text-gray-500">{t("country")}</span>
               </label>
               <select
                 id="country"
@@ -238,14 +256,14 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="vertical" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Vertical</span>
+                <span className="text-gray-500">{t("vertical")}</span>
               </label>
               <select
                 id="vertical"
                 {...register("vertical")}
                 className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedVerticalData.map((option) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -261,7 +279,7 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="stateAndCity" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Cidade/Estado</span>
+                <span className="text-gray-500">{t("stateAndCity")}</span>
               </label>
               <input
                 id="stateAndCity"
@@ -281,14 +299,14 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="operationalStage" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Estágio de operação</span>
+                <span className="text-gray-500">{t("operationalStage")}</span>
               </label>
               <select
                 id="operationalStage"
                 {...register("operationalStage")}
                 className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedOperationalStage.map((option) => (
                   <option key={option.id} value={Number(option.id)}>
                     {option.label}
@@ -304,14 +322,14 @@ export default function GeneralDataForm({ data }: Props) {
             <div className="flex flex-col w-1/2">
               <label htmlFor="businessModel" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Modelo de negócio</span>
+                <span className="text-gray-500">{t("businessModel")}</span>
               </label>
               <select
                 id="businessModel"
                 {...register("businessModel")}
                 className="block pl-2 w-full h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedBusinessModel.map((option) => (
                   <option key={option.id} value={Number(option.id)}>
                     {option.name}
@@ -329,7 +347,7 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="flex gap-10 mt-5">
             <div className="flex flex-col w-1/2">
               <label htmlFor="subscriptionNumber" className="flex items-center">
-                <span className="text-gray-500">CNPJ</span>
+                <span className="text-gray-500">{t("subscriptionNumber")}</span>
               </label>
               <input
                 id="subscriptionNumber"
@@ -345,7 +363,7 @@ export default function GeneralDataForm({ data }: Props) {
             </div>
             <div className="flex flex-col w-1/2">
               <label htmlFor="foundationDate" className="flex items-center">
-                <span className="text-gray-500">Data fundação</span>
+                <span className="text-gray-500">{t("foundationDate")}</span>
               </label>
               <Controller
                 control={control}
@@ -371,7 +389,7 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="flex gap-10 mt-5">
             <div className="flex flex-col w-full">
               <label htmlFor="referenceLink" className="flex items-center">
-                <span className="text-gray-500">Site</span>
+                <span className="text-gray-500">{t("referenceLink")}</span>
               </label>
               <input
                 id="referenceLink"
@@ -390,7 +408,7 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="flex flex-col mt-5">
             <label htmlFor="loadPitchDeck" className="flex items-center">
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">Pitchdeck</span>
+              <span className="text-gray-500">{t("pitchDeck")}</span>
             </label>
             <div className="flex items-center gap-20">
               <Controller
@@ -433,7 +451,7 @@ export default function GeneralDataForm({ data }: Props) {
                               localPitchDeckFile
                                 ? localPitchDeckFile.name
                                 : getFileNameFromUrl(pitchDeckFile) ||
-                                    "Selecionar arquivo",
+                                    t("selectFile"),
                               30
                             )}
                           </span>
@@ -459,20 +477,20 @@ export default function GeneralDataForm({ data }: Props) {
                 <Button
                   type="button"
                   variant="outline"
-                  className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+                  className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 uppercase"
                   onClick={handleGeneratePitchDeckClick}
                   disabled
                 >
                   <Sparkles size={20} />
-                  GERAR PITCHDECK
+                  {t("generatePitchDeck")}
                 </Button>
                 <Button
                   variant="link"
-                  className="text-blue-500 hover:text-blue-700 text-xs"
+                  className="text-blue-500 hover:text-blue-700 text-xs uppercase"
                   onClick={() => setIsModalOpen(true)}
                   disabled
                 >
-                  VER PITCHDECKS GERADOS
+                  {t("seeGeneratedPitchDeck")}
                 </Button>
               </div>
             </div>
@@ -541,9 +559,7 @@ export default function GeneralDataForm({ data }: Props) {
       <div className="flex flex-col w-full">
         <label htmlFor="startupChallenges" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Marque todos os desafios que sua startup enfrenta neste momento
-          </span>
+          <span className="text-gray-500">{t("challenges")}</span>
         </label>
         <div className="h-[400px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between">
           <div className="w-[450px]">
@@ -599,9 +615,7 @@ export default function GeneralDataForm({ data }: Props) {
       <div className="flex flex-col w-full">
         <label htmlFor="startupObjectives" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Quais são as conexões desejadas da startup no programa?
-          </span>
+          <span className="text-gray-500">{t("objectives")}</span>
         </label>
         <div className="h-[120px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between">
           <div className="w-[450px]">
@@ -660,16 +674,14 @@ export default function GeneralDataForm({ data }: Props) {
           className="flex items-center mt-5"
         >
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Fazer conexões apenas no país de origem da minha startup?
-          </span>
+          <span className="text-gray-500">{t("connections")}</span>
         </label>
         <select
           id="connectionsOnlyOnStartupCountryOrigin"
           {...register("connectionsOnlyOnStartupCountryOrigin")}
           className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
         >
-          <option value="">Selecione uma opção</option>
+          <option value="">{t("selectOption")}</option>
           {makeConnectionsOriginCountry.map(
             (option: { id: string; label: string }) => (
               <option key={option.id} value={option.id}>
@@ -689,7 +701,7 @@ export default function GeneralDataForm({ data }: Props) {
         <label htmlFor="valueProposal" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
           <span className="text-gray-500">
-            Proposta de valor (max 200 caracteres)
+            {t("valueProposal")} {t("valueProposalMaxLength")}
           </span>
         </label>
         <textarea
@@ -710,10 +722,8 @@ export default function GeneralDataForm({ data }: Props) {
         <label htmlFor="shortDescription" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
           <div className="flex text-gray-500 items-center gap-3">
-            <span>Descrição da startup </span>
-            <p className="text-xs">
-              (Descreva sua startup com o máximo de detalhes possível)
-            </p>
+            <span>{t("shortDescription")}</span>
+            <p className="text-xs">{t("shortDescriptionSubtitle")}</p>
           </div>
         </label>
         <textarea
@@ -736,7 +746,7 @@ export default function GeneralDataForm({ data }: Props) {
           disabled={isSubmitting}
           className="px-6 text-white rounded-md"
         >
-          Salvar
+          {t("saveButton")}
         </Button>
       </div>
 
@@ -745,7 +755,7 @@ export default function GeneralDataForm({ data }: Props) {
           <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
             <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
             <div className="text-xs text-center font-bold text-gray-500">
-              Salvando os dados...
+              {t("savingData")}
             </div>
           </div>
         </div>

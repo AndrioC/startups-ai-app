@@ -20,8 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-
-import { useRefreshAuth } from "../../hooks/useRefreshAuth";
+import { useRefreshAuth } from "@/hooks/useRefreshAuth";
 
 import "react-image-crop/dist/ReactCrop.css";
 

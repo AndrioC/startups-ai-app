@@ -40,7 +40,12 @@ export interface FormStartupData {
   startupName: string;
   country: string;
   vertical: string;
-  verticalText: string;
+  verticalText: {
+    id: number;
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
   stateAndCity: string;
   operationalStage: string;
   businessModel: string;
@@ -118,7 +123,12 @@ const initialFormStartupData: FormStartupData = {
   startupName: "",
   country: "",
   vertical: "",
-  verticalText: "",
+  verticalText: {
+    id: 0,
+    code: "",
+    name_en: "",
+    name_pt: "",
+  },
   stateAndCity: "",
   operationalStage: "",
   businessModel: "",

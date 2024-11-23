@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import isEqual from "lodash/isEqual";
 import { Loader2, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,12 +24,13 @@ import { FinanceAndMarketDataSchema } from "@/lib/schemas/schema-startup";
 import InvestmentsContainer from "./investments-container";
 import ValuationListModal from "./valuation-list-modal";
 export default function MarketFinanceDataForm() {
+  const t = useTranslations("startupForm.marketFinanceForm");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const { initialData, refetch, actorId } = useFormStartupDataState();
 
-  const schemateste = FinanceAndMarketDataSchema();
+  const schemateste = FinanceAndMarketDataSchema(t);
 
   const {
     register,
@@ -53,7 +55,7 @@ export default function MarketFinanceDataForm() {
   const onSubmit = async (data: z.infer<typeof schemateste>) => {
     const currentValues = getValues();
     if (isEqual(currentValues, initialData)) {
-      toast.warning("Nenhuma alteração foi feita!");
+      toast.warning(t("noChanges"));
       return;
     }
     mutation.mutate(data);
@@ -90,9 +92,7 @@ export default function MarketFinanceDataForm() {
   });
 
   const handleGenerateValuationClick = () => {
-    toast.info(
-      "Esta opção ainda não está disponível! Em breve você poderá usá-la!"
-    );
+    toast.info(t("marketSection.generateValuation.disabled"));
   };
 
   return (
@@ -100,24 +100,26 @@ export default function MarketFinanceDataForm() {
       <div className="flex flex-col">
         <div className="flex flex-col text-xs lg:text-base w-full mt-5">
           <div className="flex justify-between items-center mb-5">
-            <span className="text-gray-500 font-bold text-xl">MERCADO</span>
+            <span className="text-gray-500 font-bold text-xl">
+              {t("marketSection.title")}
+            </span>
             <div className="flex flex-col">
               <Button
                 type="button"
                 variant="outline"
-                className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+                className="whitespace-nowrap bg-white text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 uppercase"
                 onClick={handleGenerateValuationClick}
               >
                 <Sparkles size={20} />
-                GERAR VALUATION
+                {t("marketSection.generateValuation.label")}
               </Button>
               <Button
                 variant="link"
-                className="text-blue-500 hover:text-blue-700 text-xs"
+                className="text-blue-500 hover:text-blue-700 text-xs uppercase"
                 onClick={() => setIsModalOpen(true)}
                 disabled
               >
-                VER VALUATIONS GERADOS
+                {t("marketSection.viewGeneratedValuations.label")}
               </Button>
             </div>
           </div>
@@ -129,7 +131,7 @@ export default function MarketFinanceDataForm() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Quantos clientes pagantes possui?
+                  {t("marketSection.payingCostumers")}
                 </span>
               </label>
               <input
@@ -150,7 +152,9 @@ export default function MarketFinanceDataForm() {
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Total de clientes ativos</span>
+                <span className="text-gray-500">
+                  {t("marketSection.activeCustomers")}
+                </span>
               </label>
               <input
                 id="activeCustomersQuantity"
@@ -167,8 +171,8 @@ export default function MarketFinanceDataForm() {
           </div>
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
-          <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            FATURAMENTO
+          <span className="text-gray-500 font-bold text-xl mb-5 mt-5 uppercase">
+            {t("revenueSection.title")}
           </span>
           <div className="flex flex-col gap-5">
             <div className="mb-3 flex items-center">
@@ -178,7 +182,7 @@ export default function MarketFinanceDataForm() {
                 {...register("alreadyEarning")}
               />
               <label className="text-sm text-gray-500">
-                Já estou faturando
+                {t("revenueSection.alreadyEarningLabel")}
               </label>
             </div>
             {alreadyEarning && (
@@ -187,8 +191,8 @@ export default function MarketFinanceDataForm() {
                   <div className="flex flex-col">
                     <label htmlFor="lastRevenue" className="flex items-center">
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">
-                        Qual foi o faturamento do último mês?
+                      <span className="text-gray-500 w-[200px]">
+                        {t("revenueSection.lastMonthRevenueLabel")}
                       </span>
                     </label>
                     <input
@@ -210,7 +214,7 @@ export default function MarketFinanceDataForm() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual foi o faturamento dos últimos 6 meses?
+                        {t("revenueSection.last6MonthsRevenueLabel")}
                       </span>
                     </label>
                     <input
@@ -232,7 +236,7 @@ export default function MarketFinanceDataForm() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual foi o faturamento dos últimos 12 meses?
+                        {t("revenueSection.last12MonthsRevenueLabel")}
                       </span>
                     </label>
                     <input
@@ -252,7 +256,7 @@ export default function MarketFinanceDataForm() {
                   <label htmlFor="saasCurrentRRM" className="flex items-center">
                     <span className="text-red-500">*</span>
                     <span className="text-gray-500">
-                      Em caso de SaaS, informe o RRM atual
+                      {t("revenueSection.saasCurrentRRMLabel")}
                     </span>
                   </label>
                   <input
@@ -272,8 +276,8 @@ export default function MarketFinanceDataForm() {
           </div>
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
-          <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            INVESTIMENTOS
+          <span className="text-gray-500 font-bold text-xl mb-5 mt-5 uppercase">
+            {t("investmentsSection.title")}
           </span>
           <div className="flex flex-col gap-5">
             <div className="mb-3 flex items-center">
@@ -283,7 +287,7 @@ export default function MarketFinanceDataForm() {
                 {...register("isThereOpenInvestmentRound")}
               />
               <label className="text-sm text-gray-500">
-                Existe uma rodada de investimento em aberto
+                {t("investmentsSection.hasOpenRoundLabel")}
               </label>
             </div>
             {isThereOpenInvestmentRound && (
@@ -296,7 +300,7 @@ export default function MarketFinanceDataForm() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual o valor a ser captado?
+                        {t("investmentsSection.roundInvestmentAmountLabel")}
                       </span>
                     </label>
                     <input
@@ -318,7 +322,7 @@ export default function MarketFinanceDataForm() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual percentual de equity a ser distribuído?
+                        {t("investmentsSection.equityPercentageLabel")}
                       </span>
                     </label>
                     <input
@@ -342,7 +346,7 @@ export default function MarketFinanceDataForm() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual o valuation atual da Startup?
+                        {t("investmentsSection.currentStartupValuationLabel")}
                       </span>
                     </label>
                     <input
@@ -365,7 +369,9 @@ export default function MarketFinanceDataForm() {
                       className="flex items-center"
                     >
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Início da rodada</span>
+                      <span className="text-gray-500">
+                        {t("investmentsSection.roundStartDateLabel")}
+                      </span>
                     </label>
                     <Controller
                       control={control}
@@ -395,7 +401,9 @@ export default function MarketFinanceDataForm() {
                   <div className="flex flex-col">
                     <label htmlFor="roundEndDate" className="flex items-center">
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Fim da rodada</span>
+                      <span className="text-gray-500">
+                        {t("investmentsSection.roundEndDateLabel")}
+                      </span>
                     </label>
                     <Controller
                       control={control}
@@ -421,8 +429,8 @@ export default function MarketFinanceDataForm() {
           </div>
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
-          <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            INVESTIMENTOS RECEBIDOS
+          <span className="text-gray-500 font-bold text-xl mb-5 mt-5 uppercase">
+            {t("receivedInvestmentsSection.title")}
           </span>
           {fields.map((investment, index) => (
             <InvestmentsContainer
@@ -449,7 +457,7 @@ export default function MarketFinanceDataForm() {
               }
               className="mt-4 text-gray-500 border p-2 rounded-md hover:bg-gray-200"
             >
-              + Adicionar Rodada
+              {t("investmentsSection.addRoundButton")}
             </button>
           </div>
         </div>
@@ -465,7 +473,7 @@ export default function MarketFinanceDataForm() {
           disabled={isSubmitting}
           className="px-6 text-white rounded-md"
         >
-          Salvar
+          {t("saveButton")}
         </Button>
       </div>
       {isSubmitting && (
@@ -473,7 +481,7 @@ export default function MarketFinanceDataForm() {
           <div className="w-[300px] mt-[20%] h-[90px] bg-white shadow-lg rounded-lg flex flex-col items-center justify-center p-2 gap-1">
             <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
             <div className="text-xs text-center font-bold text-gray-500">
-              Salvando os dados...
+              {t("savingData")}
             </div>
           </div>
         </div>
