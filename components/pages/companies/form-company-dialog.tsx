@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { CompanyTable } from "@/app/api/companies/[organization_id]/list/route";
@@ -111,6 +112,7 @@ export default function FormCompanyDialog({
   isOpen,
   setIsOpen,
 }: Props) {
+  const t = useTranslations("admin.companies.formCompanyDialog");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -204,7 +206,7 @@ export default function FormCompanyDialog({
             ...prev,
             {
               file,
-              message: "O tamanho do arquivo excede o limite de 2MB.",
+              message: t("errorProcessingImage"),
             },
           ]);
         } else if (width < minWidth || height < minHeight) {
@@ -212,7 +214,7 @@ export default function FormCompanyDialog({
             ...prev,
             {
               file,
-              message: `A imagem é muito pequena. Tamanho mínimo requerido: ${minWidth}x${minHeight} pixels. Tamanho atual: ${width}x${height} pixels.`,
+              message: t("errorProcessingImage"),
             },
           ]);
         } else if (width > maxWidth || height > maxHeight) {
@@ -220,7 +222,7 @@ export default function FormCompanyDialog({
             ...prev,
             {
               file,
-              message: `A imagem é muito grande. Tamanho máximo permitido: ${maxWidth}x${maxHeight} pixels. Tamanho atual: ${width}x${height} pixels.`,
+              message: t("errorProcessingImage"),
             },
           ]);
         } else {
@@ -246,8 +248,7 @@ export default function FormCompanyDialog({
           ...prev,
           {
             file,
-            message:
-              "Erro ao verificar o tamanho da imagem. Por favor, tente novamente.",
+            message: t("errorProcessingImage"),
           },
         ]);
       }
@@ -291,7 +292,7 @@ export default function FormCompanyDialog({
         handleCloseCropModal();
       } catch (error) {
         console.log("Error processing image:", error);
-        toast.error("Erro ao processar a imagem. Por favor, tente novamente.");
+        toast.error(t("errorProcessingImage"));
       } finally {
         setIsSubmitting(false);
       }
@@ -341,9 +342,7 @@ export default function FormCompanyDialog({
 
   const toastSuccess = () => {
     toast.success(
-      company
-        ? "Organização atualizada com sucesso!"
-        : "Organização criada com sucesso!",
+      company ? t("organizationUpdated") : t("organizationCreated"),
       {
         autoClose: 2000,
         position: "top-center",
@@ -353,9 +352,7 @@ export default function FormCompanyDialog({
 
   const toastError = () => {
     toast.error(
-      company
-        ? "Erro ao atualizar a organização!"
-        : "Erro ao criar a organização!",
+      company ? t("errorUpdatingOrganization") : t("errorCreatingOrganization"),
       {
         autoClose: 2000,
         position: "top-center",
@@ -384,6 +381,7 @@ export default function FormCompanyDialog({
         if (response.status === 200 || response.status === 201) {
           setIsSubmitting(false);
           toastSuccess();
+
           refetch();
           setIsOpen(false);
           reset();
@@ -416,7 +414,7 @@ export default function FormCompanyDialog({
           >
             <div className="p-6">
               <Dialog.Title className="text-lg font-bold uppercase">
-                {company ? "Editar organização" : "Nova organização"}
+                {company ? t("editOrganization") : t("newOrganization")}
               </Dialog.Title>
             </div>
             <Separator className="w-full" />
@@ -429,7 +427,7 @@ export default function FormCompanyDialog({
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span className="text-red-500">*</span>
-                      Nome da Organização{" "}
+                      {t("organizationName")}
                     </label>
                     <Input id="companyName" {...register("companyName")} />
                     {formErrors.companyName && (
@@ -444,9 +442,8 @@ export default function FormCompanyDialog({
                       htmlFor="createdAt"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      {" "}
                       <span className="text-red-500">*</span>
-                      Data de Criação
+                      {t("creationDate")}
                     </label>
                     <Controller
                       name="createdAt"
@@ -476,7 +473,7 @@ export default function FormCompanyDialog({
                       htmlFor="isPaying"
                       className="text-sm font-medium text-gray-700"
                     >
-                      Pagante
+                      {t("paying")}
                     </label>
                   </div>
                 </div>
@@ -484,7 +481,7 @@ export default function FormCompanyDialog({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Logo
+                      {t("logo")}
                     </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg w-[320px] h-[120px] flex items-center justify-center cursor-pointer relative">
                       <input
@@ -503,7 +500,7 @@ export default function FormCompanyDialog({
                         />
                       ) : (
                         <div className="text-gray-400 text-sm">
-                          Escolher arquivo (max 300 x 200)
+                          {t("chooseFile")}
                         </div>
                       )}
                     </div>
@@ -511,7 +508,7 @@ export default function FormCompanyDialog({
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Logo sidebar
+                      {t("logoSidebar")}
                     </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg w-[60px] h-[60px] flex items-center justify-center cursor-pointer relative">
                       <input
@@ -542,14 +539,14 @@ export default function FormCompanyDialog({
                           variant="destructive"
                           className="relative"
                         >
-                          <AlertTitle>Erro de imagem</AlertTitle>
+                          <AlertTitle>{t("imageError")}</AlertTitle>
                           <AlertDescription>{error.message}</AlertDescription>
                           <button
                             onClick={() => removeError(error)}
                             className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-300 transition-colors duration-200"
                           >
                             <X className="h-4 w-4" />
-                            <span className="sr-only">Fechar</span>
+                            <span className="sr-only">{t("close")}</span>
                           </button>
                         </Alert>
                       ))}
@@ -562,7 +559,7 @@ export default function FormCompanyDialog({
 
               <div className="mt-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-medium">Usuários</h3>
+                  <h3 className="text-lg font-medium">{t("users")}</h3>
                   <Button
                     type="button"
                     onClick={() =>
@@ -577,7 +574,7 @@ export default function FormCompanyDialog({
                     size="sm"
                   >
                     <UserPlus className="w-4 h-4 mr-2" />
-                    Adicionar Usuário
+                    {t("addUser")}
                   </Button>
                 </div>
                 <AnimatePresence>
@@ -596,7 +593,7 @@ export default function FormCompanyDialog({
                             <div className="relative">
                               <User className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                               <Input
-                                placeholder="Nome"
+                                placeholder={t("name")}
                                 {...register(`users.${index}.name` as const)}
                                 className="pl-10 h-12 text-base"
                               />
@@ -611,7 +608,7 @@ export default function FormCompanyDialog({
                             <div className="relative">
                               <Mail className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                               <Input
-                                placeholder="E-mail"
+                                placeholder={t("email")}
                                 {...register(`users.${index}.email` as const)}
                                 className="pl-10 h-12 text-base"
                               />
@@ -626,7 +623,7 @@ export default function FormCompanyDialog({
                             <div className="relative">
                               <Lock className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                               <Input
-                                placeholder="Senha"
+                                placeholder={t("password")}
                                 type={showPassword ? "text" : "password"}
                                 {...register(
                                   `users.${index}.password` as const
@@ -647,8 +644,8 @@ export default function FormCompanyDialog({
                                 )}
                                 <span className="sr-only">
                                   {showPassword
-                                    ? "Hide password"
-                                    : "Show password"}
+                                    ? t("hidePassword")
+                                    : t("showPassword")}
                                 </span>
                               </Button>
                             </div>
@@ -686,8 +683,8 @@ export default function FormCompanyDialog({
                             )}
                             <span>
                               {field.is_blocked
-                                ? "Desbloquear usuário"
-                                : "Bloquear usuário"}
+                                ? t("unblockUser")
+                                : t("blockUser")}
                             </span>
                           </Button>
                         </div>
@@ -703,10 +700,10 @@ export default function FormCompanyDialog({
                   onClick={() => setIsOpen(false)}
                   variant="outline"
                 >
-                  Cancelar
+                  {t("cancel")}
                 </Button>
                 <Button type="submit" disabled={isSubmitting} variant="blue">
-                  {isSubmitting ? "Salvando..." : "Salvar"}
+                  {isSubmitting ? t("saving") : t("save")}
                 </Button>
               </div>
             </form>
@@ -732,7 +729,7 @@ export default function FormCompanyDialog({
               className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg max-w-3xl w-full z-50"
               onInteractOutside={(e) => e.preventDefault()}
             >
-              <h2 className="text-2xl font-bold mb-4">Cortar Imagem</h2>
+              <h2 className="text-2xl font-bold mb-4">{t("cropImage")}</h2>
               <div className="mb-4 relative">
                 <div
                   className="absolute border-2 border-dashed border-red-500 pointer-events-none"
@@ -770,7 +767,7 @@ export default function FormCompanyDialog({
                 </p>
                 <div className="flex justify-end gap-4">
                   <Button onClick={handleCloseCropModal} variant="secondary">
-                    Cancelar
+                    {t("cancel")}
                   </Button>
                   <Button
                     variant="blue"
@@ -780,10 +777,10 @@ export default function FormCompanyDialog({
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Enviando...
+                        {t("sending")}
                       </>
                     ) : (
-                      "Confirmar"
+                      t("confirm")
                     )}
                   </Button>
                 </div>

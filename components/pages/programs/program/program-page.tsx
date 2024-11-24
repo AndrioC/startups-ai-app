@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import Spinner from "@/components/spinner";
 
@@ -11,6 +12,7 @@ import HeaderProgramPage from "./header";
 export default function ProgramPageComponent() {
   const { data: session } = useSession();
   const { token } = useParams();
+  const t = useTranslations("admin.programs.programPage");
 
   const { data, error } = useLoadProgramInfo(
     Number(session?.user?.organization_id),
@@ -25,21 +27,20 @@ export default function ProgramPageComponent() {
     );
   }
 
-  const formatedStartDate = new Date(
-    data?.programInfoByToken.start_date
-  ).toLocaleDateString("pt-BR", {
+  const locale = t("locale");
+  const dateFormat = {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  });
+  } as const;
+
+  const formatedStartDate = new Date(
+    data?.programInfoByToken.start_date
+  ).toLocaleDateString(locale, dateFormat);
 
   const formatedEndDate = new Date(
     data?.programInfoByToken.end_date
-  ).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  ).toLocaleDateString(locale, dateFormat);
 
   return (
     <HeaderProgramPage

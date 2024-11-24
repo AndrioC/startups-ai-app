@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ import {
 
 import { StartupTable } from "../../../../app/api/startup/[organization_id]/load-startups-by-organization-id/route";
 
-import { startupColumns } from "./columns";
+import { StartupColumns } from "./columns";
 
 interface ServerControlledTableProps {
   initialStartupsCount?: number;
@@ -63,6 +64,7 @@ export function StartupTableComponent({
   const pathname = usePathname();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
+  const t = useTranslations("admin.startups.startupTable");
 
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
@@ -98,6 +100,8 @@ export function StartupTableComponent({
     [searchParams]
   );
 
+  const startupColumns = StartupColumns();
+
   return (
     <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
       <ShadcnTable
@@ -113,7 +117,7 @@ export function StartupTableComponent({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="ml-auto">
-                        Colunas <ChevronDown className="ml-2 h-4 w-4" />
+                        {t("columns")} <ChevronDown className="ml-2 h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -188,7 +192,7 @@ export function StartupTableComponent({
                     colSpan={startupColumns.length}
                     className="h-24 text-center text-gray-500"
                   >
-                    Nenhum resultado encontrado.
+                    {t("noResults")}
                   </TableCell>
                 </TableRow>
               )}
@@ -219,13 +223,16 @@ export function StartupTableComponent({
             return (
               <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row bg-gray-50 px-4 border-t border-gray-200">
                 <div className="flex-1 text-sm font-medium text-gray-700">
-                  {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                  {data?.totalCount ?? 0} linha(s) selecionada(s).
+                  {t("rowsSelected", {
+                    count:
+                      tableInstance.getFilteredSelectedRowModel().rows.length,
+                    total: data?.totalCount ?? 0,
+                  })}
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
                     <span className="text-sm font-medium text-gray-700">
-                      Linhas por página
+                      {t("rowsPerPage")}
                     </span>
                     <Select
                       value={pageSize}
@@ -254,7 +261,10 @@ export function StartupTableComponent({
                     </Select>
                   </div>
                   <div className="text-sm font-medium text-gray-700">
-                    {`Página ${data?.page ?? 1} de ${data?.totalPages ?? 1}`}
+                    {t("pageInfo", {
+                      current: data?.page ?? 1,
+                      total: data?.totalPages ?? 1,
+                    })}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -274,7 +284,7 @@ export function StartupTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Primeira página</span>
+                      <span className="sr-only">{t("firstPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -293,7 +303,7 @@ export function StartupTableComponent({
                       disabled={Number(page) === 1 || isPending || isLoading}
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Página anterior</span>
+                      <span className="sr-only">{t("previousPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -316,7 +326,7 @@ export function StartupTableComponent({
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Próxima página</span>
+                      <span className="sr-only">{t("nextPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -337,7 +347,7 @@ export function StartupTableComponent({
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Última página</span>
+                      <span className="sr-only">{t("lastPage")}</span>
                     </Button>
                   </div>
                 </div>

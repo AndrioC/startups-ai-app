@@ -6,21 +6,18 @@ import {
   useForm,
   UseFormRegister,
 } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 import { DatePicker } from "@/components/ui/date-picker";
 import { useFormStartupTabDataState } from "@/contexts/FormStartupTabContext";
-import { FinanceAndMarketDataSchema } from "@/lib/schemas/schema-startup";
 
 import InvestmentsContainer from "./investments-container";
+
 export default function MarketFinanceDataTab() {
   const { initialData } = useFormStartupTabDataState();
+  const t = useTranslations("admin.startups.marketFinanceDataTab");
 
-  const schemateste = FinanceAndMarketDataSchema();
-
-  const { register, control, watch } = useForm<z.infer<typeof schemateste>>({
-    resolver: zodResolver(schemateste),
+  const { register, control, watch } = useForm({
     defaultValues: initialData,
   });
 
@@ -36,7 +33,9 @@ export default function MarketFinanceDataTab() {
     <form className="space-y-6">
       <div className="flex flex-col">
         <div className="flex flex-col text-xs lg:text-base w-full mt-5">
-          <span className="text-gray-500 font-bold text-xl mb-5">MERCADO</span>
+          <span className="text-gray-500 font-bold text-xl mb-5">
+            {t("market")}
+          </span>
           <div className="flex items-center gap-5">
             <div className="flex flex-col">
               <label
@@ -44,9 +43,7 @@ export default function MarketFinanceDataTab() {
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Quantos clientes pagantes possui?
-                </span>
+                <span className="text-gray-500">{t("payingCustomers")}</span>
               </label>
               <input
                 id="payingCustomersQuantity"
@@ -62,7 +59,7 @@ export default function MarketFinanceDataTab() {
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Total de clientes ativos</span>
+                <span className="text-gray-500">{t("activeCustomers")}</span>
               </label>
               <input
                 id="activeCustomersQuantity"
@@ -76,7 +73,7 @@ export default function MarketFinanceDataTab() {
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
           <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            FATURAMENTO
+            {t("revenue")}
           </span>
           <div className="flex flex-col gap-5">
             <div className="mb-3 flex items-center">
@@ -90,7 +87,7 @@ export default function MarketFinanceDataTab() {
                 {...register("alreadyEarning")}
               />
               <label className="text-sm text-gray-500">
-                Já estou faturando
+                {t("alreadyEarning")}
               </label>
             </div>
             {alreadyEarning && (
@@ -100,7 +97,7 @@ export default function MarketFinanceDataTab() {
                     <label htmlFor="lastRevenue" className="flex items-center">
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual foi o faturamento do último mês?
+                        {t("lastMonthRevenue")}
                       </span>
                     </label>
                     <input
@@ -118,7 +115,7 @@ export default function MarketFinanceDataTab() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual foi o faturamento dos últimos 6 meses?
+                        {t("lastSixMonthsRevenue")}
                       </span>
                     </label>
                     <input
@@ -136,7 +133,7 @@ export default function MarketFinanceDataTab() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual foi o faturamento dos últimos 12 meses?
+                        {t("lastTwelveMonthsRevenue")}
                       </span>
                     </label>
                     <input
@@ -151,9 +148,7 @@ export default function MarketFinanceDataTab() {
                 <div className="flex flex-col">
                   <label htmlFor="saasCurrentRRM" className="flex items-center">
                     <span className="text-red-500">*</span>
-                    <span className="text-gray-500">
-                      Em caso de SaaS, informe o RRM atual
-                    </span>
+                    <span className="text-gray-500">{t("saasCurrentRRM")}</span>
                   </label>
                   <input
                     id="saasCurrentRRM"
@@ -169,7 +164,7 @@ export default function MarketFinanceDataTab() {
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
           <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            INVESTIMENTOS
+            {t("investments")}
           </span>
           <div className="flex flex-col gap-5">
             <div className="mb-3 flex items-center">
@@ -183,7 +178,7 @@ export default function MarketFinanceDataTab() {
                 {...register("isThereOpenInvestmentRound")}
               />
               <label className="text-sm text-gray-500">
-                Existe uma rodada de investimento em aberto
+                {t("openInvestmentRound")}
               </label>
             </div>
             {isThereOpenInvestmentRound && (
@@ -196,7 +191,7 @@ export default function MarketFinanceDataTab() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual o valor a ser captado?
+                        {t("valueToBeRaised")}
                       </span>
                     </label>
                     <input
@@ -214,7 +209,7 @@ export default function MarketFinanceDataTab() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual percentual de equity a ser distribuído?
+                        {t("equityPercentage")}
                       </span>
                     </label>
                     <input
@@ -234,7 +229,7 @@ export default function MarketFinanceDataTab() {
                     >
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Qual o valuation atual da Startup?
+                        {t("currentValuation")}
                       </span>
                     </label>
                     <input
@@ -253,22 +248,24 @@ export default function MarketFinanceDataTab() {
                       className="flex items-center"
                     >
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Início da rodada</span>
+                      <span className="text-gray-500">{t("roundStart")}</span>
                     </label>
                     <Controller
                       control={control}
                       name="roundStartDate"
                       render={({ field }) => {
-                        if (field.value && typeof field.value === "string") {
-                          field.value = new Date(field.value);
-                        } else if (field.value === undefined) {
-                          field.value = undefined;
+                        let dateValue: Date | undefined;
+                        if (field.value) {
+                          dateValue =
+                            typeof field.value === "string"
+                              ? new Date(field.value)
+                              : field.value;
                         }
 
                         return (
                           <DatePicker
                             onChange={(newValue) => field.onChange(newValue)}
-                            value={field.value || undefined}
+                            value={dateValue}
                             disabled
                           />
                         );
@@ -278,7 +275,7 @@ export default function MarketFinanceDataTab() {
                   <div className="flex flex-col">
                     <label htmlFor="roundEndDate" className="flex items-center">
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Fim da rodada</span>
+                      <span className="text-gray-500">{t("roundEnd")}</span>
                     </label>
                     <Controller
                       control={control}
@@ -301,7 +298,7 @@ export default function MarketFinanceDataTab() {
         </div>
         <div className="flex flex-col gap-1 text-xs lg:text-base w-full">
           <span className="text-gray-500 font-bold text-xl mb-5 mt-5">
-            INVESTIMENTOS RECEBIDOS
+            {t("receivedInvestments")}
           </span>
           {fields.map((investment, index) => (
             <InvestmentsContainer

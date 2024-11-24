@@ -1,6 +1,7 @@
 "use client";
 
 import { Controller, FieldValues, UseFormRegister } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import { DatePicker } from "@/components/ui/date-picker";
 
@@ -15,11 +16,15 @@ export default function InvestmentsContainer({
   register,
   index,
 }: Props) {
+  const t = useTranslations(
+    "admin.startups.marketFinanceDataTab.investmentsContainer"
+  );
+
   return (
     <div className="mb-4 border p-4 rounded-lg">
       <div className="flex flex-col w-full gap-2">
         <div className="mb-2 font-semibold text-gray-400">
-          {index + 1}ª Rodada.
+          {index + 1}ª {t("round")}.
         </div>
         <div className="flex flex-col gap-5">
           <div className="flex gap-5">
@@ -29,7 +34,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Início da rodada</span>
+                <span className="text-gray-500">{t("roundStart")}</span>
               </label>
               <Controller
                 control={control}
@@ -51,7 +56,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Fim da rodada</span>
+                <span className="text-gray-500">{t("roundEnd")}</span>
               </label>
               <Controller
                 control={control}
@@ -73,9 +78,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Total dos investimentos captados
-                </span>
+                <span className="text-gray-500">{t("totalInvestments")}</span>
               </label>
               <input
                 id={`collectedTotal[${index}]`}
@@ -93,9 +96,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Percentual de equities distribuídos
-                </span>
+                <span className="text-gray-500">{t("equityPercentage")}</span>
               </label>
               <input
                 id={`equityDistributedPercent[${index}]`}
@@ -111,9 +112,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Quantos investidores possuem?
-                </span>
+                <span className="text-gray-500">{t("investorsCount")}</span>
               </label>
               <input
                 id={`investorsQuantity[${index}]`}
@@ -131,9 +130,7 @@ export default function InvestmentsContainer({
                 className="flex items-center"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Ventures e/ou investidores da rodada
-                </span>
+                <span className="text-gray-500">{t("investorsList")}</span>
               </label>
               <input
                 id={`investors[${index}]`}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,9 +16,22 @@ import ProfileDataTab from "./tabs/profile-data-tab/profile-data-tab";
 import TeamDataTab from "./tabs/team-data-tab/team-data-tab";
 
 export default function StartupTab() {
+  const t = useTranslations("admin.startups.startupTab");
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabQuery = searchParams.get("startup-tab");
+
+  const tabs = [
+    { id: "general-data-tab", title: t("tabs.generalData") },
+    { id: "team-tab", title: t("tabs.team") },
+    { id: "product-service-tab", title: t("tabs.productService") },
+    { id: "deeptech-tab", title: t("tabs.deepTech") },
+    { id: "governance-tab", title: t("tabs.governance") },
+    { id: "market-finance-tab", title: t("tabs.marketFinance") },
+    { id: "matches-tab", title: t("tabs.matches"), disabled: true },
+    { id: "historical-tab", title: t("tabs.historical"), disabled: true },
+    { id: "profile-tab", title: t("tabs.profile"), icon: Sparkles },
+  ];
 
   const defaultTab = "general-data-tab";
   const isValidTab = tabs.some((tab) => tab.id === tabQuery);
@@ -59,7 +73,7 @@ export default function StartupTab() {
         <Button
           onClick={handleBack}
           className="p-2 text-gray-500 bg-transparent rounded-full hover:bg-gray-200 transition-colors"
-          aria-label="Voltar"
+          aria-label={t("back")}
         >
           <ArrowLeft className="mr-2" size={20} />
         </Button>
@@ -108,15 +122,3 @@ export default function StartupTab() {
     </div>
   );
 }
-
-const tabs = [
-  { id: "general-data-tab", title: "Dados gerais" },
-  { id: "team-tab", title: "Equipe" },
-  { id: "product-service-tab", title: "Produto e serviço" },
-  { id: "deeptech-tab", title: "DeepTech" },
-  { id: "governance-tab", title: "Governança" },
-  { id: "market-finance-tab", title: "Mercado e Finança" },
-  { id: "matches-tab", title: "Matches", disabled: true },
-  { id: "historical-tab", title: "Histórico", disabled: true },
-  { id: "profile-tab", title: "Perfil", icon: Sparkles },
-];

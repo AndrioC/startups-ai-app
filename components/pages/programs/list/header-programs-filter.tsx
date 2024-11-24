@@ -1,11 +1,13 @@
+"use client";
+
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp, FaSearch, FaTimes } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
+import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-
-import { useFormProgramData } from "../../../../contexts/FormProgramContext";
-import { Button } from "../../../ui/button";
+import { useFormProgramData } from "@/contexts/FormProgramContext";
 
 interface Props {
   setProgramName: React.Dispatch<React.SetStateAction<string>>;
@@ -24,17 +26,37 @@ export default function HeaderProgramsFilter({
   programStartDate,
   programEndDate,
 }: Props) {
+  const t = useTranslations("admin.programs.headerProgramsFilter");
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { refetch, isRefetching } = useFormProgramData();
 
-  const clearAllFields = async () => {
-    await Promise.all([
-      setProgramName(""),
-      setProgramStartDate(undefined),
-      setProgramEndDate(undefined),
-    ]);
+  const [localProgramName, setLocalProgramName] = useState(programName);
+  const [localProgramStartDate, setLocalProgramStartDate] = useState<
+    Date | undefined
+  >(programStartDate);
+  const [localProgramEndDate, setLocalProgramEndDate] = useState<
+    Date | undefined
+  >(programEndDate);
+
+  const handleSearch = () => {
+    setProgramName(localProgramName);
+    setProgramStartDate(localProgramStartDate);
+    setProgramEndDate(localProgramEndDate);
     refetch();
   };
+
+  const clearAllFields = () => {
+    setLocalProgramName("");
+    setLocalProgramStartDate(undefined);
+    setLocalProgramEndDate(undefined);
+    setProgramName("");
+    setProgramStartDate(undefined);
+    setProgramEndDate(undefined);
+    refetch();
+  };
+
+  const isSearchDisabled =
+    !localProgramName && !localProgramStartDate && !localProgramEndDate;
 
   return (
     <div className="w-full">
@@ -42,7 +64,9 @@ export default function HeaderProgramsFilter({
         className="bg-[#E5E7E7] h-[54px] cursor-pointer flex items-center justify-between px-4"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
-        <span className="text-[#747D8C] text-[16px] font-bold">Filtro</span>
+        <span className="text-[#747D8C] text-[16px] font-bold">
+          {t("filter")}
+        </span>
         <motion.div
           initial={{ rotate: isCollapsed ? 0 : 180 }}
           animate={{ rotate: isCollapsed ? 0 : 180 }}
@@ -68,62 +92,46 @@ export default function HeaderProgramsFilter({
               <div className="flex gap-4">
                 <input
                   type="text"
-                  value={programName}
-                  onChange={(e) => setProgramName(e.target.value)}
-                  placeholder="Nome do programa"
+                  value={localProgramName}
+                  onChange={(e) => setLocalProgramName(e.target.value)}
+                  placeholder={t("programNamePlaceholder")}
                   className="w-[320px] h-[40px] text-[#A7B6CD] text-[16px] border border-[#A7B6CD] rounded-[6px] placeholder-[#A7B6CD] bg-transparent px-2"
                 />
                 <div className="relative">
                   <DatePicker
                     onChange={(newValue: Date | undefined) => {
-                      setProgramStartDate(newValue);
+                      setLocalProgramStartDate(newValue);
                     }}
-                    value={programStartDate}
-                    title="Início do programa"
+                    value={localProgramStartDate}
+                    title={t("programStartDate")}
                     className="bg-transparent border border-[#A7B6CD] rounded-[6px]"
                   />
-                  {programStartDate && (
-                    <FaTimes
-                      className="absolute top-3 right-2 cursor-pointer text-gray-500"
-                      onClick={() => setProgramStartDate(undefined)}
-                    />
-                  )}
                 </div>
                 <div className="relative">
                   <DatePicker
                     onChange={(newValue: Date | undefined) => {
-                      setProgramEndDate(newValue);
+                      setLocalProgramEndDate(newValue);
                     }}
-                    value={programEndDate || undefined}
-                    title="Fim do programa"
+                    value={localProgramEndDate}
+                    title={t("programEndDate")}
                     className="bg-transparent border border-[#A7B6CD] rounded-[6px]"
                   />
-                  {programEndDate && (
-                    <FaTimes
-                      className="absolute top-3 right-2 cursor-pointer text-gray-500"
-                      onClick={() => setProgramEndDate(undefined)}
-                    />
-                  )}
                 </div>
               </div>
               <div className="flex gap-4">
                 <Button
-                  onClick={() => refetch()}
-                  disabled={
-                    (!programName && !programStartDate && !programEndDate) ||
-                    isRefetching
-                  }
+                  onClick={handleSearch}
+                  disabled={isSearchDisabled || isRefetching}
                   className="w-[40px] h-[40px] bg-[#747D8C] rounded-[6px] flex items-center justify-center"
+                  aria-label={t("search")}
                 >
                   <FaSearch className="text-white" />
                 </Button>
                 <Button
                   onClick={clearAllFields}
-                  disabled={
-                    (!programName && !programStartDate && !programEndDate) ||
-                    isRefetching
-                  }
+                  disabled={isSearchDisabled || isRefetching}
                   className="w-[40px] h-[40px] bg-[#747D8C] rounded-[6px] flex items-center justify-center"
+                  aria-label={t("clearAll")}
                 >
                   <FaTimes className="text-white" />
                 </Button>

@@ -28,11 +28,22 @@ interface Investment {
 export interface FormStartupData {
   startupId: number;
   startupName: string;
-  country: string;
-  vertical: string;
-  verticalText: string;
+  country: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
+  vertical: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
   stateAndCity: string;
-  operationalStage: string;
+  operationalStage: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
   businessModel: string;
   businessModelText: string;
   subscriptionNumber: string;
@@ -61,7 +72,11 @@ export interface FormStartupData {
   competitors: string;
   competitiveDifferentiator: string;
 
-  maturityLevel?: string;
+  maturityLevel?: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
   hasPatent?: string;
   patentAndCode?: string;
 
@@ -97,11 +112,22 @@ interface FormStartupTabContext {
 const initialFormStartupData: FormStartupData = {
   startupId: 0,
   startupName: "",
-  country: "",
-  vertical: "",
-  verticalText: "",
+  country: {
+    code: "",
+    name_en: "",
+    name_pt: "",
+  },
+  vertical: {
+    code: "",
+    name_en: "",
+    name_pt: "",
+  },
   stateAndCity: "",
-  operationalStage: "",
+  operationalStage: {
+    code: "",
+    name_en: "",
+    name_pt: "",
+  },
   businessModel: "",
   businessModelText: "",
   subscriptionNumber: "",
@@ -144,7 +170,11 @@ const initialFormStartupData: FormStartupData = {
   competitors: "",
   competitiveDifferentiator: "",
 
-  maturityLevel: "",
+  maturityLevel: {
+    code: "",
+    name_en: "",
+    name_pt: "",
+  },
   hasPatent: "",
   patentAndCode: "",
 

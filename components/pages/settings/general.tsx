@@ -7,6 +7,7 @@ import axios from "axios";
 import { Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ interface ImageError {
 }
 
 export default function GeneralTab() {
+  const t = useTranslations("admin.settings.general");
   const { data: session } = useSession();
   const organizationId = session?.user?.organization_id;
   const { refreshAuthData } = useRefreshAuth();
@@ -69,7 +71,7 @@ export default function GeneralTab() {
             ...prev,
             {
               file,
-              message: "O tamanho do arquivo excede o limite de 2MB.",
+              message: t("errors.fileSizeExceeded"),
             },
           ]);
         } else if (width < minWidth || height < minHeight) {
@@ -77,7 +79,12 @@ export default function GeneralTab() {
             ...prev,
             {
               file,
-              message: `A imagem é muito pequena. Tamanho mínimo requerido: ${minWidth}x${minHeight} pixels. Tamanho atual: ${width}x${height} pixels.`,
+              message: t("errors.imageTooSmall", {
+                minWidth,
+                minHeight,
+                width,
+                height,
+              }),
             },
           ]);
         } else if (width > maxWidth || height > maxHeight) {
@@ -85,7 +92,12 @@ export default function GeneralTab() {
             ...prev,
             {
               file,
-              message: `A imagem é muito grande. Tamanho máximo permitido: ${maxWidth}x${maxHeight} pixels. Tamanho atual: ${width}x${height} pixels.`,
+              message: t("errors.imageTooLarge", {
+                maxWidth,
+                maxHeight,
+                width,
+                height,
+              }),
             },
           ]);
         } else {
@@ -111,8 +123,7 @@ export default function GeneralTab() {
           ...prev,
           {
             file,
-            message:
-              "Erro ao verificar o tamanho da imagem. Por favor, tente novamente.",
+            message: t("errors.verificationError"),
           },
         ]);
       }
@@ -147,7 +158,9 @@ export default function GeneralTab() {
       });
 
       toast.success(
-        `${type === "logo" ? "Logo" : "Logo da sidebar"} atualizado com sucesso!`,
+        type === "logo"
+          ? t("success.logoUpdated")
+          : t("success.sidebarLogoUpdated"),
         {
           autoClose: 3000,
           position: "top-center",
@@ -160,7 +173,7 @@ export default function GeneralTab() {
     } catch (error) {
       console.error(`${type} upload failed:`, error);
       toast.error(
-        `Erro ao enviar ${type === "logo" ? "o logo" : "o logo da sidebar"}. Por favor, tente novamente.`,
+        type === "logo" ? t("error.logoUpload") : t("error.sidebarLogoUpload"),
         {
           autoClose: 3000,
           position: "top-center",
@@ -253,7 +266,7 @@ export default function GeneralTab() {
     <div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Logo
+          {t("logo")}
         </label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg w-[320px] h-[120px] flex items-center justify-center cursor-pointer">
           <div className="relative w-[300px] h-[100px]">
@@ -274,7 +287,7 @@ export default function GeneralTab() {
               />
             ) : (
               <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400">
-                Escolher arquivo (300 x 100)
+                {t("chooseFile")}
               </div>
             )}
           </div>
@@ -283,7 +296,7 @@ export default function GeneralTab() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Logo sidebar
+          {t("logoSidebar")}
         </label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg w-[60px] h-[60px] flex items-center justify-center cursor-pointer">
           <div className="relative w-[50px] h-[50px]">
@@ -305,7 +318,7 @@ export default function GeneralTab() {
               />
             ) : (
               <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400 text-xs cursor-pointer">
-                50 x 50
+                {t("logoSidebarSize")}
               </div>
             )}
           </div>
@@ -316,14 +329,15 @@ export default function GeneralTab() {
         <div className="space-y-2">
           {errors.map((error, index) => (
             <Alert key={index} variant="destructive" className="relative">
-              <AlertTitle>Erro de imagem</AlertTitle>
+              <AlertTitle>{t("imageError")}</AlertTitle>
               <AlertDescription>{error.message}</AlertDescription>
               <button
                 onClick={() => removeError(error)}
-                className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-300 transition-colors duration-200"
+                className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-300 transition
+-colors duration-200"
               >
                 <X className="h-4 w-4" />
-                <span className="sr-only">Fechar</span>
+                <span className="sr-only">{t("close")}</span>
               </button>
             </Alert>
           ))}
@@ -333,7 +347,7 @@ export default function GeneralTab() {
       {showCrop && cropImage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-3xl w-full">
-            <h2 className="text-2xl font-bold mb-4">Cortar Imagem</h2>
+            <h2 className="text-2xl font-bold mb-4">{t("cropImage")}</h2>
             <div className="mb-4 relative">
               <div
                 className="absolute border-2 border-dashed border-red-500 pointer-events-none"
@@ -365,13 +379,13 @@ export default function GeneralTab() {
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-600">
-                {cropType === "logo"
-                  ? "Tamanho exato: 300x100"
-                  : "Tamanho exato: 50x50"}
+                {t("exactSize", {
+                  size: cropType === "logo" ? "300x100" : "50x50",
+                })}
               </p>
               <div className="flex justify-end gap-4">
                 <Button onClick={handleCloseCropModal} variant="secondary">
-                  Cancelar
+                  {t("cancel")}
                 </Button>
                 <Button
                   variant="blue"
@@ -381,10 +395,10 @@ export default function GeneralTab() {
                   {isUploading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Enviando...
+                      {t("sending")}
                     </>
                   ) : (
-                    "Confirmar"
+                    t("confirm")
                   )}
                 </Button>
               </div>

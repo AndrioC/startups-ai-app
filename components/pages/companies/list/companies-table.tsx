@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { CompanyTable } from "@/app/api/companies/[organization_id]/list/route";
@@ -46,7 +47,7 @@ import { FormCompanyProvider } from "@/contexts/FormCompanyContext";
 
 import FormCompanyDialog from "../form-company-dialog";
 
-import { companyColumns } from "./columns";
+import { useCompanyColumns } from "./columns";
 import HeaderCompaniesFilter from "./header-companies-filter";
 
 export interface CompanyQuery {
@@ -56,6 +57,7 @@ export interface CompanyQuery {
 }
 
 export function CompaniesTableComponent() {
+  const t = useTranslations("admin.companies.companiesTable");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -100,6 +102,7 @@ export function CompaniesTableComponent() {
     [searchParams]
   );
 
+  const companyColumns = useCompanyColumns();
   return (
     <FormCompanyProvider
       initialData={data?.companyTable!}
@@ -109,7 +112,7 @@ export function CompaniesTableComponent() {
       <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-10">
           <h1 className="text-center text-black font-semibold text-xl sm:text-2xl mb-4 sm:mb-0">
-            ORGANIZAÇÕES
+            {t("title")}
           </h1>
           <Button
             onClick={() => {
@@ -118,7 +121,7 @@ export function CompaniesTableComponent() {
             variant="blue"
             className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
           >
-            + Novo
+            + {t("newButton")}
           </Button>
         </div>
         <HeaderCompaniesFilter
@@ -141,7 +144,8 @@ export function CompaniesTableComponent() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" className="ml-auto">
-                            Colunas <ChevronDown className="ml-2 h-4 w-4" />
+                            {t("columns")}{" "}
+                            <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">
@@ -213,7 +217,7 @@ export function CompaniesTableComponent() {
                       colSpan={companyColumns.length}
                       className="h-24 text-center"
                     >
-                      Nenhum dado encontrado
+                      {t("noData")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -256,13 +260,16 @@ export function CompaniesTableComponent() {
               return (
                 <div className="flex flex-col items-center gap-4 py-4 sm:flex-row">
                   <div className="flex-1 text-sm font-medium text-center sm:text-left">
-                    {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                    {pageSize} resultado(s) selecionado(s).
+                    {t("resultsSelected", {
+                      selected:
+                        tableInstance.getFilteredSelectedRowModel().rows.length,
+                      total: pageSize,
+                    })}
                   </div>
                   <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                     <div className="flex flex-wrap items-center space-x-2">
                       <span className="text-sm font-medium">
-                        Resultados por página
+                        {t("resultsPerPage")}
                       </span>
                       <Select
                         value={pageSize}
@@ -291,7 +298,7 @@ export function CompaniesTableComponent() {
                       </Select>
                     </div>
                     <div className="text-sm font-medium">
-                      {`Página ${page} de ${pageCount ?? 10}`}
+                      {t("pageInfo", { current: page, total: pageCount ?? 10 })}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button
@@ -316,7 +323,7 @@ export function CompaniesTableComponent() {
                         }
                       >
                         <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Primeira página</span>
+                        <span className="sr-only">{t("firstPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -340,7 +347,7 @@ export function CompaniesTableComponent() {
                         }
                       >
                         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Página anterior</span>
+                        <span className="sr-only">{t("previousPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -364,7 +371,7 @@ export function CompaniesTableComponent() {
                         }
                       >
                         <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Próxima página</span>
+                        <span className="sr-only">{t("nextPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -386,7 +393,7 @@ export function CompaniesTableComponent() {
                         }
                       >
                         <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Última página</span>
+                        <span className="sr-only">{t("lastPage")}</span>
                       </Button>
                     </div>
                   </div>

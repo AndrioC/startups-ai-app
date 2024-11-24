@@ -9,6 +9,7 @@ import Select, {
 } from "react-select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import { useLocale, useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
@@ -119,6 +120,7 @@ export default function AddRulesComponent({
   selectedKanban,
   refetch,
 }: Props) {
+  const t = useTranslations("admin.programs.programStartupTab.rulesComponent");
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,7 +128,9 @@ export default function AddRulesComponent({
     selectedKanban?.rules.length > 0 ? selectedKanban.kanban_id : ""
   );
 
-  const formSchema = KanbanProgramRulesSchema();
+  const locale = useLocale();
+
+  const formSchema = KanbanProgramRulesSchema(t);
 
   type FormValues = z.infer<ReturnType<typeof KanbanProgramRulesSchema>>;
 
@@ -134,7 +138,10 @@ export default function AddRulesComponent({
     if (selectedKanban && selectedKanban.rules.length > 0) {
       const existingRules = selectedKanban.rules.map((q) => ({
         key: q.key,
-        rule: rules.find((ques) => ques.key === q.key)?.rule_pt || "",
+        rule:
+          rules.find((ques) => ques.key === q.key)?.[
+            locale === "en" ? "rule_en" : "rule_pt"
+          ] || "",
         comparationType:
           q.comparation_type.length > 0 ? q.comparation_type[0].key : "",
         value: q.options ? q.options.map((opt) => opt.value) : "",
@@ -265,7 +272,11 @@ export default function AddRulesComponent({
   };
 
   const renderFieldInput = (index: number) => {
-    const rule = rules.find((q) => q.rule_pt === watch(`rules.${index}.rule`));
+    const rule = rules.find(
+      (q) =>
+        q[locale === "en" ? "rule_en" : "rule_pt"] ===
+        watch(`rules.${index}.rule`)
+    );
 
     if (!rule) return null;
 
@@ -282,12 +293,12 @@ export default function AddRulesComponent({
                   isMulti
                   options={rule.options?.map((option) => ({
                     value: option.value,
-                    label: option.label_pt,
+                    label: locale === "en" ? option.label_en : option.label_pt,
                   }))}
                   menuPortalTarget={document.body}
                   menuPosition="fixed"
                   components={{ DropdownIndicator, MultiValue }}
-                  placeholder="Selecione uma opção"
+                  placeholder={t("selectOption")}
                   onChange={(selectedOptions) => {
                     const values = Array.isArray(selectedOptions)
                       ? selectedOptions.map((opt) => opt.value)
@@ -299,8 +310,9 @@ export default function AddRulesComponent({
                       ? field.value.map((value) => ({
                           value,
                           label:
-                            rule.options?.find((opt) => opt.value === value)
-                              ?.label_pt || value,
+                            rule.options?.find((opt) => opt.value === value)?.[
+                              locale === "en" ? "label_en" : "label_pt"
+                            ] || value,
                         }))
                       : field.value
                         ? [
@@ -309,7 +321,9 @@ export default function AddRulesComponent({
                               label:
                                 rule.options?.find(
                                   (opt) => opt.value === field.value
-                                )?.label_pt || field.value,
+                                )?.[
+                                  locale === "en" ? "label_en" : "label_pt"
+                                ] || field.value,
                             },
                           ]
                         : []
@@ -372,6 +386,7 @@ export default function AddRulesComponent({
                     }),
                   }}
                 />
+
                 <p
                   className="text-xs mt-2"
                   style={{
@@ -402,7 +417,7 @@ export default function AddRulesComponent({
                     value={typeof field.value === "string" ? field.value : ""}
                     className="w-full py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none"
                   >
-                    <option value="">Selecione uma opção</option>
+                    <option value="">{t("selectOption")}</option>
                     {rule.options?.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label_pt}
@@ -513,7 +528,9 @@ export default function AddRulesComponent({
       .map((rule, index) => (index !== currentIndex ? rule.rule : null))
       .filter((rule): rule is string => rule !== null);
 
-    return rules.filter((q) => !selectedRules.includes(q.rule_pt));
+    return rules.filter(
+      (q) => !selectedRules.includes(q[locale === "en" ? "rule_en" : "rule_pt"])
+    );
   };
 
   const listHasRules = (kanbanId: number) => {
@@ -557,14 +574,14 @@ export default function AddRulesComponent({
         <Spinner isLoading={isLoading}>
           <div className="h-full">
             <DialogTitle className="text-2xl font-bold uppercase mb-4">
-              Adicionar Regras
+              {t("title")}
             </DialogTitle>
             <Separator className="w-[calc(100%+48px)] -mx-6" />
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-2 space-y-4">
                 <div>
                   <label className="block text-base font-medium text-[#747D8C] mb-1">
-                    Mover cards para a lista:
+                    {t("firstInput")}
                   </label>
                   <div className="relative inline-block">
                     <select
@@ -578,7 +595,7 @@ export default function AddRulesComponent({
                       }}
                       className="w-[400px] block py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none pr-10"
                     >
-                      <option value="">Selecione uma lista</option>
+                      <option value="">{t("firstInputSelect")}</option>
                       {kanbanData.map((kanban) => {
                         const hasRules = listHasRules(kanban.kanban_id);
                         const isDisabled = isKanbanDisabled(
@@ -617,7 +634,7 @@ export default function AddRulesComponent({
 
                 <div>
                   <label className="block text-base font-medium text-[#747D8C] mb-1">
-                    Quando:
+                    {t("secondInput")}
                   </label>
                   {watchedRules.map((_rule, index) => (
                     <div key={index} className="flex items-center space-x-4">
@@ -636,7 +653,10 @@ export default function AddRulesComponent({
                                 className="w-full py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none"
                                 onChange={(e) => {
                                   const selectedQuestion = rules.find(
-                                    (q) => q.rule_pt === e.target.value
+                                    (q) =>
+                                      q[
+                                        locale === "en" ? "rule_en" : "rule_pt"
+                                      ] === e.target.value
                                   );
                                   field.onChange(e.target.value);
                                   if (selectedQuestion) {
@@ -652,10 +672,17 @@ export default function AddRulesComponent({
                                   }
                                 }}
                               >
-                                <option value="">Selecione uma pergunta</option>
+                                <option value="">
+                                  {t("secondInputSelect")}
+                                </option>
                                 {getAvailableRules(index).map((q) => (
-                                  <option key={q.key} value={q.rule_pt}>
-                                    {q.rule_pt}
+                                  <option
+                                    key={q.key}
+                                    value={
+                                      q[locale === "en" ? "rule_en" : "rule_pt"]
+                                    }
+                                  >
+                                    {q[locale === "en" ? "rule_en" : "rule_pt"]}
                                   </option>
                                 ))}
                               </select>
@@ -698,15 +725,19 @@ export default function AddRulesComponent({
                                 {...field}
                                 className="w-full py-2 px-3 border border-[#A5B5C1] text-[#747D8C] bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm appearance-none"
                               >
-                                <option value="">Tipo de comparação</option>
+                                <option value="">{t("comparationType")}</option>
                                 {rules
                                   .find(
                                     (q) =>
-                                      q.rule_pt === watch(`rules.${index}.rule`)
+                                      q[
+                                        locale === "en" ? "rule_en" : "rule_pt"
+                                      ] === watch(`rules.${index}.rule`)
                                   )
                                   ?.comparation_type.map((type) => (
                                     <option key={type.key} value={type.key}>
-                                      {type.label_pt}
+                                      {locale === "en"
+                                        ? type.label_en
+                                        : type.label_pt}
                                     </option>
                                   ))}
                               </select>
@@ -764,7 +795,7 @@ export default function AddRulesComponent({
                         getAvailableRules(-1).length === 0))
                   }
                 >
-                  + Adicionar outra regra
+                  {t("addAnotherRule")}
                 </Button>
               </div>
               <div className="flex justify-end space-x-4">
@@ -774,7 +805,7 @@ export default function AddRulesComponent({
                   disabled={isLoading || isFormDisabled}
                   className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
                 >
-                  Salvar
+                  {t("save")}
                 </Button>
               </div>
             </form>

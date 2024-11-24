@@ -1,8 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useState } from "react";
-import { programs } from "@prisma/client";
+import React, { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import sha1 from "crypto-js/sha1";
@@ -16,6 +14,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { ProgramTable } from "@/app/api/programs/[organization_id]/list/route";
@@ -44,29 +43,22 @@ import {
 } from "@/components/ui/table";
 import { FormProgramProvider } from "@/contexts/FormProgramContext";
 
-import FormProgramDialog from "../form-program-dialog";
-
-import { programColumns } from "./columns";
+import { useProgramColumns } from "./columns";
 import HeaderProgramsFilter from "./header-programs-filter";
 
-export interface ProgramQuery {
-  orderBy: keyof programs;
-  page: string;
-  pageSize: string;
-}
-
 export function ProgramsTableComponent() {
+  const t = useTranslations("admin.programs");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const { data: session } = useSession();
 
-  const [programName, setProgramName] = useState<string>("");
-  const [programStartDate, setProgramStartDate] = useState<Date | undefined>(
-    undefined
-  );
-  const [programEndDate, setProgramEndDate] = useState<Date | undefined>(
+  const [programName, setProgramName] = React.useState<string>("");
+  const [programStartDate, setProgramStartDate] = React.useState<
+    Date | undefined
+  >(undefined);
+  const [programEndDate, setProgramEndDate] = React.useState<Date | undefined>(
     undefined
   );
 
@@ -85,9 +77,15 @@ export function ProgramsTableComponent() {
   const pageCount = Math.ceil(data?.programsCount! / Number(pageSize));
 
   const [isPending, startTransition] = React.useTransition();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const {
+    columns,
+    isDialogOpen,
+    setIsDialogOpen,
+    selectedProgram,
+    FormProgramDialog,
+  } = useProgramColumns();
 
-  const createQueryString = React.useCallback(
+  const createQueryString = useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
@@ -113,16 +111,14 @@ export function ProgramsTableComponent() {
       <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-5 sm:mb-10">
           <h1 className="text-center text-black font-semibold text-xl sm:text-2xl mb-4 sm:mb-0">
-            PROGRAMAS
+            {t("title")}
           </h1>
           <Button
-            onClick={() => {
-              setIsDialogOpen(true);
-            }}
+            onClick={() => setIsDialogOpen(true)}
             variant="blue"
             className="bg-[#2292EA] text-white font-semibold uppercase text-base sm:text-lg rounded-full w-full sm:w-[120px] h-[40px] shadow-xl hover:bg-[#3686c3] hover:text-white transition-colors duration-300 ease-in-out"
           >
-            + Novo
+            {t("newButton")}
           </Button>
         </div>
         <HeaderProgramsFilter
@@ -134,7 +130,7 @@ export function ProgramsTableComponent() {
           programEndDate={programEndDate}
         />
         <ShadcnTable
-          columns={programColumns}
+          columns={columns}
           data={data?.programTable ?? []}
           itemsCount={Number(pageSize)}
           manualPagination
@@ -147,7 +143,8 @@ export function ProgramsTableComponent() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" className="ml-auto">
-                            Colunas <ChevronDown className="ml-2 h-4 w-4" />
+                            {t("columns")}{" "}
+                            <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">
@@ -203,7 +200,7 @@ export function ProgramsTableComponent() {
               <TableBody>
                 {isLoading || isRefetching ? (
                   <TableRow>
-                    <TableCell colSpan={programColumns.length} className="h-24">
+                    <TableCell colSpan={columns.length} className="h-24">
                       <div className="flex justify-center items-center h-full">
                         <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
                       </div>
@@ -216,10 +213,10 @@ export function ProgramsTableComponent() {
                   data?.programTable?.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={programColumns.length}
+                      colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      Nenhum dado encontrado
+                      {t("noDataFound")}
                     </TableCell>
                   </TableRow>
                 ) : null}
@@ -252,13 +249,16 @@ export function ProgramsTableComponent() {
               return (
                 <div className="flex flex-col items-center gap-4 py-4 sm:flex-row">
                   <div className="flex-1 text-sm font-medium text-center sm:text-left">
-                    {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                    {pageSize} resultado(s) selecionado(s).
+                    {t("selectedResults", {
+                      selected:
+                        tableInstance.getFilteredSelectedRowModel().rows.length,
+                      total: pageSize,
+                    })}
                   </div>
                   <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                     <div className="flex flex-wrap items-center space-x-2">
                       <span className="text-sm font-medium">
-                        Resultados por página
+                        {t("resultsPerPage")}
                       </span>
                       <Select
                         value={pageSize}
@@ -287,7 +287,7 @@ export function ProgramsTableComponent() {
                       </Select>
                     </div>
                     <div className="text-sm font-medium">
-                      {`Página ${page} de ${pageCount ?? 10}`}
+                      {t("pageInfo", { current: page, total: pageCount ?? 10 })}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button
@@ -312,7 +312,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Primeira página</span>
+                        <span className="sr-only">{t("firstPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -336,7 +336,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Página anterior</span>
+                        <span className="sr-only">{t("previousPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -360,7 +360,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Próxima página</span>
+                        <span className="sr-only">{t("nextPage")}</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -382,7 +382,7 @@ export function ProgramsTableComponent() {
                         }
                       >
                         <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                        <span className="sr-only">Última página</span>
+                        <span className="sr-only">{t("lastPage")}</span>
                       </Button>
                     </div>
                   </div>
@@ -391,7 +391,11 @@ export function ProgramsTableComponent() {
             },
           }}
         />
-        <FormProgramDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
+        <FormProgramDialog
+          program={selectedProgram}
+          isOpen={isDialogOpen}
+          setIsOpen={setIsDialogOpen}
+        />
       </div>
     </FormProgramProvider>
   );

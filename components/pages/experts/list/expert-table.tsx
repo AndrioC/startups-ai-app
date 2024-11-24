@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
 import { ExpertTable } from "@/app/api/experts/[organization_id]/load-all-experts-by-organization-id/route";
@@ -39,18 +40,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { expertColumns } from "./columns";
+import { useExpertColumns } from "./columns";
 
 export function ExpertTableComponent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
+  const t = useTranslations("admin.mentors.mentorTable");
 
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
 
   const [isPending, startTransition] = React.useTransition();
+
+  const { expertColumns } = useExpertColumns();
 
   const { data, isLoading } = useQuery<{
     experts: ExpertTable[];
@@ -104,7 +108,8 @@ export function ExpertTableComponent() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                          Colunas <ChevronDown className="ml-2 h-4 w-4" />
+                          {t("columns")}{" "}
+                          <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -176,7 +181,7 @@ export function ExpertTableComponent() {
                     colSpan={expertColumns.length}
                     className="h-24 text-center"
                   >
-                    Nenhum resultado encontrado.
+                    {t("noResults")}
                   </TableCell>
                 </TableRow>
               )}
@@ -192,13 +197,16 @@ export function ExpertTableComponent() {
             return (
               <div className="flex flex-col-reverse items-center gap-4 py-4 md:flex-row">
                 <div className="flex-1 text-sm font-medium">
-                  {tableInstance.getFilteredSelectedRowModel().rows.length} de{" "}
-                  {data?.totalCount ?? 0} resultado(s) selecionado(s).
+                  {t("resultsSelected", {
+                    selected:
+                      tableInstance.getFilteredSelectedRowModel().rows.length,
+                    total: data?.totalCount ?? 0,
+                  })}
                 </div>
                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
                   <div className="flex flex-wrap items-center space-x-2">
                     <span className="text-sm font-medium">
-                      Resultados por página
+                      {t("resultsPerPage")}
                     </span>
                     <Select
                       value={pageSize}
@@ -227,7 +235,10 @@ export function ExpertTableComponent() {
                     </Select>
                   </div>
                   <div className="text-sm font-medium">
-                    {`Página ${data?.page ?? page} de ${data?.totalPages ?? 1}`}
+                    {t("pageInfo", {
+                      current: data?.page ?? page,
+                      total: data?.totalPages ?? 1,
+                    })}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -251,7 +262,7 @@ export function ExpertTableComponent() {
                       }
                     >
                       <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Primeira página</span>
+                      <span className="sr-only">{t("firstPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -274,7 +285,7 @@ export function ExpertTableComponent() {
                       }
                     >
                       <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Página anterior</span>
+                      <span className="sr-only">{t("previousPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -298,7 +309,7 @@ export function ExpertTableComponent() {
                       }
                     >
                       <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Próxima página</span>
+                      <span className="sr-only">{t("nextPage")}</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -320,7 +331,7 @@ export function ExpertTableComponent() {
                       }
                     >
                       <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">Última página</span>
+                      <span className="sr-only">{t("lastPage")}</span>
                     </Button>
                   </div>
                 </div>

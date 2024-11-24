@@ -3,6 +3,7 @@ import axios from "axios";
 import { RefreshCw } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { createRules } from "@/actions/rules";
 import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
@@ -12,6 +13,7 @@ import Spinner from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 
 export default function ProgramStartupTab() {
+  const t = useTranslations("admin.programs.programStartupTab");
   const { token } = useParams();
   const { data: session } = useSession();
   const {
@@ -59,7 +61,7 @@ export default function ProgramStartupTab() {
             <RefreshCw
               className={`w-4 h-4 mr-2 ${isRefetching ? "animate-spin" : ""}`}
             />
-            {isRefetching ? "Recarregando..." : "Recarregar"}
+            {isRefetching ? t("reloading") : t("reload")}
           </Button>
         </div>
         <div className="w-full">

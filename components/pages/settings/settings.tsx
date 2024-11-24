@@ -7,6 +7,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import Spinner from "@/components/spinner";
 import { ExternalPageSettingsProvider } from "@/contexts/FormExternalPageSettings";
@@ -14,15 +15,16 @@ import { ExternalPageSettingsProvider } from "@/contexts/FormExternalPageSetting
 import ExternalPageSettings from "./external-page/external-page";
 import GeneralTab from "./general";
 
-const tabs = [
-  { id: "general", title: "Geral" },
-  { id: "external-page", title: "Página externa" },
-];
-
 export default function SettingsComponent() {
+  const t = useTranslations("admin.settings");
   const searchParams = useSearchParams();
   const router = useRouter();
   const { data: session } = useSession();
+
+  const tabs = [
+    { id: "general", title: t("general.title") },
+    { id: "external-page", title: t("externalPage.title") },
+  ];
 
   const tabQuery = searchParams.get("tab");
   const defaultTab = "general";

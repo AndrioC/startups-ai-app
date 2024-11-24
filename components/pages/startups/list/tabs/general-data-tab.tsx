@@ -1,12 +1,12 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Language } from "@prisma/client";
 import Image from "next/image";
-import { z } from "zod";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { DatePicker } from "@/components/ui/date-picker";
 import { useFormStartupTabDataState } from "@/contexts/FormStartupTabContext";
-import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 
 import "react-image-crop/dist/ReactCrop.css";
 
@@ -16,28 +16,49 @@ interface ValueProps {
 }
 
 export default function GeneralDataTab() {
+  const { data: session } = useSession();
   const { initialData, selectData } = useFormStartupTabDataState();
-  const formSchema = GeneralDataSchema();
+  const t = useTranslations("admin.startups.generalDataTab");
+
+  const verticalText =
+    session?.user?.language === Language.PT_BR
+      ? initialData?.vertical?.name_pt
+      : initialData?.vertical?.name_en;
+
+  const countryText =
+    session?.user?.language === Language.PT_BR
+      ? initialData?.country?.name_pt
+      : initialData?.country?.name_en;
+
+  const operationStageText =
+    session?.user?.language === Language.PT_BR
+      ? initialData?.operationalStage?.name_pt
+      : initialData?.operationalStage?.name_en;
 
   const truncateFileName = (name: string, maxLength: number) => {
     if (name?.length <= maxLength) return name;
     return name?.slice(0, maxLength) + "...";
   };
 
-  const { register, control } = useForm<z.infer<typeof formSchema>>({
+  const { register, control } = useForm({
     defaultValues: initialData,
-    resolver: zodResolver(formSchema),
   });
 
   const challengesData: ValueProps[] = selectData?.challenges.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }))!;
 
   const startupsObjectivesData: ValueProps[] = selectData?.objectives.map(
     (value) => ({
       ...value,
-      label: value.name_pt,
+      label:
+        session?.user?.language === Language.PT_BR
+          ? value.name_pt
+          : value.name_en,
     })
   )!;
 
@@ -76,13 +97,19 @@ export default function GeneralDataTab() {
   const makeConnectionsOriginCountry = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yes"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("no"),
     },
   ];
+
+  const connectionLabel =
+    makeConnectionsOriginCountry.find(
+      (option: { id: string; label: string }) =>
+        option.id === initialData.connectionsOnlyOnStartupCountryOrigin
+    )?.label || "";
 
   return (
     <form className="space-y-6">
@@ -92,7 +119,7 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="startupName" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Nome</span>
+                <span className="text-gray-500">{t("name")}</span>
               </label>
               <input
                 id="startupName"
@@ -105,18 +132,16 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="country" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">País</span>
+                <span className="text-gray-500">{t("country")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="country"
-                {...register("country")}
+                value={countryText || ""}
+                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
-              >
-                <option value={initialData?.country}>
-                  {initialData?.country}
-                </option>
-              </select>
+                readOnly
+              />
             </div>
           </div>
 
@@ -124,23 +149,21 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="vertical" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Vertical</span>
+                <span className="text-gray-500">{t("vertical")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="vertical"
-                {...register("vertical")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={verticalText || ""}
+                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value={initialData?.vertical}>
-                  {initialData?.vertical}
-                </option>
-              </select>
+                readOnly
+              />
             </div>
             <div className="flex flex-col">
               <label htmlFor="stateAndCity" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Cidade/Estado</span>
+                <span className="text-gray-500">{t("cityState")}</span>
               </label>
               <input
                 id="stateAndCity"
@@ -155,35 +178,31 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="operationalStage" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Estágio de operação</span>
+                <span className="text-gray-500">{t("operationalStage")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="operationalStage"
-                {...register("operationalStage")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={operationStageText || ""}
+                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value={initialData?.operationalStage}>
-                  {initialData?.operationalStage}
-                </option>
-              </select>
+                readOnly
+              />
             </div>
 
             <div className="flex flex-col">
               <label htmlFor="businessModel" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Modelo de negócio</span>
+                <span className="text-gray-500">{t("businessModel")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="businessModel"
-                {...register("businessModel")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={initialData?.businessModel || ""}
+                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value={initialData?.businessModel}>
-                  {initialData?.businessModel}
-                </option>
-              </select>
+                readOnly
+              />
             </div>
           </div>
 
@@ -191,7 +210,7 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="subscriptionNumber" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">CNPJ</span>
+                <span className="text-gray-500">{t("cnpj")}</span>
               </label>
               <input
                 id="subscriptionNumber"
@@ -205,7 +224,7 @@ export default function GeneralDataTab() {
               <label htmlFor="foundationDate" className="flex items-center">
                 <div>
                   <span className="text-red-500">*</span>
-                  <span className="text-gray-500">Data fundação</span>
+                  <span className="text-gray-500">{t("foundationDate")}</span>
                 </div>
               </label>
               <Controller
@@ -228,7 +247,7 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <label htmlFor="referenceLink" className="flex items-center">
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Site</span>
+                <span className="text-gray-500">{t("website")}</span>
               </label>
               <input
                 id="referenceLink"
@@ -243,7 +262,7 @@ export default function GeneralDataTab() {
                 <div className="flex flex-col">
                   <div>
                     <span className="text-red-500">*</span>
-                    <span className="text-gray-500">Pitchdeck</span>
+                    <span className="text-gray-500">{t("pitchdeck")}</span>
                   </div>
                 </div>
               </label>
@@ -260,19 +279,27 @@ export default function GeneralDataTab() {
                       onBlur={onBlur}
                       accept=".pdf"
                       style={{ display: "none" }}
-                      src={initialData.loadPitchDeckUrl}
                     />
                     <div className="relative flex items-center space-x-2 font-medium">
                       <div className="flex items-center justify-between w-[300px]">
-                        <span
-                          className="text-blue-500 cursor-pointer"
-                          title={initialData.loadPitchDeckUrl}
-                          onClick={() =>
-                            window.open(initialData?.loadPitchDeckUrl, "_blank")
-                          }
-                        >
-                          {truncateFileName(initialData?.loadPitchDeckUrl, 30)}
-                        </span>
+                        {initialData.loadPitchDeckUrl ? (
+                          <span
+                            className="text-blue-500 cursor-pointer"
+                            title={initialData.loadPitchDeckUrl}
+                            onClick={() =>
+                              window.open(
+                                initialData.loadPitchDeckUrl,
+                                "_blank"
+                              )
+                            }
+                          >
+                            {truncateFileName(initialData.loadPitchDeckUrl, 30)}
+                          </span>
+                        ) : (
+                          <span className="text-gray-500">
+                            {t("noPitchdeck")}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -286,7 +313,7 @@ export default function GeneralDataTab() {
             <div className="flex flex-col">
               <div>
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Logo</span>
+                <span className="text-gray-500">{t("logo")}</span>
               </div>
             </div>
           </label>
@@ -322,9 +349,7 @@ export default function GeneralDataTab() {
       <div className="flex flex-col w-full">
         <label htmlFor="startupChallenges" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Marque todos os desafios que sua startup enfrenta neste momento
-          </span>
+          <span className="text-gray-500">{t("challenges")}</span>
         </label>
         <div className="h-[400px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between">
           <div className="w-[450px]">
@@ -382,9 +407,7 @@ export default function GeneralDataTab() {
       <div className="flex flex-col w-full">
         <label htmlFor="startupObjectives" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Quais são as conexões desejadas da startup no programa?
-          </span>
+          <span className="text-gray-500">{t("desiredConnections")}</span>
         </label>
         <div className="h-[120px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between">
           <div className="w-[450px]">
@@ -446,32 +469,22 @@ export default function GeneralDataTab() {
         >
           <span className="text-red-500">*</span>
           <span className="text-gray-500">
-            Fazer conexões apenas no país de origem da minha startup?
+            {t("connectionsInOriginCountry")}
           </span>
         </label>
-        <select
+        <input
+          type="text"
           id="connectionsOnlyOnStartupCountryOrigin"
-          {...register("connectionsOnlyOnStartupCountryOrigin")}
-          className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+          value={connectionLabel}
+          className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
           disabled
-        >
-          <option value={initialData.connectionsOnlyOnStartupCountryOrigin}>
-            {
-              makeConnectionsOriginCountry.find(
-                (option: { id: string; label: string }) =>
-                  option.id ===
-                  initialData.connectionsOnlyOnStartupCountryOrigin
-              )?.label
-            }
-          </option>
-        </select>
+          readOnly
+        />
       </div>
       <div>
         <label htmlFor="valueProposal" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
-          <span className="text-gray-500">
-            Proposta de valor (max 200 caracteres)
-          </span>
+          <span className="text-gray-500">{t("valueProposal")}</span>
         </label>
         <textarea
           id="valueProposal"
@@ -486,10 +499,8 @@ export default function GeneralDataTab() {
         <label htmlFor="shortDescription" className="flex items-center mt-5">
           <span className="text-red-500">*</span>
           <div className="flex text-gray-500 items-center gap-3">
-            <span>Descrição da startup </span>
-            <p className="text-xs">
-              (Descreva sua startup com o máximo de detalhes possível)
-            </p>
+            <span>{t("startupDescription")}</span>
+            <p className="text-xs">{t("startupDescriptionHint")}</p>
           </div>
         </label>
         <textarea

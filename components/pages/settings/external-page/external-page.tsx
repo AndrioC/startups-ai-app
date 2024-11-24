@@ -8,6 +8,7 @@ import { Link2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import bannerCardExternalPageSettingsInfo from "@/assets/img/banner-card-external-page-settings-info.svg";
@@ -31,63 +32,27 @@ import { ImageTooltip } from "./image-tooltip";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
-const cards = [
-  {
-    id: 1,
-    title: "Empreendedores",
-    button_text: "Sou empreendedor",
-    button_link: "https://sai.startupsai.com.br",
-    image: startupCardImage,
-    bullet_points: [
-      { id: 1, title: "Aceleração Gratuita" },
-      { id: 2, title: "Mentorias Individuais" },
-      { id: 3, title: "Conexão com o Ecossistema" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Investidores",
-    button_text: "Sou investidor",
-    button_link: "https://sai.startupsai.com.br",
-    image: investorCardImage,
-    bullet_points: [
-      { id: 1, title: "Conexão com Startups" },
-      { id: 2, title: "Oportunidades Exclusivas" },
-      { id: 3, title: "Demodays" },
-    ],
-  },
-  {
-    id: 3,
-    title: "Mentores",
-    button_text: "Sou mentor",
-    button_link: "https://sai.startupsai.com.br",
-    image: mentorCardImage,
-    bullet_points: [
-      { id: 1, title: "Give back" },
-      { id: 2, title: "Visibilidade no Ecossistema" },
-      { id: 3, title: "Eventos Exclusivos" },
-    ],
-  },
-  {
-    id: 4,
-    title: "Patrocinadores",
-    button_text: "Sou patrocinador",
-    button_link: "https://sai.startupsai.com.br",
-    image: sponsorCardImage,
-    bullet_points: [
-      { id: 1, title: "Visibilidade da marca" },
-      { id: 2, title: "Acesso VIP" },
-      { id: 3, title: "Eventos exclusivos" },
-    ],
-  },
-];
+interface BulletPoint {
+  id: number;
+  title: string;
+}
+
+interface Card {
+  id: number;
+  title: string;
+  button_text: string;
+  button_link: string;
+  image: string;
+  bullet_points: BulletPoint[];
+}
 
 export default function ExternalPageSettings() {
+  const t = useTranslations("admin.settings.externalPage.externalPageSettings");
   const { data: session } = useSession();
   const { subdomain } = useParams();
   const organizationId = session?.user?.organization_id;
   const [bannerFileImage, setBannerFileImage] = useState<File | null>(null);
-  const [enabledTabs, setEnabledTabs] = useState(cards.map(() => false));
+  const [enabledTabs, setEnabledTabs] = useState<boolean[]>([]);
   const [fileSizeError, setFileSizeError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -99,6 +64,57 @@ export default function ExternalPageSettings() {
     setLogoBannerFile,
     updateFormData,
   } = useExternalPageSettingsData();
+
+  const cards: Card[] = [
+    {
+      id: 1,
+      title: t("cards.entrepreneurs.title"),
+      button_text: t("cards.entrepreneurs.buttonText"),
+      button_link: "https://sai.startupsai.com.br",
+      image: startupCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.entrepreneurs.benefits.0") },
+        { id: 2, title: t("cards.entrepreneurs.benefits.1") },
+        { id: 3, title: t("cards.entrepreneurs.benefits.2") },
+      ],
+    },
+    {
+      id: 2,
+      title: t("cards.investors.title"),
+      button_text: t("cards.investors.buttonText"),
+      button_link: "https://sai.startupsai.com.br",
+      image: investorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.investors.benefits.0") },
+        { id: 2, title: t("cards.investors.benefits.1") },
+        { id: 3, title: t("cards.investors.benefits.2") },
+      ],
+    },
+    {
+      id: 3,
+      title: t("cards.mentors.title"),
+      button_text: t("cards.mentors.buttonText"),
+      button_link: "https://sai.startupsai.com.br",
+      image: mentorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.mentors.benefits.0") },
+        { id: 2, title: t("cards.mentors.benefits.1") },
+        { id: 3, title: t("cards.mentors.benefits.2") },
+      ],
+    },
+    {
+      id: 4,
+      title: t("cards.sponsors.title"),
+      button_text: t("cards.sponsors.buttonText"),
+      button_link: "https://sai.startupsai.com.br",
+      image: sponsorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.sponsors.benefits.0") },
+        { id: 2, title: t("cards.sponsors.benefits.1") },
+        { id: 3, title: t("cards.sponsors.benefits.2") },
+      ],
+    },
+  ];
 
   const formSchema = ExternalPageSettingsSchema();
 
@@ -115,6 +131,7 @@ export default function ExternalPageSettings() {
     defaultValues: formData,
   });
 
+  // Initialize enabled tabs based on formData
   useEffect(() => {
     if (formData.enabled_tabs) {
       const newEnabledTabs = cards.map((card) => {
@@ -124,7 +141,12 @@ export default function ExternalPageSettings() {
         return enabledTab ? enabledTab.is_enabled : false;
       });
       setEnabledTabs(newEnabledTabs);
+    }
+  }, [formData.enabled_tabs]);
 
+  // Update form values when enabledTabs change
+  useEffect(() => {
+    if (formData.enabled_tabs) {
       setValue(
         "enabled_tabs",
         cards.map((card, index) => {
@@ -133,32 +155,33 @@ export default function ExternalPageSettings() {
           );
           return {
             tab_number: card.id,
-            is_enabled: newEnabledTabs[index],
-            tab_card:
-              enabledTab && enabledTab.is_enabled
-                ? {
-                    title: enabledTab.tab_card?.title || card.title,
-                    buttonText:
-                      enabledTab.tab_card?.buttonText || card.button_text,
-                    buttonLink:
-                      enabledTab.tab_card?.buttonLink || card.button_link,
-                    benefits:
-                      enabledTab.tab_card?.benefits ||
-                      card.bullet_points.map((point) => point.title),
-                  }
-                : null,
+            is_enabled: enabledTabs[index],
+            tab_card: enabledTab?.is_enabled
+              ? {
+                  title: enabledTab.tab_card?.title || card.title,
+                  buttonText:
+                    enabledTab.tab_card?.buttonText || card.button_text,
+                  buttonLink:
+                    enabledTab.tab_card?.buttonLink || card.button_link,
+                  benefits:
+                    enabledTab.tab_card?.benefits ||
+                    card.bullet_points.map((point) => point.title),
+                }
+              : null,
           };
         })
       );
     }
-  }, [formData, setValue]);
+  }, [enabledTabs, formData.enabled_tabs, setValue, cards]);
 
+  // Reset form when formData changes
   useEffect(() => {
     reset(formData);
   }, [formData, reset]);
 
   const handleChange = (name: string, value: any) => {
     setValue(name as any, value);
+
     const updatedFormData = { ...formData, [name]: value };
     updateFormData(updatedFormData);
   };
@@ -192,6 +215,7 @@ export default function ExternalPageSettings() {
     formData.append("page_title", data.pageTitle || "");
     formData.append("link_video", data.linkVideo || "");
     formData.append("free_text", data.freeText || "");
+
     const buttonLinkUrl = `https://${subdomain}.startupsai.com.br/auth/login`;
 
     const enabledTabsData = data.enabled_tabs.map((tab) => ({
@@ -217,23 +241,20 @@ export default function ExternalPageSettings() {
       );
 
       if (!response.ok) {
-        throw new Error("Falha ao salvar as configurações");
+        throw new Error(t("toasts.settingsError"));
       }
 
-      toast.success("Configurações salvas com sucesso!", {
+      toast.success(t("toasts.settingsSaved"), {
         autoClose: 3000,
         position: "top-center",
       });
       await refetch();
     } catch (error) {
-      toast.error(
-        "Erro ao salvar as configurações. Por favor, tente novamente.",
-        {
-          autoClose: 3000,
-          position: "top-center",
-        }
-      );
-      console.error("Erro ao salvar as configurações:", error);
+      toast.error(t("toasts.settingsError"), {
+        autoClose: 3000,
+        position: "top-center",
+      });
+      console.error("Error saving settings:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -248,9 +269,7 @@ export default function ExternalPageSettings() {
 
     if (selectedFile) {
       if (selectedFile.size > MAX_FILE_SIZE) {
-        setFileSizeError(
-          "O arquivo é maior que 2MB. Por favor, selecione um arquivo menor."
-        );
+        setFileSizeError(t("banner.fileError"));
         setBannerFileImage(null);
         onChange(null);
       } else {
@@ -303,6 +322,35 @@ export default function ExternalPageSettings() {
     window.open(`/page-preview?data=${encodedData}`, "_blank");
   };
 
+  const handleCopyLink = () => {
+    const link = `https://${subdomain}.startupsai.com.br`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success(t("toasts.linkCopied"), {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        toast.error(t("toasts.copyError"), {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+  };
+
   const handleTabToggle = (index: number) => {
     const newEnabledTabs = [...enabledTabs];
     newEnabledTabs[index] = !newEnabledTabs[index];
@@ -322,41 +370,6 @@ export default function ExternalPageSettings() {
     };
 
     setValue(`enabled_tabs.${index}`, updatedTabData);
-
-    const updatedFormData = { ...formData };
-    updatedFormData.enabled_tabs = updatedFormData.enabled_tabs.map(
-      (tab, idx) => (idx === index ? updatedTabData : tab)
-    );
-    updateFormData(updatedFormData);
-  };
-
-  const handleCopyLink = () => {
-    const link = `https://${subdomain}.startupsai.com.br`;
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        toast.success("Link copiado para a área de transferência!", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      })
-      .catch((err) => {
-        console.error("Failed to copy text: ", err);
-        toast.error("Falha ao copiar o link. Por favor, tente novamente.", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      });
   };
 
   const showLearnMore = watch("showLearnMore");
@@ -380,7 +393,7 @@ export default function ExternalPageSettings() {
                   >
                     <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
                   </ImageTooltip>
-                  <span className="text-gray-500">Banner</span>
+                  <span className="text-gray-500">{t("banner.label")}</span>
                 </label>
                 <div className="flex items-center gap-20">
                   <Controller
@@ -418,7 +431,7 @@ export default function ExternalPageSettings() {
                             {truncateFileName(
                               bannerFileImage
                                 ? bannerFileImage.name
-                                : logoBannerFile || "Selecionar arquivo",
+                                : logoBannerFile || t("banner.selectFile"),
                               30
                             )}
                           </span>
@@ -438,7 +451,7 @@ export default function ExternalPageSettings() {
                 </div>
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                Tamanho máximo da imagem: 2MB
+                {t("banner.maxSize")}
               </p>
               {fileSizeError && (
                 <p className="mt-2 text-sm text-red-500">{fileSizeError}</p>
@@ -450,6 +463,8 @@ export default function ExternalPageSettings() {
               )}
             </div>
           </div>
+
+          {/* Action Buttons */}
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
             <Button
               type="button"
@@ -458,7 +473,7 @@ export default function ExternalPageSettings() {
               onClick={handleCopyLink}
             >
               <Link2 className="w-5 h-5 mr-2" />
-              LINK
+              {t("buttons.link")}
             </Button>
             <Button
               type="button"
@@ -466,7 +481,7 @@ export default function ExternalPageSettings() {
               className="bg-white text-[#2292EA] font-medium uppercase text-[15px] rounded-[30px] w-[120px] h-[40px] shadow-xl hover:text-[#3686c3] border-2 border-[#2292EA] transition-colors duration-300 ease-in-out"
               onClick={handlePreview}
             >
-              VISUALIZAR
+              {t("buttons.preview")}
             </Button>
             <Button
               type="submit"
@@ -479,10 +494,14 @@ export default function ExternalPageSettings() {
               {isSubmitting && (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               )}
-              <span>{isSubmitting ? "SALVANDO" : "SALVAR"}</span>
+              <span>
+                {isSubmitting ? t("buttons.saving") : t("buttons.save")}
+              </span>
             </Button>
           </div>
         </div>
+
+        {/* Banner Phrase */}
         <div className="space-y-2 w-full">
           <label htmlFor="bannerPhrase" className="flex items-center gap-2">
             <ImageTooltip
@@ -493,9 +512,9 @@ export default function ExternalPageSettings() {
             >
               <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
             </ImageTooltip>
-            <span className="text-gray-500">Frase sobre o banner</span>
+            <span className="text-gray-500">{t("bannerPhrase.label")}</span>
             <p className="text-xs text-muted-foreground text-right">
-              (max: 40 caracteres)
+              {t("bannerPhrase.maxChars")}
             </p>
           </label>
           <input
@@ -513,6 +532,7 @@ export default function ExternalPageSettings() {
           )}
         </div>
 
+        {/* Learn More Section */}
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
             <ImageTooltip
@@ -531,9 +551,7 @@ export default function ExternalPageSettings() {
               onChange={(e) => handleChange("showLearnMore", e.target.checked)}
             />
             <label htmlFor="showLearnMore" className="flex items-center gap-2">
-              <span className="text-gray-500">
-                Botão "Saiba mais" sobre o banner
-              </span>
+              <span className="text-gray-500">{t("learnMore.label")}</span>
             </label>
           </div>
 
@@ -544,9 +562,11 @@ export default function ExternalPageSettings() {
                   htmlFor="learnMoreText"
                   className="flex items-center gap-2"
                 >
-                  <span className="text-gray-500">Texto</span>
+                  <span className="text-gray-500">
+                    {t("learnMore.text.label")}
+                  </span>
                   <span className="text-xs text-muted-foreground">
-                    (max: 15 caracteres)
+                    {t("learnMore.text.maxChars")}
                   </span>
                 </label>
                 <input
@@ -567,7 +587,7 @@ export default function ExternalPageSettings() {
               </div>
               <div className="flex-1 space-y-2 mt-5">
                 <label htmlFor="learnMoreLink">
-                  <span className="text-gray-500">Link</span>
+                  <span className="text-gray-500">{t("learnMore.link")}</span>
                 </label>
                 <input
                   id="learnMoreLink"
@@ -588,6 +608,7 @@ export default function ExternalPageSettings() {
           )}
         </div>
 
+        {/* Page Title */}
         <div className="space-y-2">
           <label htmlFor="pageTitle" className="flex items-center gap-2">
             <ImageTooltip
@@ -598,9 +619,9 @@ export default function ExternalPageSettings() {
             >
               <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
             </ImageTooltip>
-            <span className="text-gray-500">Título da página</span>
+            <span className="text-gray-500">{t("pageTitle.label")}</span>
             <p className="text-xs text-muted-foreground text-right">
-              (max: 30 caracteres)
+              {t("pageTitle.maxChars")}
             </p>
           </label>
           <input
@@ -618,6 +639,7 @@ export default function ExternalPageSettings() {
           )}
         </div>
 
+        {/* Video Link */}
         <div className="space-y-2">
           <label htmlFor="linkVideo" className="flex items-center gap-2">
             <ImageTooltip
@@ -628,7 +650,7 @@ export default function ExternalPageSettings() {
             >
               <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
             </ImageTooltip>
-            <span className="text-gray-500">Link para o vídeo</span>
+            <span className="text-gray-500">{t("videoLink.label")}</span>
           </label>
           <input
             id="linkVideo"
@@ -644,6 +666,7 @@ export default function ExternalPageSettings() {
           )}
         </div>
 
+        {/* Free Text */}
         <div className="flex flex-col space-y-2">
           <label htmlFor="freeText" className="flex items-center gap-2">
             <ImageTooltip
@@ -654,7 +677,7 @@ export default function ExternalPageSettings() {
             >
               <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
             </ImageTooltip>
-            <span className="text-gray-500">Texto livre para a página</span>
+            <span className="text-gray-500">{t("freeText.label")}</span>
           </label>
           <Controller
             name="freeText"
@@ -677,12 +700,15 @@ export default function ExternalPageSettings() {
           )}
         </div>
 
+        {/* Registration Calls */}
         <div className="flex flex-col space-y-8">
           <label
             htmlFor="callsForRegistration"
             className="flex items-center gap-2"
           >
-            <span className="text-gray-500">Chamadas para o cadastro</span>
+            <span className="text-gray-500">
+              {t("registrationCalls.label")}
+            </span>
           </label>
           <div className="flex mt-10 md:mt-28 gap-5 py-10 px-4 md:px-0 max-w-[900px]">
             {cards.map((card, index) => (
@@ -722,13 +748,9 @@ export default function ExternalPageSettings() {
                     disabled={index >= cards.length - 2}
                   />
                   <span
-                    className={`text-sm ${
-                      index >= cards.length - 2
-                        ? "text-gray-400"
-                        : "text-gray-700"
-                    }`}
+                    className={`text-sm ${index >= cards.length - 2 ? "text-gray-400" : "text-gray-700"}`}
                   >
-                    Exibir na página
+                    {t("registrationCalls.showOnPage")}
                   </span>
                 </div>
               </div>
@@ -736,6 +758,7 @@ export default function ExternalPageSettings() {
           </div>
         </div>
 
+        {/* Custom Tabs */}
         <div className="space-y-8">
           <ExternalPageSettingsCustomTabs
             control={control}

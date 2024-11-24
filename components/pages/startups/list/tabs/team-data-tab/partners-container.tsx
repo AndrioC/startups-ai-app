@@ -1,6 +1,7 @@
 "use client";
 
 import { FieldValues, UseFormRegister } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 type Props = {
   register: UseFormRegister<FieldValues>;
@@ -14,25 +15,27 @@ export default function PartnersContainer({
   index,
   sortedPositionData,
 }: Props) {
+  const t = useTranslations("admin.startups.teamDataTab.partnersContainer");
+
   const yesNoData = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yes"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("no"),
     },
   ];
 
   const dedicationData = [
     {
       id: "fulltime",
-      label: "Full-time",
+      label: t("fullTime"),
     },
     {
       id: "partime",
-      label: "Part-time",
+      label: t("partTime"),
     },
   ];
 
@@ -48,7 +51,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Nome</span>
+                <span className="text-gray-500">{t("name")}</span>
               </label>
               <input
                 id={`name${index}`}
@@ -64,7 +67,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Telefone</span>
+                <span className="text-gray-500">{t("phone")}</span>
               </label>
               <input
                 id={`phone${index}`}
@@ -80,7 +83,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Email</span>
+                <span className="text-gray-500">{t("email")}</span>
               </label>
               <input
                 id={`email${index}`}
@@ -98,7 +101,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Cargo</span>
+                <span className="text-gray-500">{t("position")}</span>
               </label>
               <select
                 id={`position_id${index}`}
@@ -106,7 +109,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {sortedPositionData.map(
                   (option: { id: number; label: string }) => (
                     <option key={option.id} value={option.id}>
@@ -122,7 +125,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Founder?</span>
+                <span className="text-gray-500">{t("founder")}</span>
               </label>
               <select
                 id={`is_founder${index}`}
@@ -130,7 +133,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -144,7 +147,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Dedicação</span>
+                <span className="text-gray-500">{t("dedication")}</span>
               </label>
               <select
                 id={`dedication_type${index}`}
@@ -152,7 +155,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {dedicationData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -166,7 +169,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">% Captable</span>
+                <span className="text-gray-500">{t("captablePercentage")}</span>
               </label>
               <input
                 id={`percentage_captable${index}`}
@@ -184,7 +187,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Primeiro negócio?</span>
+                <span className="text-gray-500">{t("firstBusiness")}</span>
               </label>
               <select
                 id={`is_first_business${index}`}
@@ -192,7 +195,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -208,7 +211,7 @@ export default function PartnersContainer({
                 className="block text-sm font-medium text-gray-700"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">Linkedin ou Lattes</span>
+                <span className="text-gray-500">{t("linkedinLattes")}</span>
               </label>
               <input
                 id={`linkedin_lattes${index}`}
@@ -225,7 +228,7 @@ export default function PartnersContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Experiência ou formação na área da startup?
+                  {t("experienceOrFormation")}
                 </span>
               </label>
               <select
@@ -234,7 +237,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
@@ -251,7 +254,7 @@ export default function PartnersContainer({
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  A formação e a área de atuação dos sócios são complementares?
+                  {t("complementaryFormation")}
                 </span>
               </label>
               <select
@@ -260,7 +263,7 @@ export default function PartnersContainer({
                 disabled
                 className="block pl-2 w-[185px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
               >
-                <option value="">Selecione uma opção</option>
+                <option value="">{t("selectOption")}</option>
                 {yesNoData.map((option: { id: string; label: string }) => (
                   <option key={option.id} value={option.id}>
                     {option.label}

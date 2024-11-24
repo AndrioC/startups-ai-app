@@ -44,6 +44,7 @@ export async function POST() {
         logo_sidebar: user.organizations?.logo_sidebar
           ? `https://${process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${user.organizations.logo_sidebar}`
           : null,
+        language: user.language,
       },
     };
 

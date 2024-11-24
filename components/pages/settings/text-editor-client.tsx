@@ -18,7 +18,8 @@ import {
   Type,
   Underline as UnderlineIcon,
 } from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -78,6 +79,7 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
   value,
   onChange,
 }) => {
+  const t = useTranslations("admin.settings.externalPage.tipTapEditor");
   const [linkUrl, setLinkUrl] = useState<string>("");
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   const [isEditingLink, setIsEditingLink] = useState(false);
@@ -182,51 +184,51 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
           onClick={() => editor.chain().focus().toggleBold().run()}
           isActive={editor.isActive("bold")}
           icon={Bold}
-          tooltip="Bold"
+          tooltip={t("tooltips.bold")}
         />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleItalic().run()}
           isActive={editor.isActive("italic")}
           icon={Italic}
-          tooltip="Italic"
+          tooltip={t("tooltips.italic")}
         />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           isActive={editor.isActive("underline")}
           icon={UnderlineIcon}
-          tooltip="Underline"
+          tooltip={t("tooltips.underline")}
         />
         <div className="w-px h-6 bg-gray-300 mx-1" />
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
           isActive={editor.isActive({ textAlign: "left" })}
           icon={AlignLeft}
-          tooltip="Align Left"
+          tooltip={t("tooltips.alignLeft")}
         />
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
           isActive={editor.isActive({ textAlign: "center" })}
           icon={AlignCenter}
-          tooltip="Align Center"
+          tooltip={t("tooltips.alignCenter")}
         />
         <ToolbarButton
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
           isActive={editor.isActive({ textAlign: "right" })}
           icon={AlignRight}
-          tooltip="Align Right"
+          tooltip={t("tooltips.alignRight")}
         />
         <div className="w-px h-6 bg-gray-300 mx-1" />
         <ToolbarButton
           onClick={toggleBulletList}
           isActive={editor.isActive("bulletList")}
           icon={List}
-          tooltip="Bullet List"
+          tooltip={t("tooltips.bulletList")}
         />
         <ToolbarButton
           onClick={toggleOrderedList}
           isActive={editor.isActive("orderedList")}
           icon={ListOrdered}
-          tooltip="Ordered List"
+          tooltip={t("tooltips.orderedList")}
         />
         <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
           <DialogTrigger asChild>
@@ -234,19 +236,21 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
               onClick={handleLinkButtonClick}
               isActive={editor.isActive("link")}
               icon={LinkIcon}
-              tooltip="Insert/Edit Link"
+              tooltip={t("tooltips.insertEditLink")}
             />
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                {isEditingLink ? "Edit Link" : "Insert Link"}
+                {isEditingLink
+                  ? t("linkDialog.editLink")
+                  : t("linkDialog.insertLink")}
               </DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <Input
                 id="link"
-                placeholder="Enter URL"
+                placeholder={t("linkDialog.enterURL")}
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
               />
@@ -255,10 +259,12 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
                   variant="outline"
                   onClick={() => setIsLinkDialogOpen(false)}
                 >
-                  Cancel
+                  {t("linkDialog.cancel")}
                 </Button>
                 <Button onClick={setLink}>
-                  {isEditingLink ? "Atualizar" : "Aplicar"}
+                  {isEditingLink
+                    ? t("linkDialog.update")
+                    : t("linkDialog.apply")}
                 </Button>
               </div>
             </div>
@@ -270,7 +276,7 @@ const TipTapEditorClient: React.FC<TipTapEditorProps> = ({
           }
           isActive={false}
           icon={Type}
-          tooltip="Clear Formatting"
+          tooltip={t("tooltips.clearFormatting")}
         />
       </div>
       <EditorContent editor={editor} className="p-4 min-h-[200px]" />

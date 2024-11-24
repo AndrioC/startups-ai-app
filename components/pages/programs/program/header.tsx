@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { MdOutlineModeEditOutline } from "react-icons/md";
-import { MdInsertLink } from "react-icons/md";
+import { MdInsertLink, MdOutlineModeEditOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
@@ -21,6 +21,7 @@ export default function HeaderProgramPage({
   start_date,
   end_date,
 }: Props) {
+  const t = useTranslations("admin.programs.headerProgramPage");
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabQuery = searchParams.get("tab");
@@ -43,13 +44,13 @@ export default function HeaderProgramPage({
     const link = `${window.location.origin}/auth/register?token=${token}`;
     try {
       await navigator.clipboard.writeText(link);
-      toast.success("Link copiado para a área de transferência!", {
+      toast.success(t("linkCopiedSuccess"), {
         autoClose: 3000,
         position: "top-center",
       });
     } catch (err) {
-      console.error("Falha ao copiar o link", err);
-      toast.error("Erro ao copiar o link!", {
+      console.error(t("linkCopyError"), err);
+      toast.error(t("linkCopyErrorToast"), {
         autoClose: 3000,
         position: "top-center",
       });
@@ -72,10 +73,10 @@ export default function HeaderProgramPage({
         </div>
         <div className="flex flex-col sm:flex-row sm:ml-4 space-y-2 sm:space-y-0 sm:space-x-4">
           <h1 className="text-sm sm:text-base font-semibold text-black">
-            Início: {start_date}
+            {t("start")}: {start_date}
           </h1>
           <h1 className="text-sm sm:text-base font-semibold text-black">
-            Fim: {end_date}
+            {t("end")}: {end_date}
           </h1>
         </div>
       </div>
@@ -89,7 +90,7 @@ export default function HeaderProgramPage({
                   activeTab === tab.id ? "text-gray-800" : "text-gray-500"
                 }`}
               >
-                {tab.title}
+                {t(`tabs.${tab.id}`)}
               </button>
               {activeTab === tab.id && (
                 <motion.div
@@ -109,7 +110,7 @@ export default function HeaderProgramPage({
           className="flex items-center justify-center border-[#2292EA] bg-transparent border-2 text-[#2292EA] font-medium uppercase text-xs sm:text-sm rounded-[30px] w-full sm:w-auto px-4 py-2 hover:bg-transparent hover:text-[#1f7dc5] transition-colors duration-300 ease-in-out mb-4"
         >
           <MdInsertLink className="h-5 w-5 mr-1 text-[#2292EA]" />
-          Copiar link para cadastro
+          {t("copyRegistrationLink")}
         </Button>
         <div className="w-full">
           {tabContents.filter((tab) => tab.key === activeTab)}
@@ -121,5 +122,5 @@ export default function HeaderProgramPage({
 
 const tabs = [
   { id: "startups", title: "Startups" },
-  { id: "mentors", title: "Mentores" },
+  { id: "mentors", title: "Mentors" },
 ];

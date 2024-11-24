@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { uploadFileToS3 } from "@/actions/upload-s3";
-import { ProgramSchema } from "@/lib/schemas/schema-programs";
+import { ProgramSchemaServer } from "@/lib/schemas/schema-programs";
 import prisma from "@/prisma/client";
 
 const S3_PROGRAMS_EDITAL_FILES = process.env.S3_PROGRAMS_EDITAL_FILES;
 
-const formSchema = ProgramSchema();
+const formSchema = ProgramSchemaServer();
 
 interface DataRequest extends z.infer<typeof formSchema> {
   userId: number;

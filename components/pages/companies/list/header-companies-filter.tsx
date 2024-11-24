@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp, FaSearch, FaTimes } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -19,6 +20,7 @@ export default function HeaderCompaniesFilter({
   companyName,
   companyCreatedAt,
 }: Props) {
+  const t = useTranslations("admin.companies.headerCompaniesFilter");
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { refetch, isRefetching } = useFormCompanyData();
 
@@ -33,7 +35,9 @@ export default function HeaderCompaniesFilter({
         className="bg-[#E5E7E7] h-[54px] cursor-pointer flex items-center justify-between px-4"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
-        <span className="text-[#747D8C] text-[16px] font-bold">Filtro</span>
+        <span className="text-[#747D8C] text-[16px] font-bold">
+          {t("filter")}
+        </span>
         <motion.div
           initial={{ rotate: isCollapsed ? 0 : 180 }}
           animate={{ rotate: isCollapsed ? 0 : 180 }}
@@ -61,7 +65,7 @@ export default function HeaderCompaniesFilter({
                   type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="Nome da organização"
+                  placeholder={t("organizationName")}
                   className="w-[320px] h-[40px] text-[#A7B6CD] text-[16px] border border-[#A7B6CD] rounded-[6px] placeholder-[#A7B6CD] bg-transparent px-2"
                 />
                 <div className="relative">
@@ -70,7 +74,7 @@ export default function HeaderCompaniesFilter({
                       setCompanyCreatedAt(newValue);
                     }}
                     value={companyCreatedAt}
-                    title="Data cadastro"
+                    title={t("registrationDate")}
                     className="bg-transparent border border-[#A7B6CD] rounded-[6px]"
                   />
                   {companyCreatedAt && (
@@ -86,6 +90,7 @@ export default function HeaderCompaniesFilter({
                   onClick={() => refetch()}
                   disabled={(!companyName && !companyCreatedAt) || isRefetching}
                   className="w-[40px] h-[40px] bg-[#747D8C] rounded-[6px] flex items-center justify-center"
+                  aria-label={t("search")}
                 >
                   <FaSearch className="text-white" />
                 </Button>
@@ -93,6 +98,7 @@ export default function HeaderCompaniesFilter({
                   onClick={clearAllFields}
                   disabled={(!companyName && !companyCreatedAt) || isRefetching}
                   className="w-[40px] h-[40px] bg-[#747D8C] rounded-[6px] flex items-center justify-center"
+                  aria-label={t("clear")}
                 >
                   <FaTimes className="text-white" />
                 </Button>

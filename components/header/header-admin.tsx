@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import { Language } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { enUS, ptBR } from "date-fns/locale";
 import { Bell, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -30,12 +32,17 @@ function getInitials(name: string): string {
 }
 
 export default function HeaderAdmin() {
+  const t = useTranslations("admin.headerAdmin");
   const { data: session, update } = useSession();
   const router = useRouter();
+  const locale = session?.user?.language === Language.PT_BR ? ptBR : enUS;
 
   const [userName, setUserName] = useState(session?.user?.name || "User");
   const [avatarUrl, setAvatarUrl] = useState(
     session?.user?.user_logo_img || ""
+  );
+  const [language, setLanguage] = useState(
+    (session?.user?.language as Language) || Language.PT_BR
   );
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const initials = getInitials(userName);
@@ -47,17 +54,25 @@ export default function HeaderAdmin() {
     if (session?.user?.name) {
       setUserName(session.user.name);
     }
-  }, [session?.user?.user_logo_img, session?.user?.name]);
+
+    if (session?.user?.language) {
+      setLanguage(session.user.language as Language);
+    }
+  }, [
+    session?.user?.user_logo_img,
+    session?.user?.name,
+    session?.user?.language,
+  ]);
 
   const lastAccessFormatted = useMemo(() => {
     if (session?.user?.last_access) {
       return formatDistanceToNow(new Date(session.user.last_access), {
         addSuffix: true,
-        locale: ptBR,
+        locale,
       });
     }
     return "Não disponível";
-  }, [session?.user?.last_access]);
+  }, [session?.user?.last_access, session?.user?.language]);
 
   const handleLogout = async () => {
     await signOut({
@@ -129,7 +144,7 @@ export default function HeaderAdmin() {
               <div className="flex flex-col">
                 <span className="font-semibold text-sm">{userName}</span>
                 <span className="text-xs text-gray-500">
-                  Último acesso {lastAccessFormatted}
+                  {t("lastAccess")} {lastAccessFormatted}
                 </span>
               </div>
             </div>
@@ -140,7 +155,7 @@ export default function HeaderAdmin() {
               className="cursor-pointer"
             >
               <User className="mr-2 h-4 w-4" />
-              <span>Perfil</span>
+              <span>{t("profile")}</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={handleLogout}
@@ -160,6 +175,7 @@ export default function HeaderAdmin() {
         onUpdateProfile={handleUpdateProfile}
         userId={session?.user?.id!}
         organizationId={Number(session?.user?.organization_id!)}
+        language={language}
       />
     </div>
   );

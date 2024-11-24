@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2, TrashIcon, Upload } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { ProgramTable } from "@/app/api/programs/[organization_id]/list/route";
@@ -36,8 +37,11 @@ export default function FormProgramDialog({
   const [fileName, setFileName] = useState("");
   const { data: session } = useSession();
   const queryClient = useQueryClient();
-  const formSchema = ProgramSchema();
   const { refetch } = useFormProgramData();
+  const t = useTranslations(
+    "admin.programs.programStartupTab.formProgramDialog"
+  );
+  const formSchema = ProgramSchema(t);
 
   const {
     register,
@@ -107,9 +111,7 @@ export default function FormProgramDialog({
 
   const toastSuccess = () => {
     toast.success(
-      program
-        ? "Programa atualizado com sucesso!"
-        : "Programa criado com sucesso!",
+      program ? t("programUpdatedSuccess") : t("programCreatedSuccess"),
       {
         autoClose: 2000,
         position: "top-center",
@@ -119,7 +121,7 @@ export default function FormProgramDialog({
 
   const toastError = () => {
     toast.error(
-      program ? "Erro ao atualizar o programa!" : "Erro ao criar o programa!",
+      program ? t("errorUpdatingProgram") : t("errorCreatingProgram"),
       {
         autoClose: 2000,
         position: "top-center",
@@ -184,7 +186,7 @@ export default function FormProgramDialog({
   };
 
   const handleRemoveFile = () => {
-    setFileName(""); //
+    setFileName("");
     setValue("editalFile", undefined);
     setValue("removeExistingFile", true);
   };
@@ -204,7 +206,7 @@ export default function FormProgramDialog({
           >
             <div className="p-6">
               <Dialog.Title className="text-lg font-bold uppercase">
-                {program ? "Editar programa" : "Novo programa"}
+                {program ? t("editProgram") : t("newProgram")}
               </Dialog.Title>
             </div>
             <Separator className="w-full" />
@@ -217,7 +219,7 @@ export default function FormProgramDialog({
                       className="flex items-center space-x-1 mb-2"
                     >
                       <span className="text-red-500">*</span>
-                      <span className="text-gray-500">Nome do programa</span>
+                      <span className="text-gray-500">{t("programName")}</span>
                     </label>
                     <input
                       id="programName"
@@ -240,7 +242,7 @@ export default function FormProgramDialog({
                       >
                         <span className="text-red-500">*</span>
                         <span className="text-gray-500">
-                          Início do Programa
+                          {t("programStart")}
                         </span>
                       </label>
                       <Controller
@@ -269,7 +271,7 @@ export default function FormProgramDialog({
                         className="flex items-center space-x-1 mb-2"
                       >
                         <span className="text-red-500">*</span>
-                        <span className="text-gray-500">Final do Programa</span>
+                        <span className="text-gray-500">{t("programEnd")}</span>
                       </label>
                       <Controller
                         control={control}
@@ -302,12 +304,11 @@ export default function FormProgramDialog({
                     <div className="flex items-center space-x-1">
                       <span className="text-red-500">*</span>
                       <span className="text-gray-500">
-                        Descrição do programa
+                        {t("programDescription")}
                       </span>
                     </div>
                     <p className="text-sm text-gray-400 mt-1 ml-2">
-                      (Esta descrição será exibida para as Startups, caso o
-                      programa seja publicado)
+                      {t("descriptionNote")}
                     </p>
                   </label>
                   <textarea
@@ -328,10 +329,7 @@ export default function FormProgramDialog({
                     htmlFor="editalFile"
                     className="flex items-center space-x-1"
                   >
-                    <span className="text-gray-500">
-                      Carregue o edital do programa que ficará disponível para
-                      as Startups
-                    </span>
+                    <span className="text-gray-500">{t("uploadEdital")}</span>
                   </label>
                   <div className="relative">
                     <input
@@ -369,7 +367,7 @@ export default function FormProgramDialog({
                         ) : (
                           <div className="flex items-center text-gray-500">
                             <Upload className="w-5 h-5 mr-2" />
-                            <span>Selecionar arquivo</span>
+                            <span>{t("selectFile")}</span>
                           </div>
                         )}
                       </label>
@@ -402,12 +400,13 @@ export default function FormProgramDialog({
                   <input
                     id="isPublished"
                     type="checkbox"
-                    className="appearance-none w-5 h-5 mr-2 border-2 border-blue-500 rounded checked:bg-blue-500 checked:border-0 cursor-pointer bg-white transition-colors duration-300 ease-in-out"
+                    className="appearance-none w-5 h-5 mr-2 border-2 border-blue-500 rounded checked:bg-blue-500 checked:border-0 cursor-pointer bg-white transition-colors duration-
+300 ease-in-out"
                     {...register("isPublished")}
                     disabled={isSubmitting}
                   />
                   <label htmlFor="isPublished" className="text-gray-500">
-                    Publicar
+                    {t("publish")}
                   </label>
                   <div className="relative group">
                     <Button
@@ -447,9 +446,7 @@ export default function FormProgramDialog({
                           />
                         </svg>
                         <p className="flex-1 text-gray-500 font-normal">
-                          Ao publicar este programa, todas as Startups, que
-                          fazem parte da base da Startups AI, serão notificadas
-                          e poderão se inscrever neste programa.
+                          {t("publishNote")}
                         </p>
                       </div>
                       <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-r-[16px] border-r-gray-100 border-b-8 border-b-transparent"></div>
@@ -466,10 +463,10 @@ export default function FormProgramDialog({
                     {isSubmitting ? (
                       <div className="flex items-center justify-center">
                         <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        <span>Salvando...</span>
+                        <span>{t("saving")}</span>
                       </div>
                     ) : (
-                      "Salvar"
+                      t("save")
                     )}
                   </Button>
                 </div>
@@ -479,7 +476,7 @@ export default function FormProgramDialog({
               <Button
                 variant="ghost"
                 className="absolute top-3 right-3"
-                aria-label="Close"
+                aria-label={t("close")}
                 disabled={isSubmitting}
               >
                 <Cross2Icon className="w-6 h-6 text-black" />

@@ -1,44 +1,47 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Language } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { useFormStartupTabDataState } from "@/contexts/FormStartupTabContext";
-import { ProductServiceDataSchema } from "@/lib/schemas/schema-startup";
 
 export default function ProductServiceDataTab() {
   const { initialData, selectData } = useFormStartupTabDataState();
-  const formSchema = ProductServiceDataSchema();
+  const { data: session } = useSession();
+  const t = useTranslations("admin.startups.productServiceDataTab");
 
   const {
     register,
     formState: { errors },
-  } = useForm<z.infer<typeof formSchema>>({
+  } = useForm({
     defaultValues: initialData,
-    resolver: zodResolver(formSchema),
   });
 
   const serviceProductData = selectData?.service_products.map((value) => ({
     ...value,
-    label: value.name_pt,
+    label:
+      session?.user?.language === Language.PT_BR
+        ? value.name_pt
+        : value.name_en,
   }));
 
   const sdgoalsData = [
     {
       id: 1,
       value: "none",
-      label: "Nenhuma",
+      label: t("sdgOptions.none"),
     },
     {
       id: 2,
       value: "1 or more",
-      label: "1 ou mais",
+      label: t("sdgOptions.oneOrMore"),
     },
     {
       id: 3,
       value: "i don't know",
-      label: "Não sei",
+      label: t("sdgOptions.dontKnow"),
     },
   ];
 
@@ -72,6 +75,12 @@ export default function ProductServiceDataTab() {
     return 0;
   });
 
+  const quantityOdsGoalsLabel =
+    sortedSdGoals.find(
+      (option: { id: number; label: string; value: string }) =>
+        option.value === initialData.quantityOdsGoals
+    )?.label || "";
+
   return (
     <form className="space-y-6">
       <div className="flex gap-10">
@@ -84,8 +93,7 @@ export default function ProductServiceDataTab() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Escolha a opção que melhor descreve o que é comercializado na
-                  sua Startup
+                  {t("startupProductService")}
                 </span>
               </label>
               <div className="h-[80px] w-[600px] border rounded-lg border-gray-300 bg-transparent flex p-2 justify-between bg-red-200">
@@ -148,23 +156,16 @@ export default function ProductServiceDataTab() {
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">ODS atendidas</span>
+                <span className="text-gray-500">{t("odsGoals")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="quantityOdsGoals"
-                {...register("quantityOdsGoals")}
+                value={quantityOdsGoalsLabel}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
-              >
-                <option value={initialData.quantityOdsGoals}>
-                  {
-                    sortedSdGoals.find(
-                      (option: { id: number; label: string; value: string }) =>
-                        option.value === initialData.quantityOdsGoals
-                    )?.label
-                  }
-                </option>
-              </select>
+                readOnly
+              />
               {errors.quantityOdsGoals?.message && (
                 <p className="mt-2 text-sm text-red-400">
                   {errors.quantityOdsGoals.message}
@@ -178,9 +179,7 @@ export default function ProductServiceDataTab() {
               className="flex items-center mt-5"
             >
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">
-                Problemas e soluções que a Startup resolve
-              </span>
+              <span className="text-gray-500">{t("problemsSolutions")}</span>
             </label>
             <textarea
               id="problemThatIsSolved"
@@ -199,7 +198,7 @@ export default function ProductServiceDataTab() {
           <div>
             <label htmlFor="competitors" className="flex items-center mt-5">
               <span className="text-red-500">*</span>
-              <span className="text-gray-500">Lista de concorrentes</span>
+              <span className="text-gray-500">{t("competitors")}</span>
             </label>
             <textarea
               id="competitors"
@@ -222,8 +221,7 @@ export default function ProductServiceDataTab() {
             >
               <span className="text-red-500">*</span>
               <span className="text-gray-500">
-                Quais são os diferenciais competitivos em relação aos seus
-                concorrentes?
+                {t("competitiveDifferentiators")}
               </span>
             </label>
             <textarea

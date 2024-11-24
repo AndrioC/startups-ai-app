@@ -1,4 +1,9 @@
 {
+  "datePicker": {
+    "selectDate": "Select a date",
+    "locale": "en-US",
+    "dateFormat": "MM/dd/yyyy"
+  },
   "auth": {
     "welcome": "Welcome back!",
     "loginSuccess": "Login successful. Redirecting...",

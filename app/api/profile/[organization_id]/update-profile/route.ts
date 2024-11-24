@@ -1,3 +1,4 @@
+import { Language } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
@@ -28,9 +29,17 @@ export async function POST(
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
     const name = formData.get("name") as string | null;
+    const language = formData.get("language") as Language | null;
 
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    }
+
+    if (!language) {
+      return NextResponse.json(
+        { error: "Language is required" },
+        { status: 400 }
+      );
     }
 
     const user = await prisma.user.findUnique({
@@ -78,13 +87,16 @@ export async function POST(
       data: {
         name: name,
         logo_img: fileName,
+        language: language,
+        updated_at: new Date(),
       },
     });
 
     return NextResponse.json(
       {
         name: updatedUser.name,
-        logo_img: updatedUser.logo_img,
+        user_logo_img: updatedUser.logo_img,
+        language: updatedUser.language,
       },
       { status: 200 }
     );

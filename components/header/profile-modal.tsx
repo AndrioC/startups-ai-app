@@ -1,4 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
+"use client";
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactCrop, {
   centerCrop,
   Crop,
@@ -6,9 +8,12 @@ import ReactCrop, {
   PixelCrop,
 } from "react-image-crop";
 import { toast } from "react-toastify";
+import { Language } from "@prisma/client";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { InputAttachment } from "@/components/header/input-attachment";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -20,6 +25,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useRefreshAuth } from "@/hooks/useRefreshAuth";
 
 import "react-image-crop/dist/ReactCrop.css";
@@ -31,7 +43,12 @@ interface ProfileModalProps {
   avatarUrl: string;
   userId: string;
   organizationId: number;
-  onUpdateProfile: (name: string, avatarUrl: string) => void;
+  language: Language;
+  onUpdateProfile: (
+    name: string,
+    avatarUrl: string,
+    language: Language
+  ) => void;
 }
 
 function getInitials(name: string): string {
@@ -70,26 +87,47 @@ export default function ProfileModal({
   isOpen,
   onClose,
   userName: initialUserName,
-  avatarUrl,
+  avatarUrl: initialAvatarUrl,
   userId,
   organizationId,
+  language: initialLanguage,
   onUpdateProfile,
 }: ProfileModalProps) {
+  const t = useTranslations("admin.profileModal");
+  const router = useRouter();
   const { refreshAuthData } = useRefreshAuth();
   const [userName, setUserName] = useState(initialUserName);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(avatarUrl);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    initialAvatarUrl
+  );
   const [showCrop, setShowCrop] = useState(false);
   const [cropImage, setCropImage] = useState<string | null>(null);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [language, setLanguage] = useState<Language>(initialLanguage);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
+
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    setAvatarPreview(initialAvatarUrl);
+  }, [initialAvatarUrl]);
+
+  useEffect(() => {
+    const nameChanged = userName !== initialUserName;
+    const avatarChanged = avatarFile !== null;
+    const languageChanged = language !== initialLanguage;
+
+    setHasChanges(nameChanged || avatarChanged || languageChanged);
+  }, [userName, avatarFile, language, initialUserName, initialLanguage]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
-    setNameError(e.target.value.trim() ? null : "O nome é obrigatório");
+    setNameError(e.target.value.trim() ? null : t("nameRequired"));
   };
 
   const handleAvatarChange = async (file: File) => {
@@ -118,13 +156,19 @@ export default function ProfileModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userName.trim()) {
-      setNameError("O nome é obrigatório");
+      setNameError(t("nameRequired"));
+      return;
+    }
+    if (!hasChanges) {
       return;
     }
     setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append("name", userName);
+      if (language !== initialLanguage) {
+        formData.append("language", language);
+      }
       if (avatarFile) {
         formData.append("file", avatarFile);
       }
@@ -137,14 +181,19 @@ export default function ProfileModal({
         }
       );
 
-      onUpdateProfile(response.data.name, response.data.logo_img);
-      toast.success("Perfil atualizado com sucesso!");
+      onUpdateProfile(
+        response.data.name,
+        response.data.logo_img,
+        response.data.language
+      );
+      toast.success(t("profileUpdatedSuccess"));
 
       await refreshAuthData();
+      router.refresh();
       onClose();
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Erro ao atualizar o perfil. Por favor, tente novamente.");
+      console.error(t("errorUpdatingProfile"), error);
+      toast.error(t("errorUpdatingProfile"));
     }
     setIsUploading(false);
   };
@@ -154,16 +203,24 @@ export default function ProfileModal({
       const { width, height } = e.currentTarget;
       setCrop(centerAspectCrop(width, height, 1));
       imageRef.current = e.currentTarget;
+      setImageLoaded(true);
     },
     []
   );
+
+  const getAvatarSrc = (url: string | null) => {
+    if (!url) return "/placeholder.svg";
+    if (url.startsWith("data:")) return url;
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    return `/${url}`;
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold text-center">
-            Editar Perfil
+            {t("title")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -174,12 +231,25 @@ export default function ProfileModal({
                   {avatarPreview ? (
                     <>
                       <Image
-                        src={avatarPreview}
+                        src={getAvatarSrc(avatarPreview)}
                         alt="Avatar preview"
                         layout="fill"
                         objectFit="cover"
-                        className="rounded-full"
+                        className={`rounded-full transition-opacity duration-300 ${
+                          imageLoaded ? "opacity-100" : "opacity-0"
+                        }`}
+                        onLoad={() => setImageLoaded(true)}
+                        onError={() => {
+                          setImageLoaded(true);
+                          setAvatarPreview(null);
+                          toast.error(t("errorLoadingImage"));
+                        }}
                       />
+                      {!imageLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                        </div>
+                      )}
                     </>
                   ) : (
                     <AvatarFallback className="text-4xl bg-gray-100">
@@ -199,28 +269,44 @@ export default function ProfileModal({
               id="name"
               value={userName}
               onChange={handleNameChange}
-              placeholder="Nome"
-              className={`w-full text-center text-lg ${nameError ? "border-red-500" : ""}`}
+              placeholder={t("nameRequired")}
+              className={`w-full text-center text-lg ${
+                nameError ? "border-red-500" : ""
+              }`}
             />
             {nameError && (
               <p className="text-red-500 text-xs text-center mt-1">
                 {nameError}
               </p>
             )}
+            <Select
+              value={language}
+              onValueChange={(value: Language) => setLanguage(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t("selectLanguage")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={Language.PT_BR}>
+                  {t("portuguese")}
+                </SelectItem>
+                <SelectItem value={Language.EN}>{t("english")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button
             variant="blue"
             type="submit"
             className="w-full"
-            disabled={isUploading}
+            disabled={isUploading || !hasChanges}
           >
             {isUploading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Enviando...
+                {t("sending")}
               </>
             ) : (
-              "Confirmar"
+              t("confirm")
             )}
           </Button>
         </form>
@@ -229,7 +315,9 @@ export default function ProfileModal({
         <Dialog open={showCrop} onOpenChange={() => setShowCrop(false)}>
           <DialogContent className="sm:max-w-[600px] w-[600px] h-[600px] flex flex-col">
             <DialogHeader>
-              <DialogTitle className="text-center">Recortar Imagem</DialogTitle>
+              <DialogTitle className="text-center">
+                {t("cropImage")}
+              </DialogTitle>
             </DialogHeader>
             <div className="flex-grow overflow-auto flex justify-center items-center">
               <div className="relative w-full h-full">
@@ -255,10 +343,10 @@ export default function ProfileModal({
             </div>
             <div className="flex justify-end space-x-2 mt-4">
               <Button variant="outline" onClick={() => setShowCrop(false)}>
-                Cancelar
+                {t("cancel")}
               </Button>
-              <Button variant="blue" onClick={handleConfirmCrop}>
-                Confirmar
+              <Button variant="default" onClick={handleConfirmCrop}>
+                {t("confirm")}
               </Button>
             </div>
           </DialogContent>

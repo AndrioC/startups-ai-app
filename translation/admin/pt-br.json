@@ -1,0 +1,627 @@
+{
+  "datePicker": {
+    "selectDate": "Selecione uma data",
+    "locale": "pt-BR",
+    "dateFormat": "dd/MM/yyyy"
+  },
+  "admin": {
+    "headerAdmin": {
+      "lastAccess": "Último acesso",
+      "profile": "Perfil"
+    },
+    "sidebar": {
+      "home": "Home",
+      "programs": "Programas",
+      "startups": "Startups",
+      "investors": "Investidores",
+      "experts": "Mentores",
+      "companies": "Empresas",
+      "settings": "Configurações"
+    },
+    "profileModal": {
+      "title": "Editar Perfil",
+      "nameRequired": "O nome é obrigatório",
+      "selectLanguage": "Selecione o idioma",
+      "portuguese": "Português (Brasil)",
+      "english": "Inglês",
+      "confirm": "Confirmar",
+      "sending": "Enviando...",
+      "cropImage": "Recortar Imagem",
+      "cancel": "Cancelar",
+      "errorLoadingImage": "Erro ao carregar a imagem. Por favor, tente novamente.",
+      "profileUpdatedSuccess": "Perfil atualizado com sucesso!",
+      "errorUpdatingProfile": "Erro ao atualizar o perfil. Por favor, tente novamente."
+    },
+    "dashboard": {
+      "title": "Painel",
+      "statistics": "Estatísticas",
+      "error": "Erro ao carregar dados",
+      "metrics": {
+        "startups": "Startups",
+        "investors": "Investidores",
+        "mentors": "Mentores",
+        "countries": "Países",
+        "matches": "Matches"
+      },
+      "matchmaking": {
+        "startupsInvestors": "Matchmaking entre Startups e Investidores",
+        "startupsMentors": "Matchmaking entre Startups e Mentores",
+        "startupsStartups": "Matchmaking entre Startups"
+      },
+      "select": {
+        "metric": "Selecione a métrica"
+      }
+    },
+
+    "programs": {
+      "title": "Programas",
+      "newButton": "+ Novo",
+      "columns": "Colunas",
+      "noDataFound": "Nenhum dado encontrado",
+      "selectedResults": "{selected} de {total} resultado(s) selecionado(s).",
+      "resultsPerPage": "Resultados por página",
+      "pageInfo": "Página {current} de {total}",
+      "firstPage": "Primeira página",
+      "previousPage": "Página anterior",
+      "nextPage": "Próxima página",
+      "lastPage": "Última página",
+      "table": {
+        "columns": {
+          "name": "Nome",
+          "startDate": "Início do Programa",
+          "endDate": "Término do Programa",
+          "status": "Status"
+        }
+      },
+      "headerProgramsFilter": {
+        "filter": "Filtro",
+        "programNamePlaceholder": "Nome do programa",
+        "programStartDate": "Data de início do programa",
+        "programEndDate": "Data de término do programa",
+        "search": "Pesquisar",
+        "clearAll": "Limpar tudo"
+      },
+      "programColumns": {
+        "selectAll": "Selecionar todos",
+        "selectRow": "Selecionar linha",
+        "name": "Nome",
+        "published": "Publicado",
+        "yes": "Sim",
+        "no": "Não",
+        "edital": "Edital",
+        "openEdital": "Abrir Edital",
+        "noFile": "Nenhum arquivo",
+        "programStart": "Início do programa",
+        "programEnd": "Fim do programa",
+        "openMenu": "Abrir menu",
+        "actions": "Ações",
+        "edit": "Editar",
+        "details": "Detalhes"
+      },
+      "programPage": {
+        "locale": "pt-BR"
+      },
+      "headerProgramPage": {
+        "start": "Início",
+        "end": "Fim",
+        "copyRegistrationLink": "Copiar link para cadastro",
+        "linkCopiedSuccess": "Link copiado para a área de transferência!",
+        "linkCopyError": "Falha ao copiar o link",
+        "linkCopyErrorToast": "Erro ao copiar o link!",
+        "tabs": {
+          "startups": "Startups",
+          "mentors": "Mentores"
+        }
+      },
+      "programStartupTab": {
+        "reloading": "Recarregando...",
+        "reload": "Recarregar",
+        "formProgramDialog": {
+          "editProgram": "Editar programa",
+          "newProgram": "Novo programa",
+          "programName": "Nome do programa",
+          "programStart": "Início do Programa",
+          "programEnd": "Final do Programa",
+          "programDescription": "Descrição do programa",
+          "descriptionNote": "(Esta descrição será exibida para as Startups, caso o programa seja publicado)",
+          "uploadEdital": "Carregue o edital do programa que ficará disponível para as Startups",
+          "selectFile": "Selecionar arquivo",
+          "publish": "Publicar",
+          "publishNote": "Ao publicar este programa, todas as Startups, que fazem parte da base da Startups AI, serão notificadas e poderão se inscrever neste programa.",
+          "saving": "Salvando...",
+          "save": "Salvar",
+          "close": "Fechar",
+          "programUpdatedSuccess": "Programa atualizado com sucesso!",
+          "programCreatedSuccess": "Programa criado com sucesso!",
+          "errorUpdatingProgram": "Erro ao atualizar o programa!",
+          "errorCreatingProgram": "Erro ao criar o programa!",
+          "validation": {
+            "required": "Campo é obrigatório!",
+            "fileTooLarge": "Arquivo muito grande!",
+            "endDateAfterStartDate": "A data de término deve ser posterior à data de início!"
+          }
+        },
+        "kanbanComponent": {
+          "updatedInfo": "Informações atualizadas",
+          "addNewList": "+ Adicionar nova lista",
+          "listTitlePlaceholder": "Título da lista",
+          "addList": "Adicionar Lista",
+          "cancel": "Cancelar"
+        },
+        "rulesComponent": {
+          "title": "Adicionar regras",
+          "firstInput": "Mover cards para a lista:",
+          "firstInputSelect": "Selecione uma lista",
+          "secondInput": "Quando",
+          "secondInputSelect": "Selecione uma pergunta",
+          "selectOption": "Selecione uma opção",
+          "comparationType": "Tipo de comparação",
+          "addAnotherRule": "+ Adicionar outra regra",
+          "save": "Salvar",
+          "validation": {
+            "required": "Campo é obrigatório!",
+            "selectList": "Por favor, selecione uma lista válida",
+            "selectValidList": "Por favor, selecione uma lista válida"
+          }
+        },
+        "profileUpdatedInfo": {
+          "title": "Informações Atualizadas",
+          "message": {
+            "part1": "As informações da startup",
+            "part2": "{startupName}",
+            "part3": "foram atualizadas. Deseja confirmar que você está ciente desta atualização?"
+          },
+          "confirmButton": "Ok",
+          "closeButton": "Fechar"
+        },
+        "menuKanbanPopover": {
+          "moveList": "Mover lista",
+          "createRules": "Criar regras",
+          "delete": "Excluir"
+        }
+      }
+    },
+
+    "startups": {
+      "startupTable": {
+        "selectAll": "Selecionar todos",
+        "selectRow": "Selecionar linha",
+        "startup": "Startup",
+        "vertical": "Vertical",
+        "country": "País",
+        "businessModel": "Mod. negócio",
+        "stage": "Estágio",
+        "revenueLast12Months": "Fat. Ult. 12 meses",
+        "columns": "Colunas",
+        "noResults": "Nenhum resultado encontrado.",
+        "rowsSelected": "{count} de {total} linha(s) selecionada(s).",
+        "rowsPerPage": "Linhas por página",
+        "pageInfo": "Página {current} de {total}",
+        "firstPage": "Primeira página",
+        "previousPage": "Página anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Última página",
+        "loading": "Carregando..."
+      },
+      "startupTab": {
+        "back": "Voltar",
+        "tabs": {
+          "generalData": "Dados gerais",
+          "team": "Equipe",
+          "productService": "Produto e serviço",
+          "deepTech": "DeepTech",
+          "governance": "Governança",
+          "marketFinance": "Mercado e Finança",
+          "matches": "Matches",
+          "historical": "Histórico",
+          "profile": "Perfil"
+        }
+      },
+      "generalDataTab": {
+        "name": "Nome",
+        "country": "País",
+        "vertical": "Vertical",
+        "cityState": "Cidade/Estado",
+        "operationalStage": "Estágio de operação",
+        "businessModel": "Modelo de negócio",
+        "cnpj": "CNPJ",
+        "foundationDate": "Data fundação",
+        "website": "Site",
+        "pitchdeck": "Pitchdeck",
+        "noPitchdeck": "Sem pitchdeck",
+        "logo": "Logo",
+        "challenges": "Marque todos os desafios que sua startup enfrenta neste momento",
+        "desiredConnections": "Quais são as conexões desejadas da startup no programa?",
+        "connectionsInOriginCountry": "Fazer conexões apenas no país de origem da minha startup?",
+        "yes": "Sim",
+        "no": "Não",
+        "valueProposal": "Proposta de valor (max 200 caracteres)",
+        "startupDescription": "Descrição da startup",
+        "startupDescriptionHint": "(Descreva sua startup com o máximo de detalhes possível)"
+      },
+      "teamDataTab": {
+        "responsible": "RESPONSÁVEL",
+        "responsibleName": "Nome do responsável pela Startup",
+        "responsiblePhone": "Telefone do responsável pela Startup",
+        "responsibleEmail": "E-mail do responsável pela Startup",
+        "team": "EQUIPE",
+        "employeesCount": "Quantos funcionários trabalham na Startup?",
+        "fullTimeEmployees": "Quantas pessoas da equipe estão 100% envolvidas na Startup?",
+        "partners": "SÓCIOS",
+        "partnersDescription": "Adicione todas as pessoas e empresas que fazem parte do Captable da sociedade.",
+        "employeesQuantity": {
+          "1-5": "1 a 5",
+          "6-10": "6 a 10",
+          "11-30": "11 a 30",
+          "31-50": "31 a 50",
+          "moreThan50": "Mais de 50"
+        },
+        "partnersContainer": {
+          "name": "Nome",
+          "phone": "Telefone",
+          "email": "Email",
+          "position": "Cargo",
+          "founder": "Founder?",
+          "dedication": "Dedicação",
+          "captablePercentage": "% Captable",
+          "firstBusiness": "Primeiro negócio?",
+          "linkedinLattes": "Linkedin ou Lattes",
+          "experienceOrFormation": "Experiência ou formação na área da startup?",
+          "complementaryFormation": "A formação e a área de atuação dos sócios são complementares?",
+          "selectOption": "Selecione uma opção",
+          "yes": "Sim",
+          "no": "Não",
+          "fullTime": "Full-time",
+          "partTime": "Part-time"
+        }
+      },
+      "productServiceDataTab": {
+        "startupProductService": "Escolha a opção que melhor descreve o que é comercializado na sua Startup",
+        "odsGoals": "ODS atendidas",
+        "problemsSolutions": "Problemas e soluções que a Startup resolve",
+        "competitors": "Lista de concorrentes",
+        "competitiveDifferentiators": "Quais são os diferenciais competitivos em relação aos seus concorrentes?",
+        "sdgOptions": {
+          "none": "Nenhuma",
+          "oneOrMore": "1 ou mais",
+          "dontKnow": "Não sei"
+        }
+      },
+      "deepTechDataTab": {
+        "maturityLevel": "Nível de maturidade tecnológica",
+        "hasPatent": "Possui patente?",
+        "patentDescription": "Descrição da(s) patente(s)",
+        "yes": "Sim",
+        "no": "Não"
+      },
+      "governanceDataTab": {
+        "yes": "Sim",
+        "no": "Não",
+        "selectOption": "Selecione uma opção",
+        "officiallyRegistered": "A empresa está oficialmente registrada em seu país com um contrato social?",
+        "partnersAgreement": "Existe um Acordo de Sócios assinados pelos sócios?",
+        "legalAdvice": "A Startup possui uma assessoria jurídica?",
+        "accountingConsultancy": "A Startup possui uma assessoria contábil?",
+        "relationshipsRegistered": "Todas as relações com Clientes, Fornecedores, Parceiros e Funcionários estão devidamente registrados em contrato?"
+      },
+      "marketFinanceDataTab": {
+        "market": "MERCADO",
+        "payingCustomers": "Quantos clientes pagantes possui?",
+        "activeCustomers": "Total de clientes ativos",
+        "revenue": "FATURAMENTO",
+        "alreadyEarning": "Já estou faturando",
+        "lastMonthRevenue": "Qual foi o faturamento do último mês?",
+        "lastSixMonthsRevenue": "Qual foi o faturamento dos últimos 6 meses?",
+        "lastTwelveMonthsRevenue": "Qual foi o faturamento dos últimos 12 meses?",
+        "saasCurrentRRM": "Em caso de SaaS, informe o RRM atual",
+        "investments": "INVESTIMENTOS",
+        "openInvestmentRound": "Existe uma rodada de investimento em aberto",
+        "valueToBeRaised": "Qual o valor a ser captado?",
+        "equityPercentage": "Qual percentual de equity a ser distribuído?",
+        "currentValuation": "Qual o valuation atual da Startup?",
+        "roundStart": "Início da rodada",
+        "roundEnd": "Fim da rodada",
+        "receivedInvestments": "INVESTIMENTOS RECEBIDOS",
+        "investmentsContainer": {
+          "round": "Rodada",
+          "roundStart": "Início da rodada",
+          "roundEnd": "Fim da rodada",
+          "totalInvestments": "Total dos investimentos captados",
+          "equityPercentage": "Percentual de equities distribuídos",
+          "investorsCount": "Quantos investidores possuem?",
+          "investorsList": "Ventures e/ou investidores da rodada"
+        }
+      },
+      "profileDataTab": {
+        "profileNotGenerated": "O perfil da startup ainda não foi gerado. Por favor, complete as informações necessárias para gerar o perfil.",
+        "profileTitle": "PERFIL DA STARTUP GERADO PELA I.A."
+      }
+    },
+
+    "investors": {
+      "title": "Página de Investidores Em Construção",
+      "description": "Estamos trabalhando para trazer a você uma experiência excepcional de conexão com startups inovadoras. Em breve, você terá acesso a oportunidades únicas de investimento!",
+      "investmentOpportunities": "Oportunidades de Investimento",
+      "networking": "Networking"
+    },
+
+    "mentors": {
+      "mentorTable": {
+        "columns": "Colunas",
+        "noResults": "Nenhum resultado encontrado.",
+        "resultsSelected": "{selected} de {total} resultado(s) selecionado(s).",
+        "resultsPerPage": "Resultados por página",
+        "pageInfo": "Página {current} de {total}",
+        "firstPage": "Primeira página",
+        "previousPage": "Página anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Última página"
+      },
+      "mentorColumns": {
+        "name": "Nome",
+        "country": "País",
+        "stateCity": "Cidade/Estado",
+        "actions": "Ações",
+        "details": "Detalhes",
+        "company": "Empresa",
+        "startupExperiencePt": "Experiência com startups - Português",
+        "startupExperienceEn": "Experiência com startups - Inglês",
+        "ok": "Ok"
+      }
+    },
+
+    "companies": {
+      "companiesTable": {
+        "title": "ORGANIZAÇÕES",
+        "newButton": "Novo",
+        "columns": "Colunas",
+        "noData": "Nenhum dado encontrado",
+        "resultsSelected": "{selected} de {total} resultado(s) selecionado(s).",
+        "resultsPerPage": "Resultados por página",
+        "pageInfo": "Página {current} de {total}",
+        "firstPage": "Primeira página",
+        "previousPage": "Página anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Última página"
+      },
+      "companyColumns": {
+        "name": "Nome",
+        "registrationDate": "Data cadastro",
+        "actions": "Ações",
+        "edit": "Editar"
+      },
+      "formCompanyDialog": {
+        "editOrganization": "Editar organização",
+        "newOrganization": "Nova organização",
+        "organizationName": "Nome da Organização",
+        "creationDate": "Data de Criação",
+        "paying": "Pagante",
+        "logo": "Logo",
+        "chooseFile": "Escolher arquivo (max 300 x 200)",
+        "logoSidebar": "Logo sidebar",
+        "imageError": "Erro de imagem",
+        "users": "Usuários",
+        "addUser": "Adicionar Usuário",
+        "name": "Nome",
+        "email": "E-mail",
+        "password": "Senha",
+        "hidePassword": "Ocultar senha",
+        "showPassword": "Mostrar senha",
+        "blockUser": "Bloquear usuário",
+        "unblockUser": "Desbloquear usuário",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "saving": "Salvando...",
+        "cropImage": "Cortar Imagem",
+        "exactSize": "Tamanho exato: {size}",
+        "confirm": "Confirmar",
+        "sending": "Enviando...",
+        "close": "Fechar",
+        "organizationUpdated": "Organização atualizada com sucesso!",
+        "organizationCreated": "Organização criada com sucesso!",
+        "errorUpdatingOrganization": "Erro ao atualizar a organização!",
+        "errorCreatingOrganization": "Erro ao criar a organização!",
+        "errorProcessingImage": "Erro ao processar a imagem. Por favor, tente novamente."
+      },
+      "headerCompaniesFilter": {
+        "filter": "Filtro",
+        "organizationName": "Nome da organização",
+        "registrationDate": "Data de cadastro",
+        "search": "Buscar",
+        "clear": "Limpar"
+      }
+    },
+    "settings": {
+      "general": {
+        "title": "Geral",
+        "logo": "Logo",
+        "chooseFile": "Escolher arquivo (300 x 100)",
+        "logoSidebar": "Logo sidebar",
+        "logoSidebarSize": "50 x 50",
+        "imageError": "Erro de imagem",
+        "close": "Fechar",
+        "cropImage": "Cortar Imagem",
+        "exactSize": "Tamanho exato: {size}",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "sending": "Enviando...",
+        "errors": {
+          "fileSizeExceeded": "O tamanho do arquivo excede o limite de 2MB.",
+          "imageTooSmall": "A imagem é muito pequena. Tamanho mínimo requerido: {minWidth}x{minHeight} pixels. Tamanho atual: {width}x{height} pixels.",
+          "imageTooLarge": "A imagem é muito grande. Tamanho máximo permitido: {maxWidth}x{maxHeight} pixels. Tamanho atual: {width}x{height} pixels.",
+          "verificationError": "Erro ao verificar o tamanho da imagem. Por favor, tente novamente."
+        },
+        "success": {
+          "logoUpdated": "Logo atualizado com sucesso!",
+          "sidebarLogoUpdated": "Logo da sidebar atualizado com sucesso!"
+        },
+        "error": {
+          "logoUpload": "Erro ao enviar o logo. Por favor, tente novamente.",
+          "sidebarLogoUpload": "Erro ao enviar o logo da sidebar. Por favor, tente novamente."
+        }
+      },
+      "externalPage": {
+        "title": "Página Externa",
+        "tabs": {
+          "general": "Geral",
+          "externalPage": "Página Externa"
+        },
+        "tipTapEditor": {
+          "tooltips": {
+            "bold": "Negrito",
+            "italic": "Itálico",
+            "underline": "Sublinhado",
+            "alignLeft": "Alinhar à Esquerda",
+            "alignCenter": "Centralizar",
+            "alignRight": "Alinhar à Direita",
+            "bulletList": "Lista com Marcadores",
+            "orderedList": "Lista Numerada",
+            "insertEditLink": "Inserir/Editar Link",
+            "clearFormatting": "Limpar Formatação"
+          },
+          "linkDialog": {
+            "insertLink": "Inserir Link",
+            "editLink": "Editar Link",
+            "enterURL": "Digite a URL",
+            "cancel": "Cancelar",
+            "apply": "Aplicar",
+            "update": "Atualizar"
+          }
+        },
+        "externalPageSettings": {
+          "banner": {
+            "label": "Banner",
+            "maxSize": "Tamanho máximo da imagem: 2MB",
+            "fileError": "O arquivo é maior que 2MB. Por favor, selecione um arquivo menor.",
+            "selectFile": "Selecionar arquivo"
+          },
+          "buttons": {
+            "link": "LINK",
+            "preview": "VISUALIZAR",
+            "save": "SALVAR",
+            "saving": "SALVANDO"
+          },
+          "bannerPhrase": {
+            "label": "Frase sobre o banner",
+            "maxChars": "(max: 40 caracteres)"
+          },
+          "learnMore": {
+            "label": "Botão \"Saiba mais\" sobre o banner",
+            "text": {
+              "label": "Texto",
+              "maxChars": "(max: 15 caracteres)"
+            },
+            "link": "Link"
+          },
+          "pageTitle": {
+            "label": "Título da página",
+            "maxChars": "(max: 30 caracteres)"
+          },
+          "videoLink": {
+            "label": "Link para o vídeo"
+          },
+          "freeText": {
+            "label": "Texto livre para a página"
+          },
+          "registrationCalls": {
+            "label": "Chamadas para o cadastro",
+            "showOnPage": "Exibir na página"
+          },
+          "cards": {
+            "entrepreneurs": {
+              "title": "Empreendedores",
+              "buttonText": "Sou empreendedor",
+              "benefits": [
+                "Aceleração Gratuita",
+                "Mentorias Individuais",
+                "Conexão com o Ecossistema"
+              ]
+            },
+            "investors": {
+              "title": "Investidores",
+              "buttonText": "Sou investidor",
+              "benefits": [
+                "Conexão com Startups",
+                "Oportunidades Exclusivas",
+                "Demodays"
+              ]
+            },
+            "mentors": {
+              "title": "Mentores",
+              "buttonText": "Sou mentor",
+              "benefits": [
+                "Give back",
+                "Visibilidade no Ecossistema",
+                "Eventos Exclusivos"
+              ]
+            },
+            "sponsors": {
+              "title": "Patrocinadores",
+              "buttonText": "Sou patrocinador",
+              "benefits": [
+                "Visibilidade da marca",
+                "Acesso VIP",
+                "Eventos exclusivos"
+              ]
+            }
+          },
+          "toasts": {
+            "settingsSaved": "Configurações salvas com sucesso!",
+            "settingsError": "Erro ao salvar as configurações. Por favor, tente novamente.",
+            "linkCopied": "Link copiado para a área de transferência!",
+            "copyError": "Falha ao copiar o link. Por favor, tente novamente."
+          }
+        },
+        "customTabs": {
+          "cardTitle": "Título do card",
+          "buttonText": "Texto do botão",
+          "buttonLink": "Link do botão",
+          "benefit": "benefício",
+          "maxCharacters": "(max: {count} caracteres)",
+          "errors": {
+            "required": "Este campo é obrigatório",
+            "maxLength": "Máximo de {count} caracteres permitidos"
+          },
+          "cards": [
+            {
+              "title": "Empreendedores",
+              "button_text": "Sou empreendedor",
+              "bullet_points": [
+                "Aceleração Gratuita",
+                "Mentorias Individuais",
+                "Conexão com o Ecossistema"
+              ]
+            },
+            {
+              "title": "Investidores",
+              "button_text": "Sou investidor",
+              "bullet_points": [
+                "Conexão com Startups",
+                "Oportunidades Exclusivas",
+                "Demodays"
+              ]
+            },
+            {
+              "title": "Mentores",
+              "button_text": "Sou mentor",
+              "bullet_points": [
+                "Give back",
+                "Visibilidade no Ecossistema",
+                "Eventos Exclusivos"
+              ]
+            },
+            {
+              "title": "Patrocinadores",
+              "button_text": "Sou patrocinador",
+              "bullet_points": [
+                "Visibilidade da marca",
+                "Acesso VIP",
+                "Eventos exclusivos"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

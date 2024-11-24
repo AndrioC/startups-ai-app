@@ -1,51 +1,40 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Language } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { useFormStartupTabDataState } from "@/contexts/FormStartupTabContext";
-import { DeepTechDataSchema } from "@/lib/schemas/schema-startup";
 
 export default function DeepTechDataTab() {
-  const { initialData, selectData } = useFormStartupTabDataState();
-  const formSchema = DeepTechDataSchema();
+  const { data: session } = useSession();
+  const { initialData } = useFormStartupTabDataState();
+  const t = useTranslations("admin.startups.deepTechDataTab");
 
-  const { register } = useForm<z.infer<typeof formSchema>>({
+  const { register } = useForm({
     defaultValues: initialData,
-    resolver: zodResolver(formSchema),
   });
 
-  const trlData = selectData?.maturity_level.map((value) => ({
-    ...value,
-    label: value.name_pt,
-  }));
+  const maturityLevelText =
+    session?.user?.language === Language.PT_BR
+      ? initialData?.maturityLevel?.name_pt
+      : initialData?.maturityLevel?.name_en;
 
   const yesNoData = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yes"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("no"),
     },
   ];
 
-  const sortedTrlData = trlData?.slice().sort((a, b) => {
-    const labelA = a.label.toUpperCase();
-    const labelB = b.label.toUpperCase();
-
-    if (labelA < labelB) {
-      return -1;
-    }
-
-    if (labelA > labelB) {
-      return 1;
-    }
-
-    return 0;
-  });
+  const hasPatentLabel = initialData?.hasPatent
+    ? yesNoData.find((option) => option.id === initialData.hasPatent)?.label
+    : "";
 
   return (
     <form className="space-y-6">
@@ -54,47 +43,35 @@ export default function DeepTechDataTab() {
           <div className="flex gap-10 mt-10">
             <div>
               <label htmlFor="maturityLevel" className="flex items-center mt-5">
-                <span className="text-gray-500">
-                  Nível de maturidade tecnológica
-                </span>
+                <span className="text-gray-500">{t("maturityLevel")}</span>
               </label>
-              <select
+              <textarea
                 id="maturityLevel"
-                {...register("maturityLevel")}
-                defaultValue={initialData.maturityLevel || ""}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={maturityLevelText || ""}
+                className="block pl-2 h-[50px] w-[300px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500 resize-none overflow-hidden"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {sortedTrlData?.map((option: { id: number; label: string }) => (
-                  <option key={option.id} value={option.label}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                rows={4}
+                style={{ height: "auto" }}
+                readOnly
+              />
             </div>
             <div>
               <label htmlFor="hasPatent" className="flex items-center mt-5">
-                <span className="text-gray-500">Possui patente?</span>
+                <span className="text-gray-500">{t("hasPatent")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="hasPatent"
-                {...register("hasPatent")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={hasPatentLabel}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData?.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.label}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
           </div>
           <div>
             <label htmlFor="patentAndCode" className="flex items-center mt-5">
-              <span className="text-gray-500">Descrição da(s) patente(s)</span>
+              <span className="text-gray-500">{t("patentDescription")}</span>
             </label>
             <textarea
               id="patentAndCode"

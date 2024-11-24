@@ -1,7 +1,6 @@
-"use client";
-
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { type ColumnDef } from "unstyled-table";
 
 import { ProgramTable } from "@/app/api/programs/[organization_id]/list/route";
@@ -18,159 +17,175 @@ import {
 
 import FormProgramDialog from "../form-program-dialog";
 
-export const programColumns: ColumnDef<ProgramTable, unknown>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => {
-          table.toggleAllPageRowsSelected(!!value);
-        }}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => {
-          row.toggleSelected(!!value);
-        }}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "Nome",
-    accessorKey: "programName",
-    header: "Nome",
-    enableColumnFilter: false,
-  },
-  {
-    id: "Publicado",
-    accessorKey: "isPublished",
-    header: "Publicado",
-    enableColumnFilter: false,
-    cell: ({ row }) => {
-      const value = row.original;
+export const useProgramColumns = () => {
+  const t = useTranslations("admin.programs.programColumns");
 
-      return value.isPublished ? (
-        <span className="px-2 py-1 text-sm font-medium text-green-800 bg-green-200 rounded-full">
-          Sim
-        </span>
-      ) : (
-        <span className="px-2 py-1 text-sm font-medium text-red-800 bg-red-200 rounded-full">
-          Não
-        </span>
-      );
-    },
-  },
-  {
-    id: "Edital",
-    accessorKey: "editalFileUrl",
-    header: "Edital",
-    enableColumnFilter: false,
-    cell: ({ row }) => {
-      const value = row.original;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<
+    ProgramTable | undefined
+  >(undefined);
 
-      return value.editalFileUrl ? (
-        <a
-          href={value.editalFileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          Abrir Edital
-        </a>
-      ) : (
-        <span className="text-gray-400">Nenhum arquivo</span>
-      );
-    },
-  },
-  {
-    id: "Início do programa",
-    accessorKey: "startDate",
-    header: "Início do programa",
-    enableColumnFilter: false,
-    enableSorting: false,
-    cell: ({ row }) => {
-      const value = row.original;
-      const formattedDate = new Date(value.startDate).toLocaleDateString(
-        "pt-BR",
-        {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }
-      );
+  const openDialog = useCallback((program: ProgramTable) => {
+    setSelectedProgram(program);
+    setIsDialogOpen(true);
+  }, []);
 
-      return <span>{formattedDate}</span>;
-    },
-  },
-  {
-    id: "Fim do programa",
-    accessorKey: "endDate",
-    header: "Fim do programa",
-    enableColumnFilter: false,
-    cell: ({ row }) => {
-      const value = row.original;
-      const formattedDate = new Date(value.endDate).toLocaleDateString(
-        "pt-BR",
-        {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }
-      );
-
-      return <span>{formattedDate}</span>;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const program = row.original;
-      const [isDialogOpen, setIsDialogOpen] = useState(false);
-      return (
+  const columns: ColumnDef<ProgramTable, unknown>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="h-8 w-8 p-0"
-              >
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer text-blue-500 hover:text-blue-700"
-                role="button"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer text-blue-500 hover:text-blue-700"
-                role="button"
-              >
-                Detalhes
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <FormProgramDialog
-            program={program}
-            isOpen={isDialogOpen}
-            setIsOpen={setIsDialogOpen}
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => {
+              table.toggleAllPageRowsSelected(!!value);
+            }}
+            aria-label={t("selectAll")}
           />
         </div>
-      );
+      ),
+      cell: ({ row }) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => {
+              row.toggleSelected(!!value);
+            }}
+            aria-label={t("selectRow")}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-];
+    {
+      id: t("name"),
+      accessorKey: "programName",
+      header: t("name"),
+      enableColumnFilter: false,
+    },
+    {
+      id: t("published"),
+      accessorKey: "isPublished",
+      header: t("published"),
+      enableColumnFilter: false,
+      cell: ({ row }) => {
+        const value = row.original;
+        return value.isPublished ? (
+          <span className="px-2 py-1 text-sm font-medium text-green-800 bg-green-200 rounded-full">
+            {t("yes")}
+          </span>
+        ) : (
+          <span className="px-2 py-1 text-sm font-medium text-red-800 bg-red-200 rounded-full">
+            {t("no")}
+          </span>
+        );
+      },
+    },
+    {
+      id: t("edital"),
+      accessorKey: "editalFileUrl",
+      header: t("edital"),
+      enableColumnFilter: false,
+      cell: ({ row }) => {
+        const value = row.original;
+        return value.editalFileUrl ? (
+          <a
+            href={value.editalFileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {t("openEdital")}
+          </a>
+        ) : (
+          <span className="text-gray-400">{t("noFile")}</span>
+        );
+      },
+    },
+    {
+      id: t("programStart"),
+      accessorKey: "startDate",
+      header: t("programStart"),
+      enableColumnFilter: false,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const value = row.original;
+        const formattedDate = new Date(value.startDate).toLocaleDateString(
+          undefined,
+          {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }
+        );
+        return <span>{formattedDate}</span>;
+      },
+    },
+    {
+      id: t("programEnd"),
+      accessorKey: "endDate",
+      header: t("programEnd"),
+      enableColumnFilter: false,
+      cell: ({ row }) => {
+        const value = row.original;
+        const formattedDate = new Date(value.endDate).toLocaleDateString(
+          undefined,
+          {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }
+        );
+        return <span>{formattedDate}</span>;
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const program = row.original;
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  aria-label={t("openMenu")}
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t("actions")}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer text-blue-500 hover:text-blue-700"
+                  role="button"
+                  onClick={() => openDialog(program)}
+                >
+                  {t("edit")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer text-blue-500 hover:text-blue-700"
+                  role="button"
+                >
+                  {t("details")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
+  return {
+    columns,
+    isDialogOpen,
+    setIsDialogOpen,
+    selectedProgram,
+    FormProgramDialog,
+  };
+};

@@ -12,6 +12,7 @@ import axios from "axios";
 import { AlertCircle } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Rule } from "@/actions/rules";
 import { KanbanDataWithCards } from "@/app/api/kanban/[organization_id]/load-kanbans-by-program-token/route";
@@ -40,6 +41,7 @@ interface Startup {
 }
 
 export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
+  const t = useTranslations("admin.programs.programStartupTab.kanbanComponent");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { token } = useParams();
   const [newListTitle, setNewListTitle] = useState("");
@@ -179,7 +181,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                                             />
                                           </TooltipTrigger>
                                           <TooltipContent>
-                                            <p>Informações atualizadas</p>
+                                            <p>{t("updatedInfo")}</p>
                                           </TooltipContent>
                                         </Tooltip>
                                       </TooltipProvider>
@@ -199,7 +201,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
               className="bg-[#F5F7FA] h-fit text-[#747D8C] px-4 py-2 rounded-lg shadow-md hover:bg-[#eaebec] flex-shrink-0 whitespace-nowrap"
               onClick={() => setIsModalOpen(true)}
             >
-              + Adicionar nova lista
+              {t("addNewList")}
             </Button>
           </div>
         </DragDropContext>
@@ -246,7 +248,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Adicionar nova lista
+                    {t("addNewList")}
                   </DialogTitle>
                   <div className="mt-2">
                     <input
@@ -254,7 +256,7 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                       value={newListTitle}
                       onChange={(e) => setNewListTitle(e.target.value)}
                       className="w-full px-4 py-2 border rounded-md"
-                      placeholder="Título da lista"
+                      placeholder={t("listTitlePlaceholder")}
                     />
                   </div>
                   <div className="mt-4">
@@ -263,14 +265,14 @@ export default function KanbanComponent({ kanbanData, rules, refetch }: Props) {
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       onClick={addNewList}
                     >
-                      Adicionar Lista
+                      {t("addList")}
                     </button>
                     <button
                       type="button"
                       className="inline-flex justify-center ml-4 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      Cancelar
+                      {t("cancel")}
                     </button>
                   </div>
                 </DialogPanel>

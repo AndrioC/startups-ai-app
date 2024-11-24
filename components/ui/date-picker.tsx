@@ -1,8 +1,11 @@
+"use client";
+
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Calendar as CalendarIcon, X } from "lucide-react";
+import { enUS, ptBR } from "date-fns/locale";
+import { CalendarIcon, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,10 +27,11 @@ interface DatePickerProps {
 export function DatePicker({
   onChange,
   value,
-  title = "Selecione uma data",
+  title,
   className,
   disabled = false,
 }: DatePickerProps) {
+  const t = useTranslations("datePicker");
   const [date, setDate] = React.useState<Date | undefined | null>(value);
   const [open, setOpen] = React.useState(false);
 
@@ -46,6 +50,9 @@ export function DatePicker({
     onChange(undefined);
   };
 
+  const locale = t("locale") === "pt-BR" ? ptBR : enUS;
+  const dateFormat = t("dateFormat");
+
   return (
     <Popover
       open={open && !disabled}
@@ -62,7 +69,11 @@ export function DatePicker({
           disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4 text-[#A7B6CD]" />
-          {date ? format(date, "dd/MM/yyyy") : <span>{title}</span>}
+          {date ? (
+            format(date, dateFormat, { locale })
+          ) : (
+            <span>{title || t("selectDate")}</span>
+          )}
           {date && !disabled && (
             <div
               onClick={handleClear}
@@ -97,7 +108,7 @@ export function DatePicker({
                 }
               }}
               initialFocus
-              locale={ptBR}
+              locale={locale}
             />
           </PopoverContent>
         </CalendarPortal>

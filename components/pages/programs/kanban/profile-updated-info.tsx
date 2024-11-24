@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +23,10 @@ export default function ProfileUpdatedInfo({
 }: ProfileUpdatedInfoProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
+  const t = useTranslations(
+    "admin.programs.programStartupTab.profileUpdatedInfo"
+  );
+
   const handleUpdateConfirmation = async () => {
     setIsLoading(true);
     try {
@@ -40,6 +45,7 @@ export default function ProfileUpdatedInfo({
       console.error("Error confirming startup update:", error);
     }
   };
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
@@ -48,13 +54,12 @@ export default function ProfileUpdatedInfo({
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Dialog.Content className="w-[450px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all animate-contentShow">
               <Dialog.Title className="text-lg font-medium leading-6 text-gray-900">
-                Informações Atualizadas
+                {t("title")}
               </Dialog.Title>
               <div className="mt-2">
                 <p className="text-sm text-gray-500">
-                  As informações da startup{" "}
-                  <strong>{selectedStartup?.name}</strong> foram atualizadas.
-                  Deseja confirmar que você está ciente desta atualização?
+                  {t("message.part1")} <strong>{selectedStartup?.name}</strong>{" "}
+                  {t("message.part3")}
                 </p>
               </div>
               <div className="mt-4 flex justify-end">
@@ -64,13 +69,13 @@ export default function ProfileUpdatedInfo({
                   onClick={() => handleUpdateConfirmation()}
                   disabled={isLoading}
                 >
-                  Ok
+                  {t("confirmButton")}
                 </Button>
               </div>
               <Dialog.Close asChild>
                 <button
                   className="absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:outline-none"
-                  aria-label="Close"
+                  aria-label={t("closeButton")}
                 >
                   <svg
                     width="15"

@@ -26,10 +26,26 @@ export interface StartupTab extends startups {
   startup_service_products: startup_service_products[];
   startup_objectives: startup_objectives[];
   business_model: string;
-  vertical: string;
-  country: string;
-  operation_stage: string;
-  maturity_level: string;
+  vertical: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
+  country: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
+  operation_stage: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
+  maturity_level: {
+    code: string;
+    name_en: string;
+    name_pt: string;
+  };
   generated_profile?: string;
 }
 
@@ -50,10 +66,26 @@ export async function GET(
         SELECT 
           s.*,
           bm.name AS business_model,
-          v.name_pt AS vertical,
-          c.name_pt AS country,
-          os.name_pt AS operation_stage,
-          ml.name_pt AS maturity_level,
+          json_build_object(
+            'code', v.code,
+            'name_en', v.name_en,
+            'name_pt', v.name_pt
+          ) AS vertical,
+          json_build_object(
+            'code', c.code,
+            'name_en', c.name_en,
+            'name_pt', c.name_pt
+          ) AS country,
+          json_build_object(
+            'code', os.code,
+            'name_en', os.name_en,
+            'name_pt', os.name_pt
+          ) AS operation_stage,
+          json_build_object(
+            'code', ml.code,
+            'name_en', ml.name_en,
+            'name_pt', ml.name_pt
+          ) AS maturity_level,
           sgp.profile AS generated_profile
         FROM 
           startups s

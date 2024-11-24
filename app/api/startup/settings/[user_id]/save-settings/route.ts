@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     await prisma.user.update({
       where: { id: Number(session.user.id) },
-      data: { language: normalizedLanguage },
+      data: { language: normalizedLanguage, updated_at: new Date() },
     });
 
     return NextResponse.json({ success: true });

@@ -1,30 +1,29 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 import { useFormStartupTabDataState } from "@/contexts/FormStartupTabContext";
-import { GovernanceDataSchema } from "@/lib/schemas/schema-startup";
+
 export default function GovernanceDataTab() {
   const { initialData } = useFormStartupTabDataState();
-  const formSchema = GovernanceDataSchema();
-
-  const { register } = useForm<z.infer<typeof formSchema>>({
-    defaultValues: initialData,
-    resolver: zodResolver(formSchema),
-  });
+  const t = useTranslations("admin.startups.governanceDataTab");
 
   const yesNoData = [
     {
       id: "yes",
-      label: "Sim",
+      label: t("yes"),
     },
     {
       id: "no",
-      label: "Não",
+      label: t("no"),
     },
   ];
+
+  const getYesNoLabel = (value: string) => {
+    return value
+      ? yesNoData.find((option) => option.id === value)?.label || ""
+      : "";
+  };
 
   return (
     <form className="space-y-6">
@@ -38,72 +37,59 @@ export default function GovernanceDataTab() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  A empresa está oficialmente registrada em seu país com um
-                  contrato social?
+                  {t("officiallyRegistered")}
                 </span>
               </label>
-              <select
+              <input
+                type="text"
                 id="isStartupOfficiallyRegistered"
-                {...register("isStartupOfficiallyRegistered")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={getYesNoLabel(
+                  initialData?.isStartupOfficiallyRegistered
+                )}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
+
             <div>
               <label
                 htmlFor="isTherePartnersAgreementSigned"
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  Existe um Acordo de Sócios assinados pelos sócios?
-                </span>
+                <span className="text-gray-500">{t("partnersAgreement")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="isTherePartnersAgreementSigned"
-                {...register("isTherePartnersAgreementSigned")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={getYesNoLabel(
+                  initialData?.isTherePartnersAgreementSigned
+                )}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
+
             <div>
               <label
                 htmlFor="haveLegalAdvice"
                 className="flex items-center mt-5"
               >
                 <span className="text-red-500">*</span>
-                <span className="text-gray-500">
-                  A Startup possui uma assessoria jurídica?
-                </span>
+                <span className="text-gray-500">{t("legalAdvice")}</span>
               </label>
-              <select
+              <input
+                type="text"
                 id="haveLegalAdvice"
-                {...register("haveLegalAdvice")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={getYesNoLabel(initialData?.haveLegalAdvice)}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
+
             <div>
               <label
                 htmlFor="haveAccountingConsultancy"
@@ -111,23 +97,19 @@ export default function GovernanceDataTab() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  A Startup possui uma assessoria contábil?
+                  {t("accountingConsultancy")}
                 </span>
               </label>
-              <select
+              <input
+                type="text"
                 id="haveAccountingConsultancy"
-                {...register("haveAccountingConsultancy")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={getYesNoLabel(initialData?.haveAccountingConsultancy)}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
+
             <div>
               <label
                 htmlFor="relationshipsRegisteredInContract"
@@ -135,23 +117,19 @@ export default function GovernanceDataTab() {
               >
                 <span className="text-red-500">*</span>
                 <span className="text-gray-500">
-                  Todas as relações com Clientes, Fornecedores, Parceiros e
-                  Funcionários estão devidamente registrados em contrato?
+                  {t("relationshipsRegistered")}
                 </span>
               </label>
-              <select
+              <input
+                type="text"
                 id="relationshipsRegisteredInContract"
-                {...register("relationshipsRegisteredInContract")}
-                className="block pl-2 w-[300px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:max-w-xs text-xs lg:text-base sm:leading-6"
+                value={getYesNoLabel(
+                  initialData?.relationshipsRegisteredInContract
+                )}
+                className="block pl-2 min-w-[200px] w-fit max-w-[500px] h-[40px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-xs lg:text-base sm:leading-6 disabled:bg-gray-50 disabled:text-gray-500"
                 disabled
-              >
-                <option value="">Selecione uma opção</option>
-                {yesNoData.map((option: { id: string; label: string }) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                readOnly
+              />
             </div>
           </div>
         </div>

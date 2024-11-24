@@ -1,0 +1,623 @@
+{
+  "datePicker": {
+    "selectDate": "Select a date",
+    "locale": "en-US",
+    "dateFormat": "MM/dd/yyyy"
+  },
+  "admin": {
+    "headerAdmin": {
+      "lastAccess": "Last access",
+      "profile": "Profile"
+    },
+    "sidebar": {
+      "home": "Home",
+      "programs": "Programs",
+      "startups": "Startups",
+      "investors": "Investors",
+      "experts": "Mentors",
+      "companies": "Companies",
+      "settings": "Settings"
+    },
+    "profileModal": {
+      "title": "Edit Profile",
+      "nameRequired": "Name is required",
+      "selectLanguage": "Select language",
+      "portuguese": "Portuguese (Brazil)",
+      "english": "English",
+      "confirm": "Confirm",
+      "sending": "Sending...",
+      "cropImage": "Crop Image",
+      "cancel": "Cancel",
+      "errorLoadingImage": "Error loading image. Please try again.",
+      "profileUpdatedSuccess": "Profile updated successfully!",
+      "errorUpdatingProfile": "Error updating profile. Please try again."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "statistics": "Statistics",
+      "error": "Error loading data",
+      "metrics": {
+        "startups": "Startups",
+        "investors": "Investors",
+        "mentors": "Mentors",
+        "countries": "Countries",
+        "matches": "Matches"
+      },
+      "matchmaking": {
+        "startupsInvestors": "Matchmaking between Startups and Investors",
+        "startupsMentors": "Matchmaking between Startups and Mentors",
+        "startupsStartups": "Matchmaking between Startups"
+      },
+      "select": {
+        "metric": "Select metric"
+      }
+    },
+
+    "programs": {
+      "title": "Programs",
+      "newButton": "+ New",
+      "columns": "Columns",
+      "noDataFound": "No data found",
+      "selectedResults": "{selected} of {total} result(s) selected.",
+      "resultsPerPage": "Results per page",
+      "pageInfo": "Page {current} of {total}",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page",
+      "table": {
+        "columns": {
+          "name": "Name",
+          "startDate": "Program Start Date",
+          "endDate": "Program End Date",
+          "status": "Status"
+        }
+      },
+      "headerProgramsFilter": {
+        "filter": "Filter",
+        "programNamePlaceholder": "Program name",
+        "programStartDate": "Program start date",
+        "programEndDate": "Program end date",
+        "search": "Search",
+        "clearAll": "Clear all"
+      },
+      "programColumns": {
+        "selectAll": "Select all",
+        "selectRow": "Select row",
+        "name": "Name",
+        "published": "Published",
+        "yes": "Yes",
+        "no": "No",
+        "edital": "Edital",
+        "openEdital": "Open Edital",
+        "noFile": "No file",
+        "programStart": "Program Start",
+        "programEnd": "Program End",
+        "openMenu": "Open menu",
+        "actions": "Actions",
+        "edit": "Edit",
+        "details": "Details"
+      },
+      "programPage": {
+        "locale": "en-US"
+      },
+      "headerProgramPage": {
+        "start": "Start",
+        "end": "End",
+        "copyRegistrationLink": "Copy registration link",
+        "linkCopiedSuccess": "Link copied to clipboard!",
+        "linkCopyError": "Failed to copy link",
+        "linkCopyErrorToast": "Error copying link!",
+        "tabs": {
+          "startups": "Startups",
+          "mentors": "Mentors"
+        }
+      },
+      "programStartupTab": {
+        "reloading": "Reloading...",
+        "reload": "Reload",
+        "formProgramDialog": {
+          "editProgram": "Edit program",
+          "newProgram": "New program",
+          "programName": "Program name",
+          "programStart": "Program Start",
+          "programEnd": "Program End",
+          "programDescription": "Program description",
+          "descriptionNote": "(This description will be displayed to Startups if the program is published)",
+          "uploadEdital": "Upload the program's notice that will be available to Startups",
+          "selectFile": "Select file",
+          "publish": "Publish",
+          "publishNote": "By publishing this program, all Startups that are part of the Startups AI database will be notified and will be able to apply for this program.",
+          "saving": "Saving...",
+          "save": "Save",
+          "close": "Close",
+          "programUpdatedSuccess": "Program updated successfully!",
+          "programCreatedSuccess": "Program created successfully!",
+          "errorUpdatingProgram": "Error updating program!",
+          "errorCreatingProgram": "Error creating program!",
+          "validation": {
+            "required": "Field is required!",
+            "fileTooLarge": "File is too large!",
+            "endDateAfterStartDate": "The end date must be after the start date!"
+          }
+        },
+        "kanbanComponent": {
+          "updatedInfo": "Updated information",
+          "addNewList": "+ Add new list",
+          "listTitlePlaceholder": "List title",
+          "addList": "Add List",
+          "cancel": "Cancel"
+        },
+        "rulesComponent": {
+          "title": "Add rules",
+          "firstInput": "Move cards to the list:",
+          "firstInputSelect": "Select a list",
+          "secondInput": "When",
+          "secondInputSelect": "Select a question",
+          "selectOption": "Select an option",
+          "comparationType": "Comparation type",
+          "addAnotherRule": "+ Add another rule",
+          "save": "Save",
+          "validation": {
+            "required": "Field is required!",
+            "selectList": "Please select a valid list",
+            "selectValidList": "Please select a valid list"
+          }
+        },
+        "profileUpdatedInfo": {
+          "title": "Updated Information",
+          "message": {
+            "part1": "The information for startup",
+            "part2": "{startupName}",
+            "part3": "has been updated. Do you want to confirm that you are aware of this update?"
+          },
+          "confirmButton": "Ok",
+          "closeButton": "Close"
+        },
+        "menuKanbanPopover": {
+          "moveList": "Move list",
+          "createRules": "Create rules",
+          "delete": "Delete"
+        }
+      }
+    },
+
+    "startups": {
+      "startupTable": {
+        "selectAll": "Select all",
+        "selectRow": "Select row",
+        "startup": "Startup",
+        "vertical": "Vertical",
+        "country": "Country",
+        "businessModel": "Business Model",
+        "stage": "Stage",
+        "revenueLast12Months": "Revenue Last 12 Months",
+        "columns": "Columns",
+        "noResults": "No results found.",
+        "rowsSelected": "{count} of {total} row(s) selected.",
+        "rowsPerPage": "Rows per page",
+        "pageInfo": "Page {current} of {total}",
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page",
+        "loading": "Loading..."
+      },
+      "startupTab": {
+        "back": "Back",
+        "tabs": {
+          "generalData": "General Data",
+          "team": "Team",
+          "productService": "Product and Service",
+          "deepTech": "DeepTech",
+          "governance": "Governance",
+          "marketFinance": "Market and Finance",
+          "matches": "Matches",
+          "historical": "Historical",
+          "profile": "Profile"
+        }
+      },
+      "generalDataTab": {
+        "name": "Name",
+        "country": "Country",
+        "vertical": "Vertical",
+        "cityState": "City/State",
+        "operationalStage": "Operational Stage",
+        "businessModel": "Business Model",
+        "cnpj": "CNPJ",
+        "foundationDate": "Foundation Date",
+        "website": "Website",
+        "pitchdeck": "Pitchdeck",
+        "noPitchdeck": "No pitchdeck",
+        "logo": "Logo",
+        "challenges": "Mark all the challenges your startup is facing at this moment",
+        "desiredConnections": "What are the desired connections for the startup in the program?",
+        "connectionsInOriginCountry": "Make connections only in my startup's country of origin?",
+        "yes": "Yes",
+        "no": "No",
+        "valueProposal": "Value Proposal (max 200 characters)",
+        "startupDescription": "Startup Description",
+        "startupDescriptionHint": "(Describe your startup in as much detail as possible)"
+      },
+      "teamDataTab": {
+        "responsible": "RESPONSIBLE",
+        "responsibleName": "Name of the Startup's responsible person",
+        "responsiblePhone": "Phone of the Startup's responsible person",
+        "responsibleEmail": "Email of the Startup's responsible person",
+        "team": "TEAM",
+        "employeesCount": "How many employees work at the Startup?",
+        "fullTimeEmployees": "How many people on the team are 100% involved in the Startup?",
+        "partners": "PARTNERS",
+        "partnersDescription": "Add all the people and companies that are part of the company's Captable.",
+        "employeesQuantity": {
+          "1-5": "1 to 5",
+          "6-10": "6 to 10",
+          "11-30": "11 to 30",
+          "31-50": "31 to 50",
+          "moreThan50": "More than 50"
+        },
+        "partnersContainer": {
+          "name": "Name",
+          "phone": "Phone",
+          "email": "Email",
+          "position": "Position",
+          "founder": "Founder?",
+          "dedication": "Dedication",
+          "captablePercentage": "% Captable",
+          "firstBusiness": "First business?",
+          "linkedinLattes": "LinkedIn or Lattes",
+          "experienceOrFormation": "Experience or education in the startup's field?",
+          "complementaryFormation": "Are the partners' education and area of expertise complementary?",
+          "selectOption": "Select an option",
+          "yes": "Yes",
+          "no": "No",
+          "fullTime": "Full-time",
+          "partTime": "Part-time"
+        }
+      },
+      "productServiceDataTab": {
+        "startupProductService": "Choose the option that best describes what is marketed in your Startup",
+        "odsGoals": "SDGs addressed",
+        "problemsSolutions": "Problems and solutions that the Startup solves",
+        "competitors": "List of competitors",
+        "competitiveDifferentiators": "What are the competitive differentiators compared to your competitors?",
+        "sdgOptions": {
+          "none": "None",
+          "oneOrMore": "1 or more",
+          "dontKnow": "I don't know"
+        }
+      },
+      "deepTechDataTab": {
+        "maturityLevel": "Technological maturity level",
+        "hasPatent": "Has patent?",
+        "patentDescription": "Patent(s) description",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "governanceDataTab": {
+        "yes": "Yes",
+        "no": "No",
+        "selectOption": "Select an option",
+        "officiallyRegistered": "Is the company officially registered in your country with a social contract?",
+        "partnersAgreement": "Is there a Partners Agreement signed by the partners?",
+        "legalAdvice": "Does the Startup have legal advice?",
+        "accountingConsultancy": "Does the Startup have accounting consultancy?",
+        "relationshipsRegistered": "Are all relationships with Customers, Suppliers, Partners, and Employees properly registered in contracts?"
+      },
+      "marketFinanceDataTab": {
+        "market": "MARKET",
+        "payingCustomers": "How many paying customers do you have?",
+        "activeCustomers": "Total active customers",
+        "revenue": "REVENUE",
+        "alreadyEarning": "I'm already earning",
+        "lastMonthRevenue": "What was the revenue for the last month?",
+        "lastSixMonthsRevenue": "What was the revenue for the last 6 months?",
+        "lastTwelveMonthsRevenue": "What was the revenue for the last 12 months?",
+        "saasCurrentRRM": "In case of SaaS, inform the current RRM",
+        "investments": "INVESTMENTS",
+        "openInvestmentRound": "There is an open investment round",
+        "valueToBeRaised": "What is the value to be raised?",
+        "equityPercentage": "What percentage of equity to be distributed?",
+        "currentValuation": "What is the current valuation of the Startup?",
+        "roundStart": "Round start",
+        "roundEnd": "Round end",
+        "receivedInvestments": "RECEIVED INVESTMENTS",
+        "investmentsContainer": {
+          "round": "Round",
+          "roundStart": "Round start",
+          "roundEnd": "Round end",
+          "totalInvestments": "Total investments raised",
+          "equityPercentage": "Percentage of equity distributed",
+          "investorsCount": "How many investors do you have?",
+          "investorsList": "Ventures and/or investors of the round"
+        }
+      },
+      "profileDataTab": {
+        "profileNotGenerated": "The startup profile has not been generated yet. Please complete the necessary information to generate the profile.",
+        "profileTitle": "STARTUP PROFILE GENERATED BY A.I."
+      }
+    },
+
+    "investors": {
+      "title": "Investors Page Under Construction",
+      "description": "We are working to bring you an exceptional experience connecting with innovative startups. Soon, you'll have access to unique investment opportunities!",
+      "investmentOpportunities": "Investment Opportunities",
+      "networking": "Networking"
+    },
+
+    "mentors": {
+      "mentorTable": {
+        "columns": "Columns",
+        "noResults": "No results found.",
+        "resultsSelected": "{selected} of {total} result(s) selected.",
+        "resultsPerPage": "Results per page",
+        "pageInfo": "Page {current} of {total}",
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page"
+      },
+      "mentorColumns": {
+        "name": "Name",
+        "country": "Country",
+        "stateCity": "City/State",
+        "actions": "Actions",
+        "details": "Details",
+        "company": "Company",
+        "startupExperiencePt": "Experience with startups - Portuguese",
+        "startupExperienceEn": "Experience with startups - English",
+        "ok": "Ok"
+      }
+    },
+
+    "companies": {
+      "companiesTable": {
+        "title": "ORGANIZATIONS",
+        "newButton": "New",
+        "columns": "Columns",
+        "noData": "No data found",
+        "resultsSelected": "{selected} of {total} result(s) selected.",
+        "resultsPerPage": "Results per page",
+        "pageInfo": "Page {current} of {total}",
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page"
+      },
+      "companyColumns": {
+        "name": "Name",
+        "registrationDate": "Registration Date",
+        "actions": "Actions",
+        "edit": "Edit"
+      },
+      "formCompanyDialog": {
+        "editOrganization": "Edit organization",
+        "newOrganization": "New organization",
+        "organizationName": "Organization Name",
+        "creationDate": "Creation Date",
+        "paying": "Paying",
+        "logo": "Logo",
+        "chooseFile": "Choose file (max 300 x 200)",
+        "logoSidebar": "Logo sidebar",
+        "imageError": "Image error",
+        "users": "Users",
+        "addUser": "Add User",
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "hidePassword": "Hide password",
+        "showPassword": "Show password",
+        "blockUser": "Block user",
+        "unblockUser": "Unblock user",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving...",
+        "cropImage": "Crop Image",
+        "exactSize": "Exact size: {size}",
+        "confirm": "Confirm",
+        "sending": "Sending...",
+        "close": "Close",
+        "organizationUpdated": "Organization updated successfully!",
+        "organizationCreated": "Organization created successfully!",
+        "errorUpdatingOrganization": "Error updating organization!",
+        "errorCreatingOrganization": "Error creating organization!",
+        "errorProcessingImage": "Error processing image. Please try again."
+      },
+      "headerCompaniesFilter": {
+        "filter": "Filter",
+        "organizationName": "Organization name",
+        "registrationDate": "Registration date",
+        "search": "Search",
+        "clear": "Clear"
+      }
+    },
+    "settings": {
+      "general": {
+        "title": "General",
+        "logo": "Logo",
+        "chooseFile": "Choose file (300 x 100)",
+        "logoSidebar": "Sidebar logo",
+        "logoSidebarSize": "50 x 50",
+        "imageError": "Image error",
+        "close": "Close",
+        "cropImage": "Crop Image",
+        "exactSize": "Exact size: {size}",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "sending": "Sending...",
+        "errors": {
+          "fileSizeExceeded": "File size exceeds the 2MB limit.",
+          "imageTooSmall": "Image is too small. Minimum required size: {minWidth}x{minHeight} pixels. Current size: {width}x{height} pixels.",
+          "imageTooLarge": "Image is too large. Maximum allowed size: {maxWidth}x{maxHeight} pixels. Current size: {width}x{height} pixels.",
+          "verificationError": "Error verifying image size. Please try again."
+        },
+        "success": {
+          "logoUpdated": "Logo updated successfully!",
+          "sidebarLogoUpdated": "Sidebar logo updated successfully!"
+        },
+        "error": {
+          "logoUpload": "Error uploading logo. Please try again.",
+          "sidebarLogoUpload": "Error uploading sidebar logo. Please try again."
+        }
+      },
+      "externalPage": {
+        "title": "External Page",
+        "tabs": {
+          "general": "General",
+          "externalPage": "External Page"
+        },
+        "tipTapEditor": {
+          "tooltips": {
+            "bold": "Bold",
+            "italic": "Italic",
+            "underline": "Underline",
+            "alignLeft": "Align Left",
+            "alignCenter": "Align Center",
+            "alignRight": "Align Right",
+            "bulletList": "Bullet List",
+            "orderedList": "Ordered List",
+            "insertEditLink": "Insert/Edit Link",
+            "clearFormatting": "Clear Formatting"
+          },
+          "linkDialog": {
+            "insertLink": "Insert Link",
+            "editLink": "Edit Link",
+            "enterURL": "Enter URL",
+            "cancel": "Cancel",
+            "apply": "Apply",
+            "update": "Update"
+          }
+        },
+        "externalPageSettings": {
+          "banner": {
+            "label": "Banner",
+            "maxSize": "Maximum image size: 2MB",
+            "fileError": "File is larger than 2MB. Please select a smaller file.",
+            "selectFile": "Select file"
+          },
+          "buttons": {
+            "link": "LINK",
+            "preview": "PREVIEW",
+            "save": "SAVE",
+            "saving": "SAVING"
+          },
+          "bannerPhrase": {
+            "label": "Phrase over banner",
+            "maxChars": "(max: 40 characters)"
+          },
+          "learnMore": {
+            "label": "\"Learn more\" button over banner",
+            "text": {
+              "label": "Text",
+              "maxChars": "(max: 15 characters)"
+            },
+            "link": "Link"
+          },
+          "pageTitle": {
+            "label": "Page title",
+            "maxChars": "(max: 30 characters)"
+          },
+          "videoLink": {
+            "label": "Video link"
+          },
+          "freeText": {
+            "label": "Free text for page"
+          },
+          "registrationCalls": {
+            "label": "Registration calls",
+            "showOnPage": "Show on page"
+          },
+          "cards": {
+            "entrepreneurs": {
+              "title": "Entrepreneurs",
+              "buttonText": "I'm an entrepreneur",
+              "benefits": [
+                "Free Acceleration",
+                "Individual Mentoring",
+                "Ecosystem Connection"
+              ]
+            },
+            "investors": {
+              "title": "Investors",
+              "buttonText": "I'm an investor",
+              "benefits": [
+                "Startup Connection",
+                "Exclusive Opportunities",
+                "Demodays"
+              ]
+            },
+            "mentors": {
+              "title": "Mentors",
+              "buttonText": "I'm a mentor",
+              "benefits": [
+                "Give back",
+                "Ecosystem Visibility",
+                "Exclusive Events"
+              ]
+            },
+            "sponsors": {
+              "title": "Sponsors",
+              "buttonText": "I'm a sponsor",
+              "benefits": ["Brand visibility", "VIP Access", "Exclusive events"]
+            }
+          },
+          "toasts": {
+            "settingsSaved": "Settings saved successfully!",
+            "settingsError": "Error saving settings. Please try again.",
+            "linkCopied": "Link copied to clipboard!",
+            "copyError": "Failed to copy link. Please try again."
+          }
+        },
+        "customTabs": {
+          "cardTitle": "Card title",
+          "buttonText": "Button text",
+          "buttonLink": "Button link",
+          "benefit": "benefit",
+          "maxCharacters": "(max: {count} characters)",
+          "errors": {
+            "required": "This field is required",
+            "maxLength": "Maximum {count} characters allowed"
+          },
+          "cards": [
+            {
+              "title": "Entrepreneurs",
+              "button_text": "I'm an entrepreneur",
+              "bullet_points": [
+                "Free Acceleration",
+                "Individual Mentoring",
+                "Ecosystem Connection"
+              ]
+            },
+            {
+              "title": "Investors",
+              "button_text": "I'm an investor",
+              "bullet_points": [
+                "Connection with Startups",
+                "Exclusive Opportunities",
+                "Demo Days"
+              ]
+            },
+            {
+              "title": "Mentors",
+              "button_text": "I'm a mentor",
+              "bullet_points": [
+                "Give back",
+                "Ecosystem Visibility",
+                "Exclusive Events"
+              ]
+            },
+            {
+              "title": "Sponsors",
+              "button_text": "I'm a sponsor",
+              "bullet_points": [
+                "Brand Visibility",
+                "VIP Access",
+                "Exclusive Events"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

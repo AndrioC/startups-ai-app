@@ -3,6 +3,7 @@ import { Control, Controller, FieldErrors, useWatch } from "react-hook-form";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 import investorCardImage from "@/assets/img/investor-card-image.svg";
@@ -32,62 +33,12 @@ interface ExternalPageSettingsCustomTabsProps {
   enabledTabs: boolean[];
 }
 
-const cards = [
-  {
-    id: 1,
-    title: "Empreendedores",
-    button_text: "Sou empreendedor",
-    button_link: "https://sai.startupsai.com.br",
-    image: startupCardImage,
-    bullet_points: [
-      { id: 1, title: "Aceleração Gratuita" },
-      { id: 2, title: "Mentorias Individuais" },
-      { id: 3, title: "Conexão com o Ecossistema" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Investidores",
-    button_text: "Sou investidor",
-    button_link: "https://sai.startupsai.com.br",
-    image: investorCardImage,
-    bullet_points: [
-      { id: 1, title: "Conexão com Startups" },
-      { id: 2, title: "Oportunidades Exclusivas" },
-      { id: 3, title: "Demodays" },
-    ],
-  },
-  {
-    id: 3,
-    title: "Mentores",
-    button_text: "Sou mentor",
-    button_link: "https://sai.startupsai.com.br",
-    image: mentorCardImage,
-    bullet_points: [
-      { id: 1, title: "Give back" },
-      { id: 2, title: "Visibilidade no Ecossistema" },
-      { id: 3, title: "Eventos Exclusivos" },
-    ],
-  },
-  {
-    id: 4,
-    title: "Patrocinadores",
-    button_text: "Sou patrocinador",
-    button_link: "https://sai.startupsai.com.br",
-    image: sponsorCardImage,
-    bullet_points: [
-      { id: 1, title: "Visibilidade da marca" },
-      { id: 2, title: "Acesso VIP" },
-      { id: 3, title: "Eventos exclusivos" },
-    ],
-  },
-];
-
 export default function ExternalPageSettingsCustomTabs({
   control,
   errors,
   enabledTabs,
 }: ExternalPageSettingsCustomTabsProps) {
+  const t = useTranslations("admin.settings.externalPage.customTabs");
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const { subdomain } = useParams();
   const buttonLinkUrl = `https://${subdomain}.startupsai.com.br/auth/login`;
@@ -98,6 +49,57 @@ export default function ExternalPageSettingsCustomTabs({
     control,
     name: "enabled_tabs",
   });
+
+  const cards = [
+    {
+      id: 1,
+      title: t("cards.0.title"),
+      button_text: t("cards.0.button_text"),
+      button_link: "https://sai.startupsai.com.br",
+      image: startupCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.0.bullet_points.0") },
+        { id: 2, title: t("cards.0.bullet_points.1") },
+        { id: 3, title: t("cards.0.bullet_points.2") },
+      ],
+    },
+    {
+      id: 2,
+      title: t("cards.1.title"),
+      button_text: t("cards.1.button_text"),
+      button_link: "https://sai.startupsai.com.br",
+      image: investorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.1.bullet_points.0") },
+        { id: 2, title: t("cards.1.bullet_points.1") },
+        { id: 3, title: t("cards.1.bullet_points.2") },
+      ],
+    },
+    {
+      id: 3,
+      title: t("cards.2.title"),
+      button_text: t("cards.2.button_text"),
+      button_link: "https://sai.startupsai.com.br",
+      image: mentorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.2.bullet_points.0") },
+        { id: 2, title: t("cards.2.bullet_points.1") },
+        { id: 3, title: t("cards.2.bullet_points.2") },
+      ],
+    },
+    {
+      id: 4,
+      title: t("cards.3.title"),
+      button_text: t("cards.3.button_text"),
+      button_link: "https://sai.startupsai.com.br",
+      image: sponsorCardImage,
+      bullet_points: [
+        { id: 1, title: t("cards.3.bullet_points.0") },
+        { id: 2, title: t("cards.3.bullet_points.1") },
+        { id: 3, title: t("cards.3.bullet_points.2") },
+      ],
+    },
+  ];
 
   const updateContextData = useCallback(
     (newTabsData: TabData[]) => {
@@ -185,9 +187,9 @@ export default function ExternalPageSettingsCustomTabs({
                     className="flex items-center gap-2"
                   >
                     <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
-                    <span className="text-gray-500">Título do card</span>
+                    <span className="text-gray-500">{t("cardTitle")}</span>
                     <p className="text-xs text-muted-foreground text-right">
-                      (max: 30 caracteres)
+                      {t("maxCharacters", { count: 30 })}
                     </p>
                   </Label>
                   <Controller
@@ -240,9 +242,9 @@ export default function ExternalPageSettingsCustomTabs({
                     className="flex items-center gap-2"
                   >
                     <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
-                    <span className="text-gray-500">Texto do botão</span>
+                    <span className="text-gray-500">{t("buttonText")}</span>
                     <p className="text-xs text-muted-foreground text-right">
-                      (max: 18 caracteres)
+                      {t("maxCharacters", { count: 18 })}
                     </p>
                   </Label>
                   <Controller
@@ -294,7 +296,7 @@ export default function ExternalPageSettingsCustomTabs({
                     className="flex items-center gap-2"
                   >
                     <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
-                    <span className="text-gray-500">Link do botão</span>
+                    <span className="text-gray-500">{t("buttonLink")}</span>
                   </Label>
                   <Controller
                     name={`enabled_tabs.${tabIndex}.tab_card.buttonLink`}
@@ -339,9 +341,9 @@ export default function ExternalPageSettingsCustomTabs({
                       className="flex items-center gap-2"
                     >
                       <QuestionMarkCircledIcon className="h-4 w-4 text-[#2292EA] font-bold cursor-help" />
-                      <span className="text-gray-500">{`${index + 1}° benefício`}</span>
+                      <span className="text-gray-500">{`${index + 1}° ${t("benefit")}`}</span>
                       <p className="text-xs text-muted-foreground text-right">
-                        (max: 30 caracteres)
+                        {t("maxCharacters", { count: 30 })}
                       </p>
                     </Label>
                     <Controller

@@ -2,6 +2,7 @@
 
 import { Badge, Tooltip } from "@radix-ui/themes";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { type ColumnDef } from "unstyled-table";
 
 import { StartupTable } from "@/app/api/startup/[organization_id]/load-startups-by-organization-id/route";
@@ -11,96 +12,106 @@ import {
   getBadgeColorByBusinessModel,
 } from "@/extras/utils";
 
-export const startupColumns: ColumnDef<StartupTable, unknown>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => {
-          table.toggleAllPageRowsSelected(!!value);
-        }}
-        aria-label="Select all."
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => {
-          row.toggleSelected(!!value);
-        }}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "Startup",
-    accessorKey: "name",
-    header: "Startup",
-    enableColumnFilter: false,
-  },
-  {
-    id: "Vertical",
-    accessorKey: "vertical",
-    header: "Vertical",
-    enableColumnFilter: false,
-    enableSorting: false,
-  },
-  {
-    id: "País",
-    accessorKey: "country",
-    header: "País",
-    enableColumnFilter: false,
-    cell: ({ row }) => {
-      const startup = row.original;
+export const StartupColumns = () => {
+  const t = useTranslations("admin.startups.startupTable");
 
-      return (
-        <Tooltip content={startup.country}>
-          <Image
-            width={40}
-            height={40}
-            src={startup.country_flag}
-            alt={`country-flag-${startup.country}`}
+  const startupColumns: ColumnDef<StartupTable, unknown>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => {
+              table.toggleAllPageRowsSelected(!!value);
+            }}
+            aria-label={t("selectAll")}
           />
-        </Tooltip>
-      );
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => {
+              row.toggleSelected(!!value);
+            }}
+            aria-label={t("selectRow")}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-  {
-    id: "Mod. negócio",
-    accessorKey: "business_model",
-    header: "Mod. negócio",
-    enableColumnFilter: false,
-
-    cell: ({ row }) => {
-      const startup = row.original;
-
-      return (
-        <Badge
-          className="w-[60px] flex items-center justify-center"
-          color={
-            getBadgeColorByBusinessModel(
-              startup.business_model_code
-            ) as BusinessModelColors[keyof BusinessModelColors]
-          }
-        >
-          {startup.business_model}
-        </Badge>
-      );
+    {
+      id: t("startup"),
+      accessorKey: "name",
+      header: t("startup"),
+      enableColumnFilter: false,
     },
-  },
-  {
-    id: "Estágio",
-    accessorKey: "operation_stage",
-    header: "Estágio",
-    enableColumnFilter: false,
-  },
-  {
-    id: "Fat. Ult. 12 meses",
-    accessorKey: "last_twelve_months_revenue",
-    header: "Fat. Ult. 12 meses",
-    enableColumnFilter: false,
-  },
-];
+    {
+      id: t("vertical"),
+      accessorKey: "vertical",
+      header: t("vertical"),
+      enableColumnFilter: false,
+      enableSorting: false,
+    },
+    {
+      id: t("country"),
+      accessorKey: "country",
+      header: t("country"),
+      enableColumnFilter: false,
+      cell: ({ row }) => {
+        const startup = row.original;
+
+        return (
+          <Tooltip content={startup.country}>
+            <Image
+              width={40}
+              height={40}
+              src={startup.country_flag}
+              alt={`country-flag-${startup.country}`}
+            />
+          </Tooltip>
+        );
+      },
+    },
+    {
+      id: t("businessModel"),
+      accessorKey: "business_model",
+      header: t("businessModel"),
+      enableColumnFilter: false,
+
+      cell: ({ row }) => {
+        const startup = row.original;
+
+        return (
+          <Badge
+            className="w-[60px] flex items-center justify-center"
+            color={
+              getBadgeColorByBusinessModel(
+                startup.business_model_code
+              ) as BusinessModelColors[keyof BusinessModelColors]
+            }
+          >
+            {startup.business_model}
+          </Badge>
+        );
+      },
+    },
+    {
+      id: t("stage"),
+      accessorKey: "operation_stage",
+      header: t("stage"),
+      enableColumnFilter: false,
+    },
+    {
+      id: t("revenueLast12Months"),
+      accessorKey: "last_twelve_months_revenue",
+      header: t("revenueLast12Months"),
+      enableColumnFilter: false,
+    },
+  ];
+
+  return startupColumns;
+};
