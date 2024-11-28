@@ -478,36 +478,36 @@
 
   "programForm": {
     "availablePrograms": {
-      "title": "Programas disponíveis",
+      "title": "Programas Disponíveis",
       "table": {
         "noDataFound": "Nenhum dado encontrado",
         "nameColumn": "Nome",
-        "startDateColumn": "Início do programa",
-        "endDateColumn": "Fim do programa",
+        "startDateColumn": "Data de Início",
+        "endDateColumn": "Data de Término",
         "fileColumn": "Edital",
-        "seeElegibility": "Ver elegibilidade",
-        "seeFile": "Ver edital",
-        "fileNotAvailable": "Edital não disponível",
-        "resultsPerPage": "Resultados por página",
+        "seeFile": "Ver Edital",
+        "fileNotAvailable": "Arquivo indisponível",
+        "resultsPerPage": "Resultados por Página",
         "page": "Página",
         "of": "de"
       },
       "modal": {
         "title": "Inscreva-se no programa abaixo e aproveite esta grande oportunidade",
         "checkingEligibility": "Verificando elegibilidade...",
-        "errorChecking": "Erro ao verificar elegibilidade. Por favor, tente novamente.",
-        "eligible": "Sua Startup está elegível para este programa",
-        "notEligible": "Sua Startup não está elegível para este programa",
+        "seeElegibility": "Ver Elegibilidade",
+        "errorChecking": "Erro ao verificar elegibilidade. Tente novamente.",
+        "eligible": "Sua Startup é elegível para este programa",
+        "notEligible": "Sua Startup não é elegível para este programa",
         "ineligibilityReason": "Motivo da inelegibilidade",
         "alreadySubscribed": {
           "title": "Já inscrito",
           "description": "Sua startup já está inscrita neste programa."
         },
-        "registrationPeriod": "Inscrições de {startDate} a {endDate}",
+        "registrationPeriod": "Inscrições de {startDate} até {endDate}",
         "programDescription": "Descrição do programa",
         "mainTopics": "Principais tópicos do Edital",
         "readNotice": "Leia o Edital deste programa",
-        "noticeUnavailable": "Edital não disponível",
+        "noticeUnavailable": "Edital indisponível",
         "subscribe": "Inscrever-se agora",
         "subscribed": "Inscrito",
         "subscriptionSuccess": "Inscrição realizada com sucesso!",
@@ -515,18 +515,18 @@
       }
     },
     "participationHistory": {
-      "title": "Histórico de participação",
+      "title": "Histórico de Participação",
       "table": {
         "noDataFound": "Nenhum dado encontrado",
-        "nameColumn": "Nome do programa",
-        "subscriptionDate": "Data inscrição",
-        "startDateColumn": "Início do programa",
-        "endDateColumn": "Fim do programa",
+        "nameColumn": "Nome do Programa",
+        "subscriptionDate": "Data de Inscrição",
+        "startDateColumn": "Data de Início",
+        "endDateColumn": "Data de Término",
         "firstPage": "Primeira página",
-        "previousPage": "Pagina anterior",
+        "previousPage": "Página anterior",
         "nextPage": "Próxima página",
-        "lastPage": "Ultima página",
-        "resultsPerPage": "Resultados por página",
+        "lastPage": "Última página",
+        "resultsPerPage": "Resultados por Página",
         "page": "Página",
         "of": "de"
       }
@@ -534,7 +534,7 @@
     "documents": {
       "title": "Documentos",
       "titleConstruction": "Documentos em Construção",
-      "subtitle": "Estamos trabalhando duro para trazer a você uma experiência incrível de gerenciamento de documentos. Fique ligado!",
+      "subtitle": "Estamos trabalhando para trazer uma experiência incrível de gestão de documentos. Aguarde!",
       "planning": "Planejamento",
       "development": "Desenvolvimento"
     }
