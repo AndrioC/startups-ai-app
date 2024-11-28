@@ -12,17 +12,17 @@ interface Command {
 class PrePushCheck {
   private commands: Command[] = [
     {
-      title: "Verificando lint",
+      title: "Checking lint",
       command: "next lint",
       status: "pending",
     },
     {
-      title: "Verificando tipos",
+      title: "Type checking",
       command: "tsc --noEmit",
       status: "pending",
     },
     {
-      title: "Gerando build",
+      title: "Building",
       command: "next build",
       status: "pending",
     },
@@ -30,14 +30,14 @@ class PrePushCheck {
 
   private async executeCommand(command: Command): Promise<void> {
     try {
-      console.log(chalk.cyan(`\nExecutando: ${command.title}`));
+      console.log(chalk.cyan(`\nExecuting: ${command.title}`));
       execSync(command.command, { stdio: "inherit" });
       command.status = "success";
-      console.log(chalk.green(`✓ ${command.title} concluído com sucesso`));
+      console.log(chalk.green(`✓ ${command.title} completed successfully`));
     } catch (error) {
       command.status = "error";
-      console.error(chalk.red(`✗ Falha ao executar: ${command.title}`));
-      throw new Error(`Falha ao executar: ${command.title}`);
+      console.error(chalk.red(`✗ Failed to execute: ${command.title}`));
+      throw new Error(`Failed to execute: ${command.title}`);
     }
   }
 
@@ -54,7 +54,7 @@ class PrePushCheck {
 
   private async logStatus(): Promise<void> {
     console.clear();
-    console.log(chalk.blue("\n🚀 Status das Verificações:\n"));
+    console.log(chalk.blue("\n🚀 Checks Status:\n"));
 
     for (const cmd of this.commands) {
       const icon = this.getStatusIcon(cmd.status);
@@ -63,7 +63,7 @@ class PrePushCheck {
   }
 
   public async run(): Promise<void> {
-    console.log(chalk.blue("\n🔍 Iniciando verificações pre-push..."));
+    console.log(chalk.blue("\n🔍 Starting pre-push checks..."));
 
     try {
       for (const command of this.commands) {
@@ -74,16 +74,14 @@ class PrePushCheck {
 
       await this.logStatus();
       console.log(
-        chalk.green(
-          "\n✅ Todas as verificações passaram! Continuando com o push..."
-        )
+        chalk.green("\n✅ All checks passed! Continuing with push...")
       );
       process.exit(0);
     } catch (error) {
       await this.logStatus();
-      console.error(chalk.red("\n❌ Verificações falharam. Push cancelado."));
+      console.error(chalk.red("\n❌ Checks failed. Push cancelled."));
       if (error instanceof Error) {
-        console.error(chalk.red(`\nErro: ${error.message}`));
+        console.error(chalk.red(`\nError: ${error.message}`));
       }
       process.exit(1);
     }
