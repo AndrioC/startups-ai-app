@@ -1,3 +1,4 @@
+import { UserType } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
@@ -33,11 +34,12 @@ export async function POST() {
         user_logo_img: user.logo_img
           ? `https://${process.env.S3_USERS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${user.logo_img}`
           : null,
-        isSAI: user.type === "SAI",
-        isAdmin: user.type === "ADMIN",
-        isInvestor: user.type === "INVESTOR",
-        isMentor: user.type === "MENTOR",
-        isStartup: user.type === "STARTUP",
+        isSAI: user.type === UserType.SAI,
+        isAdmin: user.type === UserType.ADMIN,
+        isInvestor: user.type === UserType.INVESTOR,
+        isMentor: user.type === UserType.MENTOR,
+        isStartup: user.type === UserType.STARTUP,
+        isEnterprise: user.type === UserType.ENTERPRISE,
         logo_img: user.organizations?.logo_img
           ? `https://${process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${user.organizations.logo_img}`
           : null,

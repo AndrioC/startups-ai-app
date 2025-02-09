@@ -98,6 +98,8 @@ export const pageRedirect = (type: UserType): string => {
       return "/mentor";
     case UserType.INVESTOR:
       return "/investor";
+    case UserType.ENTERPRISE:
+      return "/enterprise";
     default:
       return "/";
   }

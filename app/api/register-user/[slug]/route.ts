@@ -10,6 +10,7 @@ interface DataRequest {
   registerPassword: string;
   registerUserType: UserType;
   registerUserTerms: boolean;
+  enterpriseCategory: number;
 }
 
 export async function POST(
@@ -35,7 +36,7 @@ export async function POST(
   }
 
   const user = await prisma.user.findFirst({
-    where: { email: data.registerEmail },
+    where: { email: data.registerEmail, organization_id: organization.id },
   });
 
   if (user) {
@@ -132,6 +133,25 @@ export async function POST(
         });
       }
 
+      if (data.registerUserType === UserType.ENTERPRISE) {
+        const enterprise = await prisma.enterprise.create({
+          data: {
+            name: data.registerName,
+            main_responsible_email: data.registerEmail,
+            organization_id: organization.id,
+            enterprise_category_id: Number(data.enterpriseCategory),
+          },
+        });
+        createdInfoId = enterprise.id;
+
+        await prisma.enterprise_organizations.create({
+          data: {
+            enterprise_id: enterprise.id,
+            organization_id: organization.id,
+          },
+        });
+      }
+
       const hashedPassword = await bcryptjs.hash(data.registerPassword, 10);
 
       const createdUser = await prisma.user.create({
@@ -145,6 +165,10 @@ export async function POST(
             data.registerUserType === UserType.INVESTOR ? createdInfoId : null,
           expert_id:
             data.registerUserType === UserType.MENTOR ? createdInfoId : null,
+          enterprise_id:
+            data.registerUserType === UserType.ENTERPRISE
+              ? createdInfoId
+              : null,
           type: data.registerUserType,
           hashed_password: hashedPassword,
           accepted_terms: data.registerUserTerms,

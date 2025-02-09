@@ -40,8 +40,10 @@
     "userTypes": {
       "STARTUP": "Startup",
       "MENTOR": "Mentor",
-      "INVESTOR": "Investidor"
+      "INVESTOR": "Investidor",
+      "ENTERPRISE": "Empresa"
     },
+    "enterpriseCategoryPlaceholder": "Selecione uma opção",
     "validation": {
       "required": "Campo obrigatório!",
       "minNameLength": "O nome deve ter pelo menos 5 caracteres!",
@@ -460,19 +462,6 @@
           "loading": "Ativando..."
         }
       }
-    },
-    "settings": {
-      "title": "Configurações",
-      "languageSetting": {
-        "label": "Idioma",
-        "portugueseLanguage": "Português (Brasil)",
-        "englishLanguage": "Inglês"
-      },
-      "saving": "Salvando...",
-      "cancelButton": "Cancelar",
-      "saveChanges": "Salvar Alterações",
-      "updateSuccess": "Suas configurações foram atualizadas.",
-      "updateError": "Falha ao salvar as configurações. Por favor, tente novamente."
     }
   },
 
@@ -538,5 +527,19 @@
       "planning": "Planejamento",
       "development": "Desenvolvimento"
     }
+  },
+
+  "headerSettings": {
+    "title": "Configurações",
+    "languageSetting": {
+      "label": "Idioma",
+      "portugueseLanguage": "Português (Brasil)",
+      "englishLanguage": "Inglês"
+    },
+    "saving": "Salvando...",
+    "cancelButton": "Cancelar",
+    "saveChanges": "Salvar Alterações",
+    "updateSuccess": "Suas configurações foram atualizadas.",
+    "updateError": "Falha ao salvar as configurações. Por favor, tente novamente."
   }
 }

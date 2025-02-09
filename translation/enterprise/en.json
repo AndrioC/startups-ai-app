@@ -1,0 +1,95 @@
+{
+  "datePicker": {
+    "selectDate": "Select a date",
+    "locale": "en-US",
+    "dateFormat": "MM/dd/yyyy"
+  },
+  "generalData": {
+    "selectOption": "Select an option",
+    "savingData": "Saving data...",
+    "title": "General Data",
+    "name": "Name",
+    "countryId": "Country",
+    "categoryId": "Category",
+    "logo": "Logo",
+    "stateCity": "State / City",
+    "subscriptionNumber": "Tax identification",
+    "website": "Website",
+    "fullAddress": "Full Address",
+    "phone": "Phone",
+    "email": "Email",
+    "responsibleRepresentative": "Responsible",
+    "mainResponsibleName": "Responsible Name",
+    "mainResponsiblePosition": "Responsible Position",
+    "mainResponsiblePhone": "Responsible Phone",
+    "mainResponsibleEmail": "Responsible Email",
+    "foundationDate": "Foundation Date",
+    "activityAreas": "Activity area",
+    "otherInformation": "Other information",
+    "enterpriseOrganizationType": "Company type",
+    "enterpriseEmployeesQuantity": "Number of employees",
+    "enterpriseSocialCapital": "Share capital",
+    "enterpriseMainResponsibleName": "CEO/Director name",
+    "enterpriseProducts": "Products and services offered",
+    "enterpriseCertifications": "Describe below the certifications and seals that the company has",
+    "governmentOrganizationType": "Agency type (municipal, state, federal)",
+    "governmentCoverageArea": "Coverage area or region",
+    "governmentBusinessHour": "Operating hours",
+    "governmentMainResponsibleName": "Name of manager or responsible",
+    "collegeOrganizationType": "Institution type",
+    "collegePublicPrivate": "Public / Private",
+    "collegeEnrolledStudentsQuantity": "Number of students",
+    "collegeMainResponsibleName": "Chancellor's name",
+    "collegeActivityArea": "Field of activity (when applicable)",
+    "fullyDescription": "Describe your company here in as much detail as possible",
+    "enterpriseObjectives": "Select the options below that describe your institution's objective in the program",
+    "save": "Save",
+    "saveSuccess": "Data saved successfully",
+    "saveError": "Error saving data",
+    "noChanges": "No changes to save"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email address",
+    "minLength": "Minimum length is {{min}} characters",
+    "invalidDate": "Invalid date",
+    "invalidEmail": "Invalid email address",
+    "fileTooLarge": "File is too large!"
+  },
+  "sideCard": {
+    "companyInfo": {
+      "title": "Company Data",
+      "responsibleData": "Responsible Data",
+      "images": {
+        "companyLogo": "Company Logo"
+      },
+      "placeholders": {
+        "emptyField": "-"
+      }
+    },
+    "logo": "Logo",
+    "matchesCard": {
+      "title": "MATCHES",
+      "images": {
+        "matchesArrow": "matches"
+      },
+      "noMatches": "No matches found!",
+      "dateFormat": {
+        "match": "{{percentage}}% - {{date}}"
+      }
+    }
+  },
+  "headerSettings": {
+    "title": "Settings",
+    "languageSetting": {
+      "label": "Language",
+      "portugueseLanguage": "Portuguese (Brazil)",
+      "englishLanguage": "English"
+    },
+    "saving": "Saving...",
+    "cancelButton": "Cancel",
+    "saveChanges": "Save Changes",
+    "updateSuccess": "Your settings has been updated.",
+    "updateError": "Failed to save settings. Please try again."
+  }
+}

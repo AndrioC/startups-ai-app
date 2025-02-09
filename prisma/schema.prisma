@@ -11,26 +11,28 @@ datasource db {
 }
 
 model organizations {
-  id                     Int                      @id @default(autoincrement())
-  name                   String
-  slug                   String?                  @unique
-  slug_admin             String?                  @unique
-  payment_needed         Boolean                  @default(false)
-  logo_img               String?
-  logo_sidebar           String?
-  created_at             DateTime                 @default(now())
-  updated_at             DateTime                 @default(now())
-  user                   user[]
-  startups               startups[]
-  ebooks                 ebooks[]
-  investors              investors[]
-  experts                experts[]
-  programs               programs[]
-  external_page_settings external_page_settings[]
-  startup_organizations  startup_organizations[]
-  user_organizations     user_organizations[]
-  expert_organizations   expert_organizations[]
-  investor_organizations investor_organizations[]
+  id                       Int                        @id @default(autoincrement())
+  name                     String
+  slug                     String?                    @unique
+  slug_admin               String?                    @unique
+  payment_needed           Boolean                    @default(false)
+  logo_img                 String?
+  logo_sidebar             String?
+  created_at               DateTime                   @default(now())
+  updated_at               DateTime                   @default(now())
+  user                     user[]
+  startups                 startups[]
+  ebooks                   ebooks[]
+  investors                investors[]
+  experts                  experts[]
+  programs                 programs[]
+  external_page_settings   external_page_settings[]
+  startup_organizations    startup_organizations[]
+  user_organizations       user_organizations[]
+  expert_organizations     expert_organizations[]
+  investor_organizations   investor_organizations[]
+  enterprise               enterprise[]
+  enterprise_organizations enterprise_organizations[]
 }
 
 model vertical {
@@ -86,13 +88,14 @@ model service_products {
 }
 
 model country {
-  id        Int         @id @default(autoincrement())
-  code      String
-  name_en   String
-  name_pt   String
-  startups  startups[]
-  investors investors[]
-  experts   experts[]
+  id         Int          @id @default(autoincrement())
+  code       String
+  name_en    String
+  name_pt    String
+  startups   startups[]
+  investors  investors[]
+  experts    experts[]
+  enterprise enterprise[]
 }
 
 model objectives {
@@ -253,6 +256,7 @@ enum UserType {
   STARTUP
   MENTOR
   INVESTOR
+  ENTERPRISE
   ADMIN
   SAI
 }
@@ -282,7 +286,6 @@ model user {
   email_verified      DateTime?
   language            Language  @default(PT_BR)
 
-  //relacionamentos
   organizations                                   organizations?                                    @relation(fields: [organization_id], references: [id])
   startups                                        startups?                                         @relation(fields: [startup_id], references: [id])
   investors                                       investors?                                        @relation(fields: [investor_id], references: [id])
@@ -295,6 +298,8 @@ model user {
   investors_startups_matchmaking_analysis_history investors_startups_matchmaking_analysis_history[]
   user_access                                     user_access[]
   user_organizations                              user_organizations[]
+  enterprise                                      enterprise?                                       @relation(fields: [enterprise_id], references: [id])
+  enterprise_id                                   Int?
 
   @@unique([email, organization_id])
 }
@@ -839,4 +844,169 @@ model investor_organizations {
   organization organizations @relation(fields: [organization_id], references: [id])
 
   @@id([investor_id, organization_id])
+}
+
+model enterprise_organizations {
+  enterprise_id   Int
+  organization_id Int
+  created_at      DateTime @default(now())
+
+  enterprise   enterprise    @relation(fields: [enterprise_id], references: [id])
+  organization organizations @relation(fields: [organization_id], references: [id])
+
+  @@id([enterprise_id, organization_id])
+}
+
+enum EnterpriseCategoryType {
+  TRADITIONAL_COMPANY
+  GOVERNMENT
+  INNOVATION_ENVIRONMENT
+}
+
+model enterprise_category {
+  id         Int                    @id @default(autoincrement())
+  code       EnterpriseCategoryType @unique
+  name_en    String
+  name_pt    String
+  enterprise enterprise[]
+}
+
+model enterprise_objectives {
+  id                             Int                              @id @default(autoincrement())
+  code                           String
+  name_en                        String
+  name_pt                        String
+  enterprise_objective_relations enterprise_objective_relations[]
+}
+
+model enterprise_objective_relations {
+  id                    Int                   @id @default(autoincrement())
+  enterprise_id         Int
+  objective_id          Int
+  enterprise            enterprise            @relation(fields: [enterprise_id], references: [id])
+  enterprise_objectives enterprise_objectives @relation(fields: [objective_id], references: [id])
+
+  @@unique([enterprise_id, objective_id])
+  @@index([enterprise_id])
+  @@index([objective_id])
+}
+
+model enterprise_college_activity_area {
+  id                                         Int                                          @id @default(autoincrement())
+  code                                       String
+  name_en                                    String
+  name_pt                                    String
+  enterprise_college_activity_area_relations enterprise_college_activity_area_relations[]
+}
+
+model enterprise_college_activity_area_relations {
+  id                                  Int                              @id @default(autoincrement())
+  enterprise_id                       Int
+  enterprise_college_activity_area_id Int
+  enterprise                          enterprise?                      @relation(fields: [enterprise_id], references: [id])
+  enterprise_college_activity_area    enterprise_college_activity_area @relation(fields: [enterprise_college_activity_area_id], references: [id])
+
+  @@unique([enterprise_id, enterprise_college_activity_area_id])
+  @@index([enterprise_id])
+  @@index([enterprise_college_activity_area_id])
+}
+
+model enterprise_college_organization_type {
+  id         Int          @id @default(autoincrement())
+  code       String
+  name_en    String
+  name_pt    String
+  enterprise enterprise[]
+}
+
+model enterprise_activity_area_category {
+  id                       Int                        @id @default(autoincrement())
+  code                     String
+  name_en                  String
+  name_pt                  String
+  enterprise_activity_area enterprise_activity_area[]
+}
+
+model enterprise_activity_area {
+  id                                   Int                                  @id @default(autoincrement())
+  enterprise_activity_area_category_id Int
+  code                                 String
+  name_en                              String
+  name_pt                              String
+  enterprise_activity_area_relations   enterprise_activity_area_relations[]
+
+  enterprise_activity_area_category enterprise_activity_area_category @relation(fields: [enterprise_activity_area_category_id], references: [id])
+}
+
+model enterprise_activity_area_relations {
+  id               Int @id @default(autoincrement())
+  enterprise_id    Int
+  activity_area_id Int
+
+  enterprise               enterprise               @relation(fields: [enterprise_id], references: [id])
+  enterprise_activity_area enterprise_activity_area @relation(fields: [activity_area_id], references: [id])
+
+  @@unique([enterprise_id, activity_area_id])
+  @@index([enterprise_id])
+  @@index([activity_area_id])
+}
+
+model enterprise {
+  id                                 Int       @id @default(autoincrement())
+  organization_id                    Int
+  name                               String?
+  country_id                         Int?
+  enterprise_category_id             Int?
+  state_city                         String?
+  subscription_number                String?
+  full_address                       String?
+  website                            String?
+  main_responsible_name              String?
+  main_responsible_email             String?
+  main_responsible_phone             String?
+  fully_description                  String?
+  enterprise_organization_type       String?
+  enterprise_employees_quantity      Int?
+  enterprise_social_capital          Float?
+  enterprise_main_responsible_name   String?
+  enterprise_products                String?
+  enterprise_certifications          String?
+  logo_img                           String?
+  government_organization_type       String?
+  government_coverage_area           String?
+  government_business_hour           String?
+  government_main_responsible_name   String?
+  college_organization_type_id       Int?
+  college_public_private             String?
+  college_main_responsible_name      String?
+  college_enrolled_students_quantity Int?
+  score_classification               Float?
+  fully_completed_profile            Boolean   @default(false)
+  profile_filled_percentage          Float     @default(0.0)
+  profile_updated                    Boolean   @default(false)
+  plan                               String    @default("free")
+  is_deleted                         Boolean   @default(false)
+  is_approved                        Boolean   @default(false)
+  is_blocked                         Boolean   @default(false)
+  was_processed                      Boolean   @default(false)
+  free_subscription_expires_at       DateTime?
+  created_at                         DateTime  @default(now())
+  updated_at                         DateTime  @default(now())
+  deleted_at                         DateTime?
+  deleted_by                         Int?
+
+  organizations                              organizations                                @relation(fields: [organization_id], references: [id])
+  country                                    country?                                     @relation(fields: [country_id], references: [id])
+  enterprise_category                        enterprise_category?                         @relation(fields: [enterprise_category_id], references: [id])
+  user                                       user[]
+  enterprise_organizations                   enterprise_organizations[]
+  enterprise_objective_relations             enterprise_objective_relations[]
+  enterprise_college_activity_area_relations enterprise_college_activity_area_relations[]
+  enterprise_activity_area_relations         enterprise_activity_area_relations[]
+  college_organization_type                  enterprise_college_organization_type?        @relation(fields: [college_organization_type_id], references: [id])
+
+  @@index([organization_id])
+  @@index([country_id])
+  @@index([enterprise_category_id])
+  @@index([college_organization_type_id])
 }

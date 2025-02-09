@@ -40,8 +40,10 @@
     "userTypes": {
       "STARTUP": "Startup",
       "MENTOR": "Mentor",
-      "INVESTOR": "Investor"
+      "INVESTOR": "Investor",
+      "ENTERPRISE": "Enterprise"
     },
+    "enterpriseCategoryPlaceholder": "Select an option",
     "validation": {
       "required": "This field is required!",
       "minNameLength": "Name must be at least 5 characters long!",
@@ -460,19 +462,6 @@
           "loading": "Activating..."
         }
       }
-    },
-    "settings": {
-      "title": "Settings",
-      "languageSetting": {
-        "label": "Language",
-        "portugueseLanguage": "Portuguese (Brazil)",
-        "englishLanguage": "English"
-      },
-      "saving": "Saving...",
-      "cancelButton": "Cancel",
-      "saveChanges": "Save Changes",
-      "updateSuccess": "Your settings has been updated.",
-      "updateError": "Failed to save settings. Please try again."
     }
   },
 
@@ -538,5 +527,19 @@
       "planning": "Planning",
       "development": "Development"
     }
+  },
+
+  "headerSettings": {
+    "title": "Settings",
+    "languageSetting": {
+      "label": "Language",
+      "portugueseLanguage": "Portuguese (Brazil)",
+      "englishLanguage": "English"
+    },
+    "saving": "Saving...",
+    "cancelButton": "Cancel",
+    "saveChanges": "Save Changes",
+    "updateSuccess": "Your settings has been updated.",
+    "updateError": "Failed to save settings. Please try again."
   }
 }

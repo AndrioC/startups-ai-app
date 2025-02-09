@@ -45,7 +45,7 @@ const getLocaleFromLanguage = (language: string | undefined): string => {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const router = useRouter();
-  const t = useTranslations("startupForm.settings");
+  const t = useTranslations("headerSettings");
   const { refreshAuthData } = useRefreshAuth();
   const { data: session } = useSession();
 

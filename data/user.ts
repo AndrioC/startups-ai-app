@@ -4,6 +4,7 @@ export const getUserByEmail = async (email: string, slug: string) => {
   try {
     const type = slug.includes("admin");
     const whereOrganization = type ? { slug_admin: slug } : { slug };
+
     const organization = await prisma.organizations.findFirst({
       where: whereOrganization,
     });
@@ -32,7 +33,20 @@ export const getUserByEmail = async (email: string, slug: string) => {
             startup_id: true,
             investor_id: true,
             expert_id: true,
+            enterprise_id: true,
             language: true,
+            enterprise: {
+              select: {
+                id: true,
+                name: true,
+                logo_img: true,
+                enterprise_category: {
+                  select: {
+                    code: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -44,17 +58,32 @@ export const getUserByEmail = async (email: string, slug: string) => {
     };
 
     return user;
-  } catch {
+  } catch (error) {
+    console.error("Erro ao buscar usuário:", error);
     return null;
   }
 };
 
 export const getUserById = async (id: number, organization_id: number) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        enterprise: {
+          select: {
+            enterprise_category: {
+              select: { code: true },
+            },
+          },
+        },
+      },
+    });
+
     return {
       ...user,
       organization_id,
+      enterprise_category_code:
+        user?.enterprise?.enterprise_category?.code ?? null,
     };
   } catch {
     return null;

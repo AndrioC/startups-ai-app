@@ -1,0 +1,96 @@
+{
+  "datePicker": {
+    "selectDate": "Selecione uma data",
+    "locale": "pt-BR",
+    "dateFormat": "dd/MM/yyyy"
+  },
+  "generalData": {
+    "selectOption": "Selecione uma opção",
+    "savingData": "Salvando os dados...",
+    "title": "Dados Gerais",
+    "name": "Nome",
+    "countryId": "País",
+    "categoryId": "Categoria",
+    "logo": "Logo",
+    "stateCity": "Estado / Cidade",
+    "subscriptionNumber": "CNPJ",
+    "website": "Site",
+    "fullAddress": "Endereço Completo",
+    "phone": "Telefone",
+    "email": "E-mail",
+    "responsibleRepresentative": "Responsável",
+    "mainResponsibleName": "Nome do Responsável",
+    "mainResponsiblePosition": "Cargo do Responsável",
+    "mainResponsiblePhone": "Telefone do Responsável",
+    "mainResponsibleEmail": "E-mail do Responsável",
+    "foundationDate": "Data de Fundação",
+    "activityAreas": "Área de atuação",
+    "otherInformation": "Outras Informações",
+    "enterpriseOrganizationType": "Tipo de empresa",
+    "enterpriseEmployeesQuantity": "Número de funcionários",
+    "enterpriseSocialCapital": "Capital social",
+    "enterpriseMainResponsibleName": "Nome do CEO/Diretor",
+    "enterpriseProducts": "Produtos e serviços oferecidos",
+    "enterpriseCertifications": "Descreva abaixo, as certificações e selos que a empresa possui",
+    "governmentOrganizationType": "Tipo de órgão (municipal, estadual, federal)",
+    "governmentCoverageArea": "Região ou área de abrangência",
+    "governmentBusinessHour": "Horário de funcionamento",
+    "governmentMainResponsibleName": "Nome do gestor ou responsável",
+    "collegeOrganizationType": "Tipo de instituição",
+    "collegePublicPrivate": "Público / Privado",
+    "collegeEnrolledStudentsQuantity": "Quantidade de alunos",
+    "collegeMainResponsibleName": "Nome do reitor",
+    "collegeActivityArea": "Área de atuação (quando aplicável)",
+    "fullyDescription": "Descreva a sua empresa aqui com o máximo de detalhes possível",
+    "companyDescription": "Descreva a sua empresa aqui com o máximo de detalhes possível",
+    "enterpriseObjectives": "Selecione as opções abaixo que descreve o objetivo de sua instituição no programa",
+    "save": "Salvar",
+    "saveSuccess": "Dados salvos com sucesso",
+    "saveError": "Erro ao salvar dados",
+    "noChanges": "Não há alterações para salvar"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "email": "E-mail inválido",
+    "minLength": "Mínimo de {{min}} caracteres",
+    "invalidDate": "Data inválida",
+    "invalidEmail": "E-mail inválido",
+    "fileTooLarge": "Arquivo muito grande!"
+  },
+  "sideCard": {
+    "companyInfo": {
+      "title": "Dados da Empresa",
+      "responsibleData": "Dados do Responsável",
+      "images": {
+        "companyLogo": "Logo da Empresa"
+      },
+      "placeholders": {
+        "emptyField": "-"
+      }
+    },
+    "logo": "Logo",
+    "matchesCard": {
+      "title": "COMBINAÇÕES",
+      "images": {
+        "matchesArrow": "combinações"
+      },
+      "noMatches": "Nenhuma combinação encontrada!",
+      "dateFormat": {
+        "match": "{{percentage}}% - {{date}}"
+      }
+    }
+  },
+  "headerSettings": {
+    "title": "Configurações",
+    "languageSetting": {
+      "label": "Idioma",
+      "portugueseLanguage": "Português (Brasil)",
+      "englishLanguage": "Inglês"
+    },
+    "saving": "Salvando...",
+    "cancelButton": "Cancelar",
+    "saveChanges": "Salvar Alterações",
+    "updateSuccess": "Suas configurações foram atualizadas.",
+    "updateError": "Falha ao salvar as configurações. Por favor, tente novamente."
+  }
+}

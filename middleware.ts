@@ -6,7 +6,13 @@ export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
 };
 
-const protectedRoutes = ["/management", "/startup", "/mentor", "/investor"];
+const protectedRoutes = [
+  "/management",
+  "/startup",
+  "/mentor",
+  "/investor",
+  "/enterprise",
+];
 
 const accessDeniedHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -180,6 +186,8 @@ export default async function middleware(req: NextRequest) {
           redirectTo = "/startup";
         } else if (session.user.isMentor) {
           redirectTo = "/mentor";
+        } else if (session.user.isEnterprise) {
+          redirectTo = "/enterprise";
         }
         if (redirectTo) {
           return NextResponse.redirect(new URL(redirectTo, req.nextUrl.origin));
@@ -235,6 +243,16 @@ export default async function middleware(req: NextRequest) {
         if (
           req.nextUrl.pathname.startsWith("/mentor") &&
           !session.user.isMentor
+        ) {
+          return new Response(accessDeniedHTML, {
+            status: 403,
+            headers: { "Content-Type": "text/html" },
+          });
+        }
+
+        if (
+          req.nextUrl.pathname.startsWith("/enterprise") &&
+          !session.user.isEnterprise
         ) {
           return new Response(accessDeniedHTML, {
             status: 403,

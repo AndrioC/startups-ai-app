@@ -47,7 +47,7 @@ export default async function RootLayout({
   }
 
   const locale = getLocaleFromLanguage(session?.user?.language as Language);
-  const messages = await import(`@/translation/${locale}.json`).then(
+  const messages = await import(`@/translation/enterprise/${locale}.json`).then(
     (module) => module.default
   );
 

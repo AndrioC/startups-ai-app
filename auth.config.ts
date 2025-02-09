@@ -1,3 +1,4 @@
+import { UserType } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import { cookies } from "next/headers";
 import type { NextAuthConfig } from "next-auth";
@@ -41,14 +42,17 @@ export default {
             if (passwordsMatch) {
               let actor_id;
               switch (user.type) {
-                case "STARTUP":
+                case UserType.STARTUP:
                   actor_id = user?.startup_id;
                   break;
-                case "INVESTOR":
+                case UserType.INVESTOR:
                   actor_id = user?.investor_id;
                   break;
-                case "MENTOR":
+                case UserType.MENTOR:
                   actor_id = user?.expert_id;
+                  break;
+                case UserType.ENTERPRISE:
+                  actor_id = user?.enterprise_id;
                   break;
                 default:
                   actor_id = null;
@@ -60,13 +64,18 @@ export default {
                 email: user.email,
                 organization_id: user.organization_id!,
                 type: user.type!,
-                isSAI: user.type === "SAI",
-                isAdmin: user.type === "ADMIN",
-                isInvestor: user.type === "INVESTOR",
-                isMentor: user.type === "MENTOR",
-                isStartup: user.type === "STARTUP",
+                isSAI: user.type === UserType.SAI,
+                isAdmin: user.type === UserType.ADMIN,
+                isInvestor: user.type === UserType.INVESTOR,
+                isMentor: user.type === UserType.MENTOR,
+                isStartup: user.type === UserType.STARTUP,
+                isEnterprise: user.type === UserType.ENTERPRISE,
                 actor_id: actor_id ? actor_id : null,
                 language: user.language,
+                enterprise_category_code:
+                  user.type === UserType.ENTERPRISE
+                    ? user.enterprise?.enterprise_category?.code
+                    : null,
               };
             }
           }

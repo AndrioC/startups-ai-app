@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { UserType } from "@prisma/client";
 import NextAuth from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 
@@ -73,11 +74,13 @@ export const {
           ? `https://${S3_USERS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${token.user_logo_img}`
           : null;
 
-        session.user.isSAI = token.type === "SAI";
-        session.user.isAdmin = token.type === "ADMIN";
-        session.user.isInvestor = token.type === "INVESTOR";
-        session.user.isMentor = token.type === "MENTOR";
-        session.user.isStartup = token.type === "STARTUP";
+        session.user.isSAI = token.type === UserType.SAI;
+        session.user.isAdmin = token.type === UserType.ADMIN;
+        session.user.isInvestor = token.type === UserType.INVESTOR;
+        session.user.isMentor = token.type === UserType.MENTOR;
+        session.user.isStartup = token.type === UserType.STARTUP;
+        session.user.isEnterprise = token.type === UserType.ENTERPRISE;
+        session.user.enterprise_category_code = token.enterprise_category_code;
 
         session.user.actor_id = token.actor_id;
 
@@ -139,11 +142,14 @@ export const {
         token.type = existingUser.type!;
         token.user_logo_img = existingUser.logo_img;
 
-        token.isSAI = existingUser.type === "SAI";
-        token.isAdmin = existingUser.type === "ADMIN";
-        token.isInvestor = existingUser.type === "INVESTOR";
-        token.isMentor = existingUser.type === "MENTOR";
-        token.isStartup = existingUser.type === "STARTUP";
+        token.isSAI = existingUser.type === UserType.SAI;
+        token.isAdmin = existingUser.type === UserType.ADMIN;
+        token.isInvestor = existingUser.type === UserType.INVESTOR;
+        token.isMentor = existingUser.type === UserType.MENTOR;
+        token.isStartup = existingUser.type === UserType.STARTUP;
+        token.isEnterprise = existingUser.type === UserType.ENTERPRISE;
+        token.enterprise_category_code =
+          existingUser.enterprise?.enterprise_category?.code;
 
         token.logo_img = organization?.logo_img;
         token.logo_sidebar = organization?.logo_sidebar;
@@ -153,19 +159,24 @@ export const {
         token.language = existingUser.language;
 
         switch (existingUser.type) {
-          case "STARTUP":
+          case UserType.STARTUP:
             token.actor_id = existingUser.startup_id
               ? Number(existingUser.startup_id)
               : null;
             break;
-          case "INVESTOR":
+          case UserType.INVESTOR:
             token.actor_id = existingUser.investor_id
               ? Number(existingUser.investor_id)
               : null;
             break;
-          case "MENTOR":
+          case UserType.MENTOR:
             token.actor_id = existingUser.expert_id
               ? Number(existingUser.expert_id)
+              : null;
+            break;
+          case UserType.ENTERPRISE:
+            token.actor_id = existingUser.enterprise_id
+              ? Number(existingUser.enterprise_id)
               : null;
             break;
           default:

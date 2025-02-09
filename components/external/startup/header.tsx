@@ -14,23 +14,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 
 import SettingsModal from "./settings-modal";
 
 interface HeaderProps {
   logoAlt: string;
   userName: string;
+  organizationLogo: string;
 }
 
 export default function HeaderExternalStartupComponent({
   logoAlt,
   userName,
+  organizationLogo,
 }: HeaderProps) {
   const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  const { initialData } = useFormStartupDataState();
 
   const initials = userName
     .split(" ")
@@ -51,7 +50,7 @@ export default function HeaderExternalStartupComponent({
     router.push(redirectUrl);
   };
 
-  const logoUrl = initialData.organizationLogo || logoPlaceholder.src;
+  const logoUrl = organizationLogo || logoPlaceholder.src;
 
   return (
     <header className="w-full bg-[#B4D5EE] rounded-b-lg">
