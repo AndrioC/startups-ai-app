@@ -3,13 +3,15 @@ import { getRequestConfig } from "next-intl/server";
 
 export default getRequestConfig(async () => {
   const cookieStore = cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value || "pt-br";
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "pt";
+
+  const newLocale = locale === "pt" ? "pt-br" : locale;
 
   return {
     locale,
-    messages: (await import(`../translation/${locale}.json`)).default,
+    messages: (await import(`../translation/${newLocale}.json`)).default,
     timeZone: "America/Sao_Paulo",
-    defaultLocale: "pt-br",
-    locales: ["pt-br", "en"],
+    defaultLocale: "pt",
+    locales: ["pt", "en"],
   };
 });

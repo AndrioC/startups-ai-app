@@ -11,13 +11,13 @@ export default function SelectLanguage() {
     document.cookie = `NEXT_LOCALE=${value}; path=/`;
     window.location.reload();
   };
+
+  console.log("HERE", document.documentElement.lang);
   return (
     <div className="w-full flex justify-end mb-4 text-gray-500">
       <Select
         defaultValue={
-          typeof window !== "undefined"
-            ? document.documentElement.lang
-            : "pt-br"
+          typeof window !== "undefined" ? document.documentElement.lang : "pt"
         }
         onValueChange={handleLanguageChange}
       >
@@ -25,7 +25,7 @@ export default function SelectLanguage() {
           <SelectValue placeholder="Language" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="pt-br">PT-BR</SelectItem>
+          <SelectItem value="pt">PT-BR</SelectItem>
           <SelectItem value="en">EN</SelectItem>
         </SelectContent>
       </Select>

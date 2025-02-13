@@ -121,7 +121,7 @@ export function RegisterForm({
 
   const enterpriseData: ValueProps[] = enterpriseCategory.map((value) => ({
     id: value.id,
-    label: locale === "pt-br" ? value.name_pt : value.name_en,
+    label: locale === "pt" ? value.name_pt : value.name_en,
   }));
 
   const sortedEnterpriseData = enterpriseData
