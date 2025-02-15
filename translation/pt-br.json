@@ -34,14 +34,16 @@
     "termsLink": "termos de uso",
     "haveAccount": "Já possuo conta",
     "submit": "Cadastrar",
-    "successMessage": "Usuário criado com sucesso!",
+    "successMessage": "Um e-mail de confirmação foi enviado para o seu endereço de e-mail. Por favor, verifique sua caixa de entrada.",
     "errorMessage": "Tivemos um problema ao criar seu e-mail:",
     "unexpectedError": "Ocorreu um erro inesperado.",
     "userTypes": {
       "STARTUP": "Startup",
       "MENTOR": "Mentor",
       "INVESTOR": "Investidor",
-      "ENTERPRISE": "Empresa"
+      "TRADITIONAL_COMPANY": "Empresa Tradicional",
+      "GOVERNMENT": "Governo",
+      "INNOVATION_ENVIRONMENT": "Ambiente de Inovação"
     },
     "enterpriseCategoryPlaceholder": "Selecione uma opção",
     "validation": {
@@ -541,5 +543,47 @@
     "saveChanges": "Salvar Alterações",
     "updateSuccess": "Suas configurações foram atualizadas.",
     "updateError": "Falha ao salvar as configurações. Por favor, tente novamente."
+  },
+
+  "verify": {
+    "successMessage": "Sua conta foi verificada com sucesso!",
+    "title": "Verificação de Conta",
+    "success": {
+      "title": "Conta Confirmada",
+      "description": "Sua conta foi confirmada com sucesso.",
+      "button": "Ir para Login",
+      "redirect": "Você será redirecionado para a página de login em breve."
+    },
+    "error": {
+      "title": "Erro na Verificação",
+      "description": "Ocorreu um erro ao verificar sua conta.",
+      "button": "Ir para Login",
+      "generic": "Ocorreu um erro. Por favor, tente novamente mais tarde."
+    }
+  },
+
+  "forgotPassword": {
+    "title": "Redefinição de senha",
+    "errorLoadingOrganization": "Erro ao carregar os dados da organização.",
+    "instruction": "Digite seu email de login que enviaremos as instruções para você redefinir sua senha.",
+    "emailPlaceholder": "Digite seu e-mail",
+    "invalidEmail": "Email inválido",
+    "successMessage": "Instruções de recuperação de senha enviadas para seu email.",
+    "errorMessage": "Erro ao enviar o email de recuperação de senha.",
+    "back": "Voltar",
+    "submit": "Enviar"
+  },
+
+  "resetPassword": {
+    "title": "Redefinir Senha",
+    "newPasswordPlaceholder": "Digite sua nova senha",
+    "confirmPasswordPlaceholder": "Confirme sua nova senha",
+    "submit": "Redefinir",
+    "newPasswordMin": "A senha deve ter pelo menos 6 caracteres",
+    "confirmPasswordMin": "A senha deve ter pelo menos 6 caracteres",
+    "passwordsMismatch": "As senhas não coincidem",
+    "successMessage": "Senha redefinida com sucesso!",
+    "errorMessage": "Erro ao redefinir a senha.",
+    "tokenMissing": "Token de redefinição não encontrado."
   }
 }

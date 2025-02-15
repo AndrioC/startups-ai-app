@@ -71,7 +71,7 @@ export function StartupTableComponent({
 
   const [isPending, startTransition] = React.useTransition();
 
-  const { data, isLoading } = useQuery<ApiResponse>({
+  const { data, isLoading, refetch } = useQuery<ApiResponse>({
     queryKey: ["startups", page, pageSize],
     queryFn: () =>
       axios
@@ -100,7 +100,9 @@ export function StartupTableComponent({
     [searchParams]
   );
 
-  const startupColumns = StartupColumns();
+  const startupColumns = StartupColumns({
+    refetchData: () => refetch(),
+  });
 
   return (
     <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">

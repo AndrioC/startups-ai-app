@@ -201,7 +201,19 @@
         "previousPage": "Previous page",
         "nextPage": "Next page",
         "lastPage": "Last page",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "approve": "Approve",
+        "reject": "Reject",
+        "status": "Status",
+        "openMenu": "Open menu",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "updateStatusError": "Failed to update status",
+        "statusUpdateSuccess": "Startup {status} successfully!",
+        "statusUpdateError": "Error updating status",
+        "statusUpdateErrorDescription": "An error occurred while trying to update the startup status.",
+        "approvalSuccess": "Startup approved successfully!",
+        "rejectionSuccess": "Startup rejected successfully!"
       },
       "startupTab": {
         "back": "Back",

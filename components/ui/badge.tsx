@@ -15,6 +15,15 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
+        b2b: "border-0 bg-emerald-600 text-white hover:bg-emerald-700",
+        b2c: "border-0 bg-blue-600 text-white hover:bg-blue-700",
+        b2e: "border-0 bg-rose-600 text-white hover:bg-rose-700",
+        b2g: "border-0 bg-purple-600 text-white hover:bg-purple-700",
+        b2b2c: "border-0 bg-pink-600 text-white hover:bg-pink-700",
+        b2i: "border-0 bg-fuchsia-600 text-white hover:bg-fuchsia-700",
+        "b2b-b2c": "border-0 bg-red-600 text-white hover:bg-red-700",
+        approved: "border-0 bg-green-600 text-white hover:bg-green-700",
+        rejected: "border-0 bg-red-600 text-white hover:bg-red-700",
       },
     },
     defaultVariants: {

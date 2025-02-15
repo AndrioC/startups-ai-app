@@ -18,6 +18,7 @@ export interface StartupTable {
   problem_that_is_solved: string;
   competitive_differentiator: string;
   last_twelve_months_revenue: string;
+  is_approved: boolean;
 }
 
 export async function GET(
@@ -46,7 +47,7 @@ export async function GET(
           },
         },
       },
-      orderBy: [{ name: "asc" }],
+      orderBy: [{ is_approved: "desc" }, { name: "asc" }],
       skip: (page - 1) * pageSize,
       take: pageSize,
       include: {
@@ -80,6 +81,7 @@ export async function GET(
       ),
       country_flag: `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country?.code}.svg`,
       last_twelve_months_revenue: value.last_twelve_months_revenue ?? "-",
+      is_approved: value.is_approved ?? false,
     }));
 
     const totalCount = await prisma.startups.count({

@@ -12,7 +12,6 @@ export default function SelectLanguage() {
     window.location.reload();
   };
 
-  console.log("HERE", document.documentElement.lang);
   return (
     <div className="w-full flex justify-end mb-4 text-gray-500">
       <Select

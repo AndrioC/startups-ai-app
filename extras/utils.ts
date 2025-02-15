@@ -3,28 +3,19 @@ import { Buffer } from "buffer";
 interface Colors {
   [key: string]: string;
 }
-export interface BusinessModelColors {
-  [key: string]:
-    | "green"
-    | "blue"
-    | "ruby"
-    | "purple"
-    | "crimson"
-    | "pink"
-    | "red";
-}
+
 export function getBadgeColorByBusinessModel(businessModel: string): string {
-  const colors: Colors = {
-    b2b: "green",
-    b2c: "blue",
-    b2e: "ruby",
-    b2g: "purple",
-    b2b2c: "crimson",
-    b2i: "pink",
-    "b2b-b2c": "red",
+  const variants: Record<string, string> = {
+    b2b: "b2b",
+    b2c: "b2c",
+    b2e: "b2e",
+    b2g: "b2g",
+    b2b2c: "b2b2c",
+    b2i: "b2i",
+    "b2b-b2c": "b2b-b2c",
   };
 
-  return colors[businessModel];
+  return variants[businessModel] || "default";
 }
 
 export function getBadgeColorByApprovalStatus(status: string): string {

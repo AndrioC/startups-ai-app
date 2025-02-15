@@ -34,14 +34,16 @@
     "termsLink": "terms of use",
     "haveAccount": "I already have an account",
     "submit": "Register",
-    "successMessage": "User created successfully!",
+    "successMessage": "A confirmation email has been sent to your email address. Please check your inbox",
     "errorMessage": "We had a problem creating your email:",
     "unexpectedError": "An unexpected error occurred.",
     "userTypes": {
       "STARTUP": "Startup",
       "MENTOR": "Mentor",
       "INVESTOR": "Investor",
-      "ENTERPRISE": "Enterprise"
+      "TRADITIONAL_COMPANY": "Traditional Company",
+      "GOVERNMENT": "Government",
+      "INNOVATION_ENVIRONMENT": "Innovation Environment"
     },
     "enterpriseCategoryPlaceholder": "Select an option",
     "validation": {
@@ -541,5 +543,47 @@
     "saveChanges": "Save Changes",
     "updateSuccess": "Your settings has been updated.",
     "updateError": "Failed to save settings. Please try again."
+  },
+
+  "verify": {
+    "successMessage": "Your account has been successfully verified!",
+    "title": "Account Verification",
+    "success": {
+      "title": "Account Confirmed",
+      "description": "Your account has been successfully confirmed.",
+      "button": "Go to Login",
+      "redirect": "You will be redirected to the login page shortly."
+    },
+    "error": {
+      "title": "Verification Error",
+      "description": "An error occurred while verifying your account.",
+      "button": "Go to Login",
+      "generic": "An error occurred. Please try again later."
+    }
+  },
+
+  "forgotPassword": {
+    "title": "Password Reset",
+    "errorLoadingOrganization": "Error loading organization data.",
+    "instruction": "Enter your login email and we will send you instructions to reset your password.",
+    "emailPlaceholder": "Enter your email",
+    "invalidEmail": "Invalid email",
+    "successMessage": "Password reset instructions have been sent to your email.",
+    "errorMessage": "Error sending the password reset email.",
+    "back": "Back",
+    "submit": "Submit"
+  },
+
+  "resetPassword": {
+    "title": "Reset Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "submit": "Reset",
+    "newPasswordMin": "Password must be at least 6 characters",
+    "confirmPasswordMin": "Password must be at least 6 characters",
+    "passwordsMismatch": "Passwords do not match",
+    "successMessage": "Password reset successfully!",
+    "errorMessage": "Error resetting password.",
+    "tokenMissing": "Reset token not found."
   }
 }

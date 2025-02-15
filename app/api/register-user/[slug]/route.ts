@@ -2,6 +2,8 @@ import { UserType } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
+import { sendVerificationEmail } from "@/actions/send-email-confirmation-account";
+import { sendNewRegistrationNotification } from "@/actions/send-email-new-register-notification";
 import prisma from "@/prisma/client";
 
 interface DataRequest {
@@ -11,6 +13,7 @@ interface DataRequest {
   registerUserType: UserType;
   registerUserTerms: boolean;
   enterpriseCategory: number;
+  locale: string;
 }
 
 export async function POST(
@@ -46,6 +49,8 @@ export async function POST(
     );
   }
 
+  let accountType = null;
+
   try {
     await prisma.$transaction(async (prisma) => {
       let createdInfoId = 0;
@@ -57,6 +62,7 @@ export async function POST(
             organization_id: organization.id,
           },
         });
+        accountType = UserType.STARTUP;
         createdInfoId = startup.id;
 
         await prisma.startup_organizations.create({
@@ -66,12 +72,11 @@ export async function POST(
           },
         });
 
-        //checa se o programa existe
         if (token) {
           const programExists = await prisma.$queryRaw<
             { exists: boolean }[]
           >`SELECT EXISTS (
-              SELECT 1 FROM programs 
+              SELECT 1 FROM programs
               WHERE encode(digest(CAST(id AS text), 'sha1'), 'hex') = ${token}
             ) AS exists`;
 
@@ -103,8 +108,10 @@ export async function POST(
             name: data.registerName,
             contact_email: data.registerEmail,
             organization_id: organization.id,
+            is_approved: false,
           },
         });
+        accountType = UserType.INVESTOR;
         createdInfoId = investor.id;
 
         await prisma.investor_organizations.create({
@@ -121,8 +128,10 @@ export async function POST(
             name: data.registerName,
             contact_email: data.registerEmail,
             organization_id: organization.id,
+            is_approved: false,
           },
         });
+        accountType = UserType.MENTOR;
         createdInfoId = expert.id;
 
         await prisma.expert_organizations.create({
@@ -140,8 +149,10 @@ export async function POST(
             main_responsible_email: data.registerEmail,
             organization_id: organization.id,
             enterprise_category_id: Number(data.enterpriseCategory),
+            is_approved: false,
           },
         });
+        accountType = UserType.ENTERPRISE;
         createdInfoId = enterprise.id;
 
         await prisma.enterprise_organizations.create({
@@ -154,7 +165,7 @@ export async function POST(
 
       const hashedPassword = await bcryptjs.hash(data.registerPassword, 10);
 
-      const createdUser = await prisma.user.create({
+      await prisma.user.create({
         data: {
           name: data.registerName,
           email: data.registerEmail,
@@ -173,18 +184,31 @@ export async function POST(
           hashed_password: hashedPassword,
           accepted_terms: data.registerUserTerms,
           accepted_terms_date: new Date(),
-          email_verified: new Date(),
-        },
-      });
-
-      await prisma.user_organizations.create({
-        data: {
-          user_id: createdUser.id,
-          organization_id: organization.id,
-          joined_at: new Date(),
         },
       });
     });
+
+    const users = await prisma.user.findMany({
+      where: {
+        organization_id: organization.id,
+        type: { in: [UserType.ADMIN, UserType.SAI] },
+        startup_id: null,
+        investor_id: null,
+        expert_id: null,
+        enterprise_id: null,
+      },
+    });
+
+    const usersEmail = users.map((user) => user.email);
+
+    await sendVerificationEmail(data.registerEmail, data.locale, organization);
+    await sendNewRegistrationNotification(
+      data.registerName,
+      data.registerEmail,
+      organization.slug!,
+      usersEmail,
+      accountType
+    );
 
     return NextResponse.json({}, { status: 201 });
   } catch (error) {

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 import LoadingSpinner from "@/components/loading-spinner";
@@ -13,6 +14,7 @@ import { ForgotPasswordForm } from "./forgot-password-form";
 
 export default function ForgotPasswordComponent() {
   const { subdomain } = useParams();
+  const t = useTranslations("forgotPassword");
 
   const { data, isLoading, isError } = useLogoOrganization(subdomain as string);
 
@@ -21,7 +23,7 @@ export default function ForgotPasswordComponent() {
   }
 
   if (isError) {
-    return <div>Error loading organization data</div>;
+    return <div>{t("errorLoadingOrganization")}</div>;
   }
 
   const logoUrl = data?.logoImgUrl || logoPlaceholder.src;
@@ -29,7 +31,7 @@ export default function ForgotPasswordComponent() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-[#F5F7FA] p-4">
       <h1 className="text-center text-black font-semibold text-[32px] md:text-[48px]">
-        Redefinição de senha.
+        {t("title")}
       </h1>
 
       <div className="bg-white shadow-lg rounded-lg mt-5 w-full max-w-[660px] h-auto md:h-[640px] flex flex-col items-center p-4 md:p-8">

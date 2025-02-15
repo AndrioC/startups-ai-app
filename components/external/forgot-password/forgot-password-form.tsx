@@ -1,24 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email("Email inválido"),
-});
-
-type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
-
 export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
+  const t = useTranslations("forgotPassword");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const locale = useLocale();
+
+  const forgotPasswordSchema = useMemo(() => {
+    return z.object({
+      email: z.string().email(t("invalidEmail")),
+    });
+  }, [t]);
+
+  type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
   const {
     register,
@@ -32,16 +37,21 @@ export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `/api/forgot-password/${subdomain}`,
+        `/api/forgot-password/${subdomain}?locale=${locale}`,
         data
       );
       if (response.status === 200) {
-        toast.success(
-          "Instruções de recuperação de senha enviadas para seu email."
-        );
+        toast.success(t("successMessage"), {
+          autoClose: 5000,
+          position: "top-center",
+        });
       }
     } catch (error) {
-      toast.error("Erro ao enviar o email de recuperação de senha.");
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(t("errorMessage"));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -50,8 +60,7 @@ export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[526px]">
       <p className="text-[#4087C2] w-full max-w-[500px] self-start font-medium text-[15px] mb-1 mt-10">
-        Digite seu email de login que enviaremos as instruções para você
-        redefinir sua senha.
+        {t("instruction")}
       </p>
 
       <div className="relative w-full mb-6">
@@ -61,7 +70,7 @@ export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
         <input
           {...register("email")}
           type="email"
-          placeholder="Digite seu e-mail"
+          placeholder={t("emailPlaceholder")}
           className="w-full h-[50px] pl-10 text-[#A2B0C2] text-[15px] bg-[#EBE9E9] rounded-md"
         />
         {errors.email && (
@@ -72,7 +81,7 @@ export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
       <div className="w-full flex justify-between mb-6">
         <Link href="/auth/login">
           <Button className="border-[#4087C2] bg-transparent border-2 md:border-4 text-[#4087C2] font-bold uppercase text-[16px] md:text-[20px] rounded-[30px] w-full max-w-[120px] h-[50px] shadow-xl hover:bg-transparent hover:text-[#266395] transition-colors duration-300 ease-in-out">
-            Voltar
+            {t("back")}
           </Button>
         </Link>
         <Button
@@ -81,7 +90,7 @@ export function ForgotPasswordForm({ subdomain }: { subdomain: string }) {
           disabled={isSubmitting}
           className="bg-[#4087C2] text-white font-bold uppercase text-[16px] md:text-[20px] rounded-[30px] w-full max-w-[120px] h-[50px] shadow-xl hover:bg-[#266395] hover:text-white transition-colors duration-300 ease-in-out"
         >
-          Enviar
+          {t("submit")}
         </Button>
       </div>
     </form>

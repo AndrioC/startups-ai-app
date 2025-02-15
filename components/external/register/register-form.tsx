@@ -7,7 +7,7 @@ import { FaUserCog } from "react-icons/fa";
 import { MdLock, MdOutlineMailOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { enterprise_category } from "@prisma/client";
+import { enterprise_category, EnterpriseCategoryType } from "@prisma/client";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,11 +18,6 @@ import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/schemas/schema-register";
 
 import TermsOfUseDialog from "./terms";
-
-interface ValueProps {
-  id: number;
-  label: string;
-}
 
 export function RegisterForm({
   subdomain,
@@ -35,7 +30,6 @@ export function RegisterForm({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const token = searchParams.get("token");
   const t = useTranslations("register");
 
@@ -47,13 +41,10 @@ export function RegisterForm({
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
-  const registerUserType = watch("registerUserType");
 
   const toastSuccess = () => {
     toast.success(t("successMessage"), {
@@ -72,9 +63,23 @@ export function RegisterForm({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsSubmitting(true);
+      const payload: any = { ...data, locale };
+
+      if (
+        data.registerUserType === EnterpriseCategoryType.TRADITIONAL_COMPANY ||
+        data.registerUserType === EnterpriseCategoryType.GOVERNMENT ||
+        data.registerUserType === EnterpriseCategoryType.INNOVATION_ENVIRONMENT
+      ) {
+        const selectedCategory = enterpriseCategory.find(
+          (cat) => cat.code === data.registerUserType
+        );
+        if (selectedCategory) {
+          payload.enterpriseCategory = selectedCategory.id;
+        }
+      }
       const response = await axios.post(
         `/api/register-user/${subdomain}/?token=${token}`,
-        JSON.stringify(data),
+        JSON.stringify(payload),
         {
           headers: {
             "Content-Type": "application/json",
@@ -83,7 +88,6 @@ export function RegisterForm({
       );
 
       if (response.status === 201) {
-        setIsSubmitting(false);
         toastSuccess();
         router.replace("/auth/login");
         return;
@@ -102,31 +106,17 @@ export function RegisterForm({
     { id: "STARTUP", label: t("userTypes.STARTUP") },
     { id: "MENTOR", label: t("userTypes.MENTOR") },
     { id: "INVESTOR", label: t("userTypes.INVESTOR") },
-    { id: "ENTERPRISE", label: t("userTypes.ENTERPRISE") },
+    { id: "TRADITIONAL_COMPANY", label: t("userTypes.TRADITIONAL_COMPANY") },
+    { id: "GOVERNMENT", label: t("userTypes.GOVERNMENT") },
+    {
+      id: "INNOVATION_ENVIRONMENT",
+      label: t("userTypes.INNOVATION_ENVIRONMENT"),
+    },
   ].sort((a, b) => a.label.localeCompare(b.label));
 
   const handleAgreeTerms = () => {
     setValue("registerUserTerms", true);
   };
-
-  const handleUserTypeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setValue("registerUserType", event.target.value);
-
-    if (event.target.value !== "ENTERPRISE") {
-      setValue("enterpriseCategory", undefined);
-    }
-  };
-
-  const enterpriseData: ValueProps[] = enterpriseCategory.map((value) => ({
-    id: value.id,
-    label: locale === "pt" ? value.name_pt : value.name_en,
-  }));
-
-  const sortedEnterpriseData = enterpriseData
-    ?.slice()
-    .sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <form
@@ -212,7 +202,6 @@ export function RegisterForm({
         <select
           id="registerUserType"
           {...register("registerUserType")}
-          onChange={handleUserTypeChange}
           className="w-full h-[50px] pl-10 text-[#A2B0C2] text-[15px] bg-[#EBE9E9] rounded-md"
         >
           <option value="">{t("userTypePlaceholder")}</option>
@@ -228,31 +217,6 @@ export function RegisterForm({
           </p>
         )}
       </div>
-
-      {registerUserType === "ENTERPRISE" && (
-        <div className="relative w-full max-w-[526px] mx-auto">
-          <span className="absolute left-3 top-4">
-            <FaUserCog className="h-5 w-5 text-gray-400" />
-          </span>
-          <select
-            id="enterpriseCategory"
-            {...register("enterpriseCategory")}
-            className="w-full h-[50px] pl-10 text-[#A2B0C2] text-[15px] bg-[#EBE9E9] rounded-md"
-          >
-            <option value="">{t("enterpriseCategoryPlaceholder")}</option>
-            {sortedEnterpriseData.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {errors.enterpriseCategory?.message && (
-            <p className="text-sm text-red-400">
-              {errors.enterpriseCategory.message}
-            </p>
-          )}
-        </div>
-      )}
 
       <div className="w-full max-w-[526px] flex justify-between mx-auto">
         <div>

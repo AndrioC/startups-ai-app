@@ -22,7 +22,6 @@ export const RegisterSchema = (t: any) => {
         .string()
         .min(6, messages.minConfirmPasswordLength),
       registerUserType: z.string().min(1, messages.required),
-      enterpriseCategory: z.string().optional(), // Make it optional initially
       registerUserTerms: z.boolean().refine((val) => val === true, {
         message: messages.mustAcceptTerms,
       }),
@@ -30,20 +29,5 @@ export const RegisterSchema = (t: any) => {
     .refine((data) => data.registerPassword === data.registerConfirmPassword, {
       path: ["registerConfirmPassword"],
       message: messages.passwordsNotMatch,
-    })
-    .refine(
-      (data) => {
-        if (
-          data.registerUserType === "ENTERPRISE" &&
-          (!data.enterpriseCategory || data.enterpriseCategory.length === 0)
-        ) {
-          return false;
-        }
-        return true;
-      },
-      {
-        message: messages.required,
-        path: ["enterpriseCategory"],
-      }
-    );
+    });
 };

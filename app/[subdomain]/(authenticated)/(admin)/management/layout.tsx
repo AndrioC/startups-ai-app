@@ -11,6 +11,7 @@ import SideBar from "@/components/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
 import "@/app/globals.css";
+import "@/app/theme-config.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,8 +60,8 @@ export default async function RootLayout({
             <QueryClientProvider>
               <Theme>
                 <SideBar>{children}</SideBar>
-                <ToastContainer />
               </Theme>
+              <ToastContainer />
             </QueryClientProvider>
           </NextIntlClientProvider>
         </body>
