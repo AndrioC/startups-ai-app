@@ -7,7 +7,11 @@ import { FaUserCog } from "react-icons/fa";
 import { MdLock, MdOutlineMailOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { enterprise_category, EnterpriseCategoryType } from "@prisma/client";
+import {
+  enterprise_category,
+  EnterpriseCategoryType,
+  UserType,
+} from "@prisma/client";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -75,6 +79,7 @@ export function RegisterForm({
         );
         if (selectedCategory) {
           payload.enterpriseCategory = selectedCategory.id;
+          payload.registerUserType = UserType.ENTERPRISE;
         }
       }
       const response = await axios.post(

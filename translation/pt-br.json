@@ -201,7 +201,7 @@
   "server": {
     "login": {
       "invalidFields": "Campos inválidos!",
-      "emailNotExists": "E-mail não existe!",
+      "emailNotExists": "E-mail não existe ou ainda não foi verificado!",
       "accountBlocked": "Conta bloqueada. Entre em contato com o administrador.",
       "invalidCredentials": "Credenciais inválidas!",
       "genericError": "Algo deu errado!",
