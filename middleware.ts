@@ -12,6 +12,9 @@ const protectedRoutes = [
   "/mentor",
   "/investor",
   "/enterprise",
+  "innovation-environment",
+  "government",
+  "tradicional-company",
 ];
 
 const accessDeniedHTML = `<!DOCTYPE html>
