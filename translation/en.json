@@ -585,5 +585,12 @@
     "successMessage": "Password reset successfully!",
     "errorMessage": "Error resetting password.",
     "tokenMissing": "Reset token not found."
+  },
+
+  "cropImage": {
+    "imageTooBig": "Image too large - Maximum 600x600 pixels allowed",
+    "title": "Crop image",
+    "cancelButton": "Cancel",
+    "saveButton": "Save"
   }
 }

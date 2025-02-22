@@ -162,9 +162,9 @@ export async function sendNewRegistrationNotification(
       process.env.NEXT_PUBLIC_PROTOCOL ||
       (process.env.NODE_ENV === "development" ? "http://" : "https://");
 
-    const adminPath = getAccountRoute(accountType as UserType);
+    //const adminPath = getAccountRoute(accountType as UserType);
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    const mainUrl = `${protocol}${slug}.${appUrl}${adminPath}`;
+    const mainUrl = `${protocol}${slug}.${appUrl}/home`;
 
     const htmlContent = generateEmailTemplate(t, name, email, mainUrl);
 

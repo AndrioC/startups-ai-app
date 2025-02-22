@@ -35,7 +35,7 @@ export default function TermsOfUseDialog({
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[90vh] w-[60vw] translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg shadow-lg focus:outline-none">
+        <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[90vh] w-[90vw] md:w-[60vw] translate-x-[-50%] translate-y-[-50%] bg-white rounded-lg shadow-lg focus:outline-none">
           <div className="p-6">
             <Dialog.Title className="text-lg font-semibold mb-4 text-gray-800">
               {t("title")}
@@ -63,7 +63,6 @@ export default function TermsOfUseDialog({
               </h2>
               <p className="mb-4">{t("sections.userAccess.content")}</p>
 
-              {/* Registration Section */}
               <h2 className="text-base font-semibold mb-2 text-gray-800">
                 {t("sections.registration.title")}
               </h2>
