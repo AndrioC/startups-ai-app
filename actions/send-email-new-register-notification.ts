@@ -164,7 +164,7 @@ export async function sendNewRegistrationNotification(
 
     //const adminPath = getAccountRoute(accountType as UserType);
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    const mainUrl = `${protocol}${slug}.${appUrl}/home`;
+    const mainUrl = `${protocol}${slug}.${appUrl}/management/home`;
 
     const htmlContent = generateEmailTemplate(t, name, email, mainUrl);
 
