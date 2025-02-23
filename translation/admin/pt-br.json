@@ -13,6 +13,9 @@
       "home": "Home",
       "programs": "Programas",
       "startups": "Startups",
+      "government": "Governo",
+      "innovation-environment": "Ambiente de Inovação",
+      "traditional-company": "Empresa Tradicional",
       "investors": "Investidores",
       "experts": "Mentores",
       "companies": "Empresas",
@@ -441,6 +444,42 @@
         "registrationDate": "Data de cadastro",
         "search": "Buscar",
         "clear": "Limpar"
+      }
+    },
+
+    "enterprise": {
+      "enterpriseTable": {
+        "selectAll": "Selecionar todos",
+        "selectRow": "Selecionar linha",
+        "startup": "Startup",
+        "vertical": "Vertical",
+        "country": "País",
+        "businessModel": "Mod. negócio",
+        "stage": "Estágio",
+        "revenueLast12Months": "Fat. Ult. 12 meses",
+        "columns": "Colunas",
+        "noResults": "Nenhum resultado encontrado.",
+        "rowsSelected": "{count} de {total} linha(s) selecionada(s).",
+        "rowsPerPage": "Linhas por página",
+        "pageInfo": "Página {current} de {total}",
+        "firstPage": "Primeira página",
+        "previousPage": "Página anterior",
+        "nextPage": "Próxima página",
+        "lastPage": "Última página",
+        "loading": "Carregando...",
+        "approve": "Aprovar",
+        "reject": "Rejeitar",
+        "status": "Status",
+        "openMenu": "Abrir menu",
+        "approved": "Aprovado",
+        "rejected": "Rejeitado",
+        "updateStatusError": "Falha ao atualizar status",
+        "statusUpdateSuccess": "Startup {status} com sucesso!",
+        "statusUpdateError": "Erro ao atualizar status",
+        "statusUpdateErrorDescription": "Ocorreu um erro ao tentar atualizar o status da startup.",
+        "approvalSuccess": "Startup aprovada com sucesso!",
+        "rejectionSuccess": "Startup rejeitada com sucesso!",
+        "name": "Nome"
       }
     },
     "settings": {

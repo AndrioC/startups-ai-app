@@ -14,7 +14,7 @@ const protectedRoutes = [
   "/enterprise",
   "innovation-environment",
   "government",
-  "tradicional-company",
+  "traditional-company",
 ];
 
 const accessDeniedHTML = `<!DOCTYPE html>

@@ -1,5 +1,5 @@
-import { StartupTableComponent } from "@/components/pages/startups/list/startup-table";
+import { EnterpriseTableComponent } from "@/components/pages/enterprise/list/enterprise-table";
 
 export default function GovernmentPage() {
-  return <StartupTableComponent />;
+  return <EnterpriseTableComponent />;
 }

@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import { Tooltip } from "@radix-ui/themes";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { type ColumnDef } from "unstyled-table";
 
-import { StartupTable } from "@/app/api/startup/[organization_id]/load-startups-by-organization-id/route";
+import { EnterpriseTable } from "@/app/api/enterprise/[organization_id]/load-enterprise-by-organization-id-and-type/route";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,22 +18,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getBadgeColorByBusinessModel } from "@/extras/utils";
 
-interface StartupColumnsProps {
+interface EnterpriseColumnsProps {
   refetchData?: () => void;
 }
 
-export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
-  const t = useTranslations("admin.startups.startupTable");
+export const EnterpriseColumns = ({ refetchData }: EnterpriseColumnsProps) => {
+  const t = useTranslations("admin.enterprise.enterpriseTable");
+  const { data: session } = useSession();
 
   const handleApprovalUpdate = async (
-    startupId: number,
+    enterpriseId: number,
     isApproved: boolean
   ) => {
     try {
       const response = await fetch(
-        `/api/government/update-approve-status/${startupId}`,
+        `/api/enterprise/${session?.user?.organization_id}/update-approve-status?enterpriseId=${enterpriseId}`,
         {
           method: "PUT",
           headers: {
@@ -53,11 +54,11 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
         position: "top-center",
       });
 
-      await refetchData?.();
+      refetchData?.();
 
       return data;
     } catch (error) {
-      console.error("Error updating startup approval status:", error);
+      console.error("Error updating enteprise approval status:", error);
 
       toast.error(t("statusUpdateErrorDescription"), {
         autoClose: 5000,
@@ -66,7 +67,7 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
     }
   };
 
-  const startupColumns: ColumnDef<StartupTable, unknown>[] = [
+  const enterpriseColumns: ColumnDef<EnterpriseTable, unknown>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -95,17 +96,10 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
       enableHiding: false,
     },
     {
-      id: t("startup"),
+      id: t("name"),
       accessorKey: "name",
-      header: t("startup"),
+      header: t("name"),
       enableColumnFilter: false,
-    },
-    {
-      id: t("vertical"),
-      accessorKey: "vertical",
-      header: t("vertical"),
-      enableColumnFilter: false,
-      enableSorting: false,
     },
     {
       id: t("country"),
@@ -113,78 +107,41 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
       header: t("country"),
       enableColumnFilter: false,
       cell: ({ row }) => {
-        const startup = row.original;
+        const enterprise = row.original;
 
         return (
-          <Tooltip content={startup.country}>
-            <Image
-              width={40}
-              height={40}
-              src={startup.country_flag}
-              alt={`country-flag-${startup.country}`}
-            />
+          <Tooltip content={enterprise.country}>
+            {enterprise.country_flag ? (
+              <Image
+                width={40}
+                height={40}
+                src={enterprise.country_flag}
+                alt={`country-flag-${enterprise.country}`}
+              />
+            ) : (
+              <span>-</span>
+            )}
           </Tooltip>
         );
       },
     },
-    {
-      id: t("businessModel"),
-      accessorKey: "business_model",
-      header: t("businessModel"),
-      enableColumnFilter: false,
-      cell: ({ row }) => {
-        const startup = row.original;
 
-        const color = getBadgeColorByBusinessModel(startup.business_model_code);
-
-        if (!color) {
-          return (
-            <Badge className="w-[60px] flex items-center justify-center bg-transparent text-gray-500">
-              -
-            </Badge>
-          );
-        }
-
-        return (
-          <Badge
-            variant={
-              getBadgeColorByBusinessModel(startup.business_model_code) as any
-            }
-            className="w-[60px] flex items-center justify-center"
-          >
-            {startup.business_model}
-          </Badge>
-        );
-      },
-    },
-    {
-      id: t("stage"),
-      accessorKey: "operation_stage",
-      header: t("stage"),
-      enableColumnFilter: false,
-    },
-    {
-      id: t("revenueLast12Months"),
-      accessorKey: "last_twelve_months_revenue",
-      header: t("revenueLast12Months"),
-      enableColumnFilter: false,
-    },
     {
       id: "status",
       header: t("status"),
       cell: ({ row }) => {
-        const startup = row.original;
+        const enterprise = row.original;
         return (
-          startup.is_approved !== undefined && (
+          enterprise.is_approved !== undefined && (
             <Badge
               className={`${
-                startup.is_approved
+                enterprise.is_approved
                   ? "bg-green-100 text-green-800 hover:bg-green-100"
                   : "bg-red-100 text-red-800 hover:bg-red-100"
               }`}
               variant="outline"
             >
-              {t(startup.is_approved ? "approved" : "rejected")}
+              {t(enterprise.is_approved ? "approved" : "rejected")}
             </Badge>
           )
         );
@@ -193,7 +150,7 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
     {
       id: "actions",
       cell: ({ row }) => {
-        const startup = row.original;
+        const enterprise = row.original;
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -205,17 +162,17 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {startup.is_approved ? (
+                {enterprise.is_approved ? (
                   <DropdownMenuItem
                     className="cursor-pointer text-red-500 hover:text-red-700"
-                    onClick={() => handleApprovalUpdate(startup.id, false)}
+                    onClick={() => handleApprovalUpdate(enterprise.id, false)}
                   >
                     {t("reject")}
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem
                     className="cursor-pointer text-green-500 hover:text-green-700"
-                    onClick={() => handleApprovalUpdate(startup.id, true)}
+                    onClick={() => handleApprovalUpdate(enterprise.id, true)}
                   >
                     {t("approve")}
                   </DropdownMenuItem>
@@ -228,5 +185,5 @@ export const StartupColumns = ({ refetchData }: StartupColumnsProps) => {
     },
   ];
 
-  return startupColumns;
+  return enterpriseColumns;
 };

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import sha1 from "crypto-js/sha1";
+// import sha1 from "crypto-js/sha1";
 import {
   ChevronDown,
   ChevronLeft,
@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Table as ShadcnTable } from "unstyled-table";
 
+import { EnterpriseTable } from "@/app/api/enterprise/[organization_id]/load-enterprise-by-organization-id-and-type/route";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -41,30 +42,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { StartupTable } from "../../../../app/api/startup/[organization_id]/load-startups-by-organization-id/route";
-
-import { StartupColumns } from "./columns";
+import { EnterpriseColumns } from "./columns";
 
 interface ServerControlledTableProps {
-  initialStartupsCount?: number;
+  initialEnteprisesCount?: number;
 }
 
 interface ApiResponse {
-  startups: StartupTable[];
+  enterprises: EnterpriseTable[];
   totalCount: number;
   page: number;
   pageSize: number;
   totalPages: number;
 }
 
-export function StartupTableComponent({
-  initialStartupsCount,
+export function EnterpriseTableComponent({
+  initialEnteprisesCount,
 }: ServerControlledTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const t = useTranslations("admin.startups.startupTable");
+  const t = useTranslations("admin.enterprise.enterpriseTable");
+
+  const enterpriseCategory = pathname.split("/")[2];
 
   const page = searchParams.get("page") ?? "1";
   const pageSize = searchParams.get("pageSize") ?? "10";
@@ -72,11 +73,11 @@ export function StartupTableComponent({
   const [isPending, startTransition] = React.useTransition();
 
   const { data, isLoading, refetch } = useQuery<ApiResponse>({
-    queryKey: ["startups", page, pageSize],
+    queryKey: ["enterprise", page, pageSize, enterpriseCategory],
     queryFn: () =>
       axios
         .get(
-          `/api/startup/${session?.user?.organization_id}/load-startups-by-organization-id?page=${page}&pageSize=${pageSize}`
+          `/api/enterprise/${session?.user?.organization_id}/load-enterprise-by-organization-id-and-type?enterpriseCategory=${enterpriseCategory}&page=${page}&pageSize=${pageSize}`
         )
         .then((res) => res.data),
     staleTime: 60 * 1000,
@@ -100,16 +101,16 @@ export function StartupTableComponent({
     [searchParams]
   );
 
-  const startupColumns = StartupColumns({
+  const enterpriseColumns = EnterpriseColumns({
     refetchData: () => refetch(),
   });
 
   return (
     <div className="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-5 sm:py-10">
       <ShadcnTable
-        columns={startupColumns}
-        data={data?.startups ?? []}
-        itemsCount={data?.totalCount ?? initialStartupsCount ?? 0}
+        columns={enterpriseColumns}
+        data={data?.enterprises ?? []}
+        itemsCount={data?.totalCount ?? initialEnteprisesCount ?? 0}
         manualPagination
         renders={{
           table: ({ children, tableInstance }) => {
@@ -180,18 +181,21 @@ export function StartupTableComponent({
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={startupColumns.length} className="h-24">
+                  <TableCell
+                    colSpan={enterpriseColumns.length}
+                    className="h-24"
+                  >
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="w-8 h-8 animate-spin text-[#2292EA]" />
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : data?.startups.length ? (
+              ) : data?.enterprises.length ? (
                 children
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={startupColumns.length}
+                    colSpan={enterpriseColumns.length}
                     className="h-24 text-center text-gray-500"
                   >
                     {t("noResults")}
@@ -200,22 +204,22 @@ export function StartupTableComponent({
               )}
             </TableBody>
           ),
-          bodyRow: ({ children, row }) => (
-            <TableRow
-              className="cursor-pointer hover:bg-gray-50 transition-colors"
-              onClick={(e) => {
-                const url = `startups/startup/${sha1(row.original.id.toString()).toString()}`;
+          // bodyRow: ({ children, row }) => (
+          //   <TableRow
+          //     className="cursor-pointer hover:bg-gray-50 transition-colors"
+          //     onClick={(e) => {
+          //       const url = `startups/startup/${sha1(row.original.id.toString()).toString()}`;
 
-                if (e.metaKey || e.ctrlKey) {
-                  window.open(url, "_blank");
-                } else {
-                  router.push(url);
-                }
-              }}
-            >
-              {children}
-            </TableRow>
-          ),
+          //       if (e.metaKey || e.ctrlKey) {
+          //         window.open(url, "_blank");
+          //       } else {
+          //         router.push(url);
+          //       }
+          //     }}
+          //   >
+          //     {children}
+          //   </TableRow>
+          // ),
           bodyCell: ({ children }) => (
             <TableCell className="px-4 py-3 text-sm text-gray-700">
               {isPending ? <Skeleton className="h-6 w-full" /> : children}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { auth } from "@/auth";
 import prisma from "@/prisma/client";
 
 const S3_STARTUP_COUNTRY_FLAGS = process.env.S3_STARTUP_COUNTRY_FLAGS;
@@ -25,6 +26,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { organization_id: string } }
 ) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { organization_id } = params;
 
   if (!organization_id) {

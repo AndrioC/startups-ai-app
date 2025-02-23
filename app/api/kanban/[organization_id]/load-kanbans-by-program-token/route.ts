@@ -86,6 +86,13 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!params.organization_id) {
+    return NextResponse.json(
+      { error: "Organization ID is required" },
+      { status: 400 }
+    );
+  }
+
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
   if (!token) {
