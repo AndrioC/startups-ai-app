@@ -310,7 +310,6 @@ export default function GeneralDataForm({ data }: Props) {
 
               <div className="flex flex-col">
                 <label htmlFor="fullAddress" className="flex items-center">
-                  <span className="text-red-500">*</span>
                   <span className="text-gray-500">
                     {t("generalData.fullAddress")}
                   </span>
@@ -722,7 +721,7 @@ export default function GeneralDataForm({ data }: Props) {
 
             {/* college */}
             {session?.user?.enterprise_category_code ===
-              EnterpriseCategoryType.GOVERNMENT && (
+              EnterpriseCategoryType.INNOVATION_ENVIRONMENT && (
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label

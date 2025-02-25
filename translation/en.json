@@ -18,6 +18,19 @@
       "required": "This field is required!",
       "invalidEmail": "Email is not valid!",
       "minPassword": "Password must be at least 6 characters long!"
+    },
+    "resendEmail": {
+      "emailVerificationNeeded": "Email Verification Needed",
+      "emailVerificationSentPrefix": "We've sent a verification email to",
+      "checkInbox": "Please check your inbox and click the verification link.",
+      "checkSpam": "If you can't find the email, check your spam folder.",
+      "gotIt": "Got it",
+      "resendEmail": "Resend Email",
+      "resending": "Resending...",
+      "resendSuccess": "Verification email successfully resent.",
+      "registrationSuccess": "Registration Successful!",
+      "confirmationEmailSent": "We've sent a confirmation email to",
+      "confirmationRequired": "You need to confirm your email before logging in."
     }
   },
 
@@ -201,7 +214,8 @@
   "server": {
     "login": {
       "invalidFields": "Invalid fields!",
-      "emailNotExists": "Email does not exist or has not been verified!",
+      "emailNotExists": "E-mail does not exist!",
+      "emailNotVerified": "E-mail not verified!",
       "accountBlocked": "Account blocked. Please contact the administrator.",
       "invalidCredentials": "Invalid credentials!",
       "genericError": "Something went wrong!",

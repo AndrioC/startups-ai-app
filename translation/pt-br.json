@@ -18,6 +18,19 @@
       "required": "Este campo é obrigatório!",
       "invalidEmail": "E-mail não é válido!",
       "minPassword": "A senha deve ter pelo menos 6 caracteres!"
+    },
+    "resendEmail": {
+      "emailVerificationNeeded": "Verificação de Email Necessária",
+      "emailVerificationSentPrefix": "Enviamos um email de verificação para",
+      "checkInbox": "Por favor, verifique sua caixa de entrada e clique no link de verificação.",
+      "checkSpam": "Se não encontrar o email, verifique sua pasta de spam.",
+      "gotIt": "Entendi",
+      "resendEmail": "Reenviar Email",
+      "resending": "Reenviando...",
+      "resendSuccess": "Email de verificação reenviado com sucesso.",
+      "registrationSuccess": "Cadastro Realizado com Sucesso!",
+      "confirmationEmailSent": "Enviamos um email de confirmação para",
+      "confirmationRequired": "Você precisa confirmar seu email antes de fazer login."
     }
   },
 
@@ -201,7 +214,8 @@
   "server": {
     "login": {
       "invalidFields": "Campos inválidos!",
-      "emailNotExists": "E-mail não existe ou ainda não foi verificado!",
+      "emailNotExists": "E-mail não existe!",
+      "emailNotVerified": "E-mail não verificado!",
       "accountBlocked": "Conta bloqueada. Entre em contato com o administrador.",
       "invalidCredentials": "Credenciais inválidas!",
       "genericError": "Algo deu errado!",

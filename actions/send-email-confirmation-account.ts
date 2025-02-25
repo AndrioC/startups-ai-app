@@ -8,9 +8,6 @@ import { Resend } from "resend";
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
-  process.env.S3_ORGANIZATIONS_IMGS_BUCKET_NAME;
-
 const translations = {
   pt: {
     subject: "Verificação de Email - StartupsAI",
@@ -73,10 +70,6 @@ export async function sendVerificationEmail(
 
     const verificationUrl = `${protocol}${subdomain}.${process.env.NEXT_PUBLIC_APP_URL}/auth/confirm-account?token=${token}`;
 
-    const imageOrganization = organization.logo_img
-      ? `https://${S3_ORGANIZATIONS_IMGS_BUCKET_NAME}.s3.amazonaws.com/${organization.logo_img}`
-      : null;
-
     await resend.emails.send({
       from: "StartupsAI <no-reply@startupsai.com.br>",
       to: email,
@@ -93,7 +86,6 @@ export async function sendVerificationEmail(
             <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; margin-top: 40px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
               <tr>
                 <td style="padding: 40px 0; text-align: center; background: linear-gradient(135deg, #3B82F6 0%, #3B82F6 100%); border-radius: 8px 8px 0 0;">
-                ${imageOrganization ? `<img src="${imageOrganization}" alt="Logo" style="width: 50px; height: 50px; margin-bottom: 16px;">` : ""}
                   <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">${t.title}</h1>
                 </td>
               </tr>

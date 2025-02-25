@@ -1,6 +1,6 @@
 "use server";
 
-import { UserType } from "@prisma/client";
+import { EnterpriseCategoryType, UserType } from "@prisma/client";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -134,12 +134,34 @@ const generateEmailTemplate = (
 </html>
 `;
 
-function getAccountRoute(accountType: UserType): string {
+function getAccountRoute(
+  accountType: UserType,
+  enterpriseCategory?: EnterpriseCategoryType
+): string {
+  const formattedTraditionalCompany = formatString(
+    EnterpriseCategoryType.TRADITIONAL_COMPANY
+  );
+
+  const formattedGovernment = formatString(EnterpriseCategoryType.GOVERNMENT);
+
+  const formattedInnovationEnvironment = formatString(
+    EnterpriseCategoryType.INNOVATION_ENVIRONMENT
+  );
+
   switch (accountType) {
     case "STARTUP":
       return "/management/startups";
     case "ENTERPRISE":
-      return "/management/enterprises";
+      switch (enterpriseCategory) {
+        case formattedTraditionalCompany:
+          return `/management/${formattedTraditionalCompany}`;
+        case formattedGovernment:
+          return `/management/${formattedGovernment}`;
+        case formattedInnovationEnvironment:
+          return `/management/${formattedInnovationEnvironment}`;
+        default:
+          return "/management/home";
+      }
     case "INVESTOR":
       return "/management/investors";
     case "MENTOR":
@@ -154,7 +176,8 @@ export async function sendNewRegistrationNotification(
   email: string,
   slug: string,
   users: string[],
-  accountType: UserType | null
+  accountType: UserType | null,
+  enterpriseCategoryFormatted?: EnterpriseCategoryType
 ) {
   try {
     const t = translations.pt;
@@ -162,7 +185,11 @@ export async function sendNewRegistrationNotification(
       process.env.NEXT_PUBLIC_PROTOCOL ||
       (process.env.NODE_ENV === "development" ? "http://" : "https://");
 
-    const adminPath = getAccountRoute(accountType as UserType);
+    const adminPath = getAccountRoute(
+      accountType as UserType,
+      enterpriseCategoryFormatted
+    );
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
     const mainUrl = `${protocol}${slug}.${appUrl}${adminPath}`;
 
@@ -182,4 +209,12 @@ export async function sendNewRegistrationNotification(
     console.error("Error sending new registration notification email:", error);
     return { success: false, error: translations.pt.errors.emailFailed };
   }
+}
+
+function formatString(input: string) {
+  let result = input.toLowerCase();
+
+  result = result.replace(/_/g, "-");
+
+  return result;
 }

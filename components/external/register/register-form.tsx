@@ -21,6 +21,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/schemas/schema-register";
 
+import { RegistrationSuccessModal } from "./email-creation-success-modal";
 import TermsOfUseDialog from "./terms";
 
 export function RegisterForm({
@@ -40,6 +41,8 @@ export function RegisterForm({
   const formSchema = RegisterSchema(t);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
+  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const {
     register,
@@ -50,18 +53,16 @@ export function RegisterForm({
     resolver: zodResolver(formSchema),
   });
 
-  const toastSuccess = () => {
-    toast.success(t("successMessage"), {
-      autoClose: 5000,
-      position: "top-center",
-    });
-  };
-
   const toastWarning = (erro: string) => {
     toast.warning(`${t("errorMessage")} ${erro}`, {
       autoClose: 5000,
       position: "top-center",
     });
+  };
+
+  const handleModalClose = () => {
+    setIsVerificationModalOpen(false);
+    router.replace("/auth/login");
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -79,6 +80,7 @@ export function RegisterForm({
         );
         if (selectedCategory) {
           payload.enterpriseCategory = selectedCategory.id;
+          payload.enterpriseCategoryCode = selectedCategory.code;
           payload.registerUserType = UserType.ENTERPRISE;
         }
       }
@@ -93,8 +95,8 @@ export function RegisterForm({
       );
 
       if (response.status === 201) {
-        toastSuccess();
-        router.replace("/auth/login");
+        setRegisteredEmail(data.registerEmail);
+        setIsVerificationModalOpen(true);
         return;
       }
     } catch (error: unknown) {
@@ -274,6 +276,11 @@ export function RegisterForm({
         isOpen={isTermsDialogOpen}
         setIsOpen={setIsTermsDialogOpen}
         onAgree={handleAgreeTerms}
+      />
+      <RegistrationSuccessModal
+        open={isVerificationModalOpen}
+        onOpenChange={handleModalClose}
+        email={registeredEmail}
       />
     </form>
   );

@@ -1,3 +1,5 @@
+import { EnterpriseCategoryType } from "@prisma/client";
+
 import prisma from "@/prisma/client";
 
 export const getUserByEmail = async (email: string, slug: string) => {
@@ -35,6 +37,7 @@ export const getUserByEmail = async (email: string, slug: string) => {
             expert_id: true,
             enterprise_id: true,
             language: true,
+            email_verified: true,
             enterprise: {
               select: {
                 id: true,
@@ -52,9 +55,25 @@ export const getUserByEmail = async (email: string, slug: string) => {
       },
     });
 
+    const enterpriseCategoryCode =
+      userOrganization?.user?.enterprise?.enterprise_category?.code;
+    let enterpriseCategoryEnum: EnterpriseCategoryType | null = null;
+
+    if (enterpriseCategoryCode) {
+      if (
+        Object.values(EnterpriseCategoryType).includes(
+          enterpriseCategoryCode as EnterpriseCategoryType
+        )
+      ) {
+        enterpriseCategoryEnum =
+          enterpriseCategoryCode as EnterpriseCategoryType;
+      }
+    }
+
     const user = {
       ...userOrganization?.user,
       organization_id: organization?.id,
+      enterprise_category_type: enterpriseCategoryEnum,
     };
 
     return user;

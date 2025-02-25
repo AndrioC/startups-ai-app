@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl"; // Adicionado useLocale
+import { useLocale, useTranslations } from "next-intl";
 
 import logoPlaceholder from "@/assets/img/logo-placeholder.png";
 import LoadingSpinner from "@/components/loading-spinner";
