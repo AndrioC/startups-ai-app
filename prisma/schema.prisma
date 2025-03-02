@@ -222,8 +222,6 @@ model startups {
   profile_updated                              Boolean   @default(false)
   plan                                         String    @default("free")
   is_deleted                                   Boolean   @default(false)
-  is_approved                                  Boolean   @default(false)
-  is_blocked                                   Boolean   @default(false)
   was_processed                                Boolean   @default(false)
   created_at                                   DateTime  @default(now())
   updated_at                                   DateTime  @default(now())
@@ -279,6 +277,7 @@ model user {
   hashed_password     String?
   accepted_terms      Boolean   @default(false)
   is_blocked          Boolean   @default(false)
+  is_deleted          Boolean   @default(false)
   accepted_terms_date DateTime?
   blocked_at          DateTime?
   created_at          DateTime  @default(now())
@@ -370,8 +369,6 @@ model investors {
   plan                                        String                        @default("free")
   is_deleted                                  Boolean                       @default(false)
   was_processed                               Boolean                       @default(false)
-  is_approved                                 Boolean                       @default(false)
-  is_blocked                                  Boolean                       @default(false)
   created_at                                  DateTime                      @default(now())
   updated_at                                  DateTime                      @default(now())
   deleted_at                                  DateTime?
@@ -459,8 +456,6 @@ model experts {
   plan                               String                 @default("free")
   is_deleted                         Boolean                @default(false)
   was_processed                      Boolean                @default(false)
-  is_approved                        Boolean                @default(false)
-  is_blocked                         Boolean                @default(false)
   created_at                         DateTime               @default(now())
   updated_at                         DateTime               @default(now())
   deleted_at                         DateTime?
@@ -778,6 +773,8 @@ model startup_organizations {
   startup_id      Int
   organization_id Int
   created_at      DateTime @default(now())
+  is_approved     Boolean  @default(false)
+  is_blocked      Boolean  @default(false)
 
   startup      startups      @relation(fields: [startup_id], references: [id])
   organization organizations @relation(fields: [organization_id], references: [id])
@@ -828,6 +825,8 @@ model expert_organizations {
   expert_id       Int
   organization_id Int
   created_at      DateTime @default(now())
+  is_approved     Boolean  @default(false)
+  is_blocked      Boolean  @default(false)
 
   experts      experts       @relation(fields: [expert_id], references: [id])
   organization organizations @relation(fields: [organization_id], references: [id])
@@ -839,6 +838,8 @@ model investor_organizations {
   investor_id     Int
   organization_id Int
   created_at      DateTime @default(now())
+  is_approved     Boolean  @default(false)
+  is_blocked      Boolean  @default(false)
 
   investors    investors     @relation(fields: [investor_id], references: [id])
   organization organizations @relation(fields: [organization_id], references: [id])
@@ -850,6 +851,8 @@ model enterprise_organizations {
   enterprise_id   Int
   organization_id Int
   created_at      DateTime @default(now())
+  is_approved     Boolean  @default(false)
+  is_blocked      Boolean  @default(false)
 
   enterprise   enterprise    @relation(fields: [enterprise_id], references: [id])
   organization organizations @relation(fields: [organization_id], references: [id])
@@ -986,8 +989,6 @@ model enterprise {
   profile_updated                    Boolean   @default(false)
   plan                               String    @default("free")
   is_deleted                         Boolean   @default(false)
-  is_approved                        Boolean   @default(false)
-  is_blocked                         Boolean   @default(false)
   was_processed                      Boolean   @default(false)
   free_subscription_expires_at       DateTime?
   created_at                         DateTime  @default(now())

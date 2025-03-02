@@ -23,14 +23,18 @@ export async function PUT(
     }
 
     const url = new URL(request.url);
-    const enterpriseId = url.searchParams.get("enterpriseId");
+    const enterpriseId =
+      url.searchParams.get("enterpriseId") || params.enterprise_id;
+
+    if (!enterpriseId) {
+      return new NextResponse("Enterprise ID is required", { status: 400 });
+    }
 
     const data = (await request.json()) as DataRequest;
 
     const enterprise = await prisma.enterprise.findFirst({
       where: {
         id: Number(enterpriseId),
-        organization_id: session.user.organization_id,
       },
     });
 
@@ -38,19 +42,42 @@ export async function PUT(
       return new NextResponse("Enterprise not found", { status: 404 });
     }
 
-    const updatedEnterprise = await prisma.enterprise.update({
+    const enterpriseOrganization =
+      await prisma.enterprise_organizations.findUnique({
+        where: {
+          enterprise_id_organization_id: {
+            enterprise_id: Number(enterpriseId),
+            organization_id: organizationId,
+          },
+        },
+      });
+
+    if (!enterpriseOrganization) {
+      return new NextResponse(
+        "Enterprise not associated with this organization",
+        { status: 404 }
+      );
+    }
+
+    const updatedRelationship = await prisma.enterprise_organizations.update({
       where: {
-        id: Number(enterpriseId),
+        enterprise_id_organization_id: {
+          enterprise_id: Number(enterpriseId),
+          organization_id: organizationId,
+        },
       },
       data: {
         is_approved: data.is_approved,
-        updated_at: new Date(),
       },
     });
 
-    return NextResponse.json(updatedEnterprise);
+    return NextResponse.json({
+      enterprise_id: enterprise.id,
+      organization_id: organizationId,
+      is_approved: updatedRelationship.is_approved,
+    });
   } catch (error) {
-    console.error("Error updating enterprise status:", error);
+    console.error("Error updating enterprise approval status:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

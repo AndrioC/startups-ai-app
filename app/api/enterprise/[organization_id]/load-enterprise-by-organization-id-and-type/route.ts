@@ -60,37 +60,65 @@ export async function GET(
       );
     }
 
-    const enterprises = await prisma.enterprise.findMany({
+    const enterpriseRelations = await prisma.enterprise_organizations.findMany({
       where: {
         organization_id: Number(organization_id),
-        enterprise_category_id: enterpriseCategoryId.id,
       },
-      orderBy: [{ is_approved: "desc" }, { name: "asc" }],
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      select: {
+        enterprise_id: true,
+        is_approved: true,
+      },
+    });
+
+    const enterprises = await prisma.enterprise.findMany({
+      where: {
+        enterprise_category_id: enterpriseCategoryId.id,
+        id: {
+          in: enterpriseRelations.map((rel) => rel.enterprise_id),
+        },
+      },
       include: {
         country: true,
         enterprise_category: true,
       },
     });
 
-    const enterpriseTable: EnterpriseTable[] = enterprises.map((value) => ({
-      id: value.id,
-      name: value.name,
-      country: value?.country?.name_en ?? "-",
-      enterprise_category: value?.enterprise_category?.name_en ?? "-",
-      country_flag: value?.country?.code
-        ? `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country.code}.svg`
-        : null,
-      is_approved: value.is_approved,
-    }));
-
-    const totalCount = await prisma.enterprise.count({
-      where: {
-        organization_id: Number(organization_id),
-        enterprise_category_id: enterpriseCategoryId.id,
-      },
+    const combinedEnterprises = enterprises.map((enterprise) => {
+      const relation = enterpriseRelations.find(
+        (rel) => rel.enterprise_id === enterprise.id
+      );
+      return {
+        ...enterprise,
+        is_approved: relation ? relation.is_approved : false,
+      };
     });
+
+    const sortedEnterprises = combinedEnterprises.sort((a, b) => {
+      if (a.is_approved === b.is_approved) {
+        return (a.name || "").localeCompare(b.name || "");
+      }
+      return a.is_approved ? -1 : 1;
+    });
+
+    const paginatedEnterprises = sortedEnterprises.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
+
+    const enterpriseTable: EnterpriseTable[] = paginatedEnterprises.map(
+      (value) => ({
+        id: value.id,
+        name: value.name,
+        country: value?.country?.name_en ?? "-",
+        enterprise_category: value?.enterprise_category?.name_en ?? "-",
+        country_flag: value?.country?.code
+          ? `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country.code}.svg`
+          : null,
+        is_approved: value.is_approved,
+      })
+    );
+
+    const totalCount = enterprises.length;
 
     return NextResponse.json(
       {

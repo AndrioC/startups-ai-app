@@ -6,6 +6,7 @@ import prisma from "@/prisma/client";
 interface DataRequest {
   is_approved: boolean;
 }
+
 export async function PUT(
   req: NextRequest,
   { params }: { params: { startup_id: string } }
@@ -21,12 +22,12 @@ export async function PUT(
       return new NextResponse("Invalid startup ID", { status: 400 });
     }
 
+    const organizationId = session.user.organization_id;
     const data = (await req.json()) as DataRequest;
 
     const startup = await prisma.startups.findFirst({
       where: {
         id: startupId,
-        organization_id: session.user.organization_id,
       },
     });
 
@@ -34,19 +35,40 @@ export async function PUT(
       return new NextResponse("Startup not found", { status: 404 });
     }
 
-    const updatedStartup = await prisma.startups.update({
+    const startupOrganization = await prisma.startup_organizations.findUnique({
       where: {
-        id: startupId,
-      },
-      data: {
-        is_approved: data.is_approved,
-        updated_at: new Date(),
+        startup_id_organization_id: {
+          startup_id: startupId,
+          organization_id: organizationId,
+        },
       },
     });
 
-    return NextResponse.json(updatedStartup);
+    if (!startupOrganization) {
+      return new NextResponse("Startup not associated with this organization", {
+        status: 404,
+      });
+    }
+
+    const updatedRelationship = await prisma.startup_organizations.update({
+      where: {
+        startup_id_organization_id: {
+          startup_id: startupId,
+          organization_id: organizationId,
+        },
+      },
+      data: {
+        is_approved: data.is_approved,
+      },
+    });
+
+    return NextResponse.json({
+      startup_id: startup.id,
+      organization_id: organizationId,
+      is_approved: updatedRelationship.is_approved,
+    });
   } catch (error) {
-    console.error("Error updating startup status:", error);
+    console.error("Error updating startup approval status:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

@@ -19,6 +19,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const organizationId = session.user?.organization_id;
+
   const enterprise = await prisma.enterprise.findUnique({
     where: { id: Number(params.enterprise_id) },
     include: {
@@ -41,6 +43,11 @@ export async function GET(
           enterprise_college_activity_area: true,
         },
       },
+      enterprise_organizations: {
+        where: {
+          organization_id: organizationId,
+        },
+      },
       enterprise_category: true,
       organizations: true,
       country: true,
@@ -53,6 +60,10 @@ export async function GET(
       { status: 404 }
     );
   }
+
+  const enterpriseOrganization = enterprise.enterprise_organizations[0];
+  const isApproved = enterpriseOrganization?.is_approved || false;
+  const isBlocked = enterpriseOrganization?.is_blocked || false;
 
   const generalData: Block = {
     id: enterprise.id,
@@ -123,8 +134,8 @@ export async function GET(
     profileUpdated: enterprise.profile_updated,
     plan: enterprise.plan,
     isDeleted: enterprise.is_deleted,
-    isApproved: enterprise.is_approved,
-    isBlocked: enterprise.is_blocked,
+    isApproved,
+    isBlocked,
     wasProcessed: enterprise.was_processed,
   };
 

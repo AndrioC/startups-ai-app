@@ -70,6 +70,7 @@ export async function POST(
           data: {
             startup_id: startup.id,
             organization_id: organization.id,
+            is_approved: false,
           },
         });
 
@@ -109,7 +110,6 @@ export async function POST(
             name: data.registerName,
             contact_email: data.registerEmail,
             organization_id: organization.id,
-            is_approved: false,
           },
         });
         accountType = UserType.INVESTOR;
@@ -119,6 +119,7 @@ export async function POST(
           data: {
             investor_id: investor.id,
             organization_id: organization.id,
+            is_approved: false,
           },
         });
       }
@@ -129,7 +130,6 @@ export async function POST(
             name: data.registerName,
             contact_email: data.registerEmail,
             organization_id: organization.id,
-            is_approved: false,
           },
         });
         accountType = UserType.MENTOR;
@@ -139,6 +139,7 @@ export async function POST(
           data: {
             expert_id: expert.id,
             organization_id: organization.id,
+            is_approved: false,
           },
         });
       }
@@ -150,7 +151,6 @@ export async function POST(
             main_responsible_email: data.registerEmail,
             organization_id: organization.id,
             enterprise_category_id: Number(data.enterpriseCategory),
-            is_approved: false,
           },
         });
         accountType = UserType.ENTERPRISE;
@@ -160,6 +160,8 @@ export async function POST(
           data: {
             enterprise_id: enterprise.id,
             organization_id: organization.id,
+            is_approved: false,
+            is_blocked: false,
           },
         });
       }

@@ -45,17 +45,22 @@ export async function GET(
   const pageSize = Number(url.searchParams.get("pageSize")) || 10;
 
   try {
+    const startupRelations = await prisma.startup_organizations.findMany({
+      where: {
+        organization_id: Number(organization_id),
+      },
+      select: {
+        startup_id: true,
+        is_approved: true,
+      },
+    });
+
     const startups = await prisma.startups.findMany({
       where: {
-        startup_organizations: {
-          some: {
-            organization_id: Number(organization_id),
-          },
+        id: {
+          in: startupRelations.map((rel) => rel.startup_id),
         },
       },
-      orderBy: [{ is_approved: "desc" }, { name: "asc" }],
-      skip: (page - 1) * pageSize,
-      take: pageSize,
       include: {
         vertical: true,
         country: true,
@@ -64,7 +69,29 @@ export async function GET(
       },
     });
 
-    const startupTable: StartupTable[] = startups.map((value) => ({
+    const combinedStartups = startups.map((startup) => {
+      const relation = startupRelations.find(
+        (rel) => rel.startup_id === startup.id
+      );
+      return {
+        ...startup,
+        is_approved: relation?.is_approved || false,
+      };
+    });
+
+    const sortedStartups = combinedStartups.sort((a, b) => {
+      if (a.is_approved === b.is_approved) {
+        return (a.name || "").localeCompare(b.name || "");
+      }
+      return a.is_approved ? -1 : 1;
+    });
+
+    const paginatedStartups = sortedStartups.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
+
+    const startupTable: StartupTable[] = paginatedStartups.map((value) => ({
       id: value.id,
       name: value.name!,
       short_description:
@@ -85,20 +112,14 @@ export async function GET(
       operation_stage: extractFirstWordOperationStage(
         value.operation_stage?.name_en
       ),
-      country_flag: `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country?.code}.svg`,
+      country_flag: value.country?.code
+        ? `https://${S3_STARTUP_COUNTRY_FLAGS}.s3.amazonaws.com/${value.country.code}.svg`
+        : "",
       last_twelve_months_revenue: value.last_twelve_months_revenue ?? "-",
-      is_approved: value.is_approved ?? false,
+      is_approved: value.is_approved,
     }));
 
-    const totalCount = await prisma.startups.count({
-      where: {
-        startup_organizations: {
-          some: {
-            organization_id: Number(organization_id),
-          },
-        },
-      },
-    });
+    const totalCount = startups.length;
 
     return NextResponse.json(
       {
