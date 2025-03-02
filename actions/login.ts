@@ -11,6 +11,9 @@ import { getUserByEmail } from "@/data/user";
 import { LoginSchemaServer } from "@/lib/schemas/schema";
 import prisma from "@/prisma/client";
 
+import { checkIfEmailIsNotVerified } from "./check-if-email-is-not-verified";
+import { sendVerificationEmail } from "./send-email-confirmation-account";
+
 const locales = ["pt-br", "en"];
 
 async function getServerTranslations() {
@@ -27,6 +30,8 @@ async function getServerTranslations() {
 export async function login(
   values: z.infer<ReturnType<typeof LoginSchemaServer>>
 ) {
+  const cookieStore = cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "pt-br";
   const t = await getServerTranslations();
 
   const validatedFields = LoginSchemaServer(t).safeParse(values);
@@ -37,9 +42,23 @@ export async function login(
 
   const { email, password, slug } = validatedFields.data;
 
+  const emailVerificationResult = await checkIfEmailIsNotVerified(email, slug);
+
+  if (!emailVerificationResult.exists) {
+    await sendVerificationEmail(
+      email,
+      locale,
+      emailVerificationResult.organization!
+    );
+    return {
+      emailNotVerified: true,
+      error: t("server.login.emailNotVerified"),
+    };
+  }
+
   const existingUser = await getUserByEmail(email, values.slug);
 
-  if (!existingUser || !existingUser.email || !existingUser.hashed_password) {
+  if (!existingUser || !existingUser.email) {
     return { error: t("server.login.emailNotExists") };
   }
 

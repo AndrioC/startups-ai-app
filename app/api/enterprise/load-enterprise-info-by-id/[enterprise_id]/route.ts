@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { auth } from "@/auth";
 import prisma from "@/prisma/client";
 
 interface Block {
@@ -13,6 +14,11 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { enterprise_id: string } }
 ) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const enterprise = await prisma.enterprise.findUnique({
     where: { id: Number(params.enterprise_id) },
     include: {

@@ -82,7 +82,7 @@ export default function ResetPasswordPage() {
       <h1 className="text-center text-black font-semibold text-3xl md:text-5xl mb-6">
         {t("title")}
       </h1>
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-[600px] p-6 md:p-10">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-[600px] p-6 md:p-10 text-gray-600">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="relative">
             <input

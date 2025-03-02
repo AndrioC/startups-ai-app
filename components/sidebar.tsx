@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { BsPeople } from "react-icons/bs";
+import { FaBuilding, FaLandmark, FaLightbulb } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { GoHome } from "react-icons/go";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
@@ -67,6 +68,30 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
     },
     {
       id: 4,
+      key: "government",
+      title: t("government"),
+      href: "/management/government",
+      icon: <FaLandmark />,
+      strokeWidth: 0.5,
+    },
+    {
+      id: 5,
+      key: "innovation-environment",
+      title: t("innovation-environment"),
+      href: "/management/innovation-environment",
+      icon: <FaLightbulb />,
+      strokeWidth: 0.5,
+    },
+    {
+      id: 6,
+      key: "traditional-company",
+      title: t("traditional-company"),
+      href: "/management/traditional-company",
+      icon: <FaBuilding />,
+      strokeWidth: 0.5,
+    },
+    {
+      id: 7,
       key: "investors",
       title: t("investors"),
       href: "/management/investors",
@@ -74,7 +99,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       strokeWidth: 0.5,
     },
     {
-      id: 5,
+      id: 8,
       key: "experts",
       title: t("experts"),
       href: "/management/mentors",
@@ -82,7 +107,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       strokeWidth: 0.5,
     },
     {
-      id: 6,
+      id: 9,
       key: "companies",
       title: t("companies"),
       href: "/management/companies",
@@ -90,7 +115,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       strokeWidth: 0.5,
     },
     {
-      id: 7,
+      id: 10,
       key: "settings",
       title: t("settings"),
       href: "/management/settings",

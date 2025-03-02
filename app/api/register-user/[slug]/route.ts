@@ -1,4 +1,4 @@
-import { UserType } from "@prisma/client";
+import { EnterpriseCategoryType, UserType } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,6 +13,7 @@ interface DataRequest {
   registerUserType: UserType;
   registerUserTerms: boolean;
   enterpriseCategory: number;
+  enterpriseCategoryCode: string;
   locale: string;
 }
 
@@ -200,6 +201,9 @@ export async function POST(
     });
 
     const usersEmail = users.map((user) => user.email);
+    const enterpriseCategoryFormatted = formatString(
+      data.enterpriseCategoryCode
+    );
 
     await sendVerificationEmail(data.registerEmail, data.locale, organization);
     await sendNewRegistrationNotification(
@@ -207,7 +211,8 @@ export async function POST(
       data.registerEmail,
       organization.slug!,
       usersEmail,
-      accountType
+      accountType,
+      enterpriseCategoryFormatted as EnterpriseCategoryType
     );
 
     return NextResponse.json({}, { status: 201 });
@@ -215,4 +220,12 @@ export async function POST(
     console.log("error creating user: ", error);
     return NextResponse.json(error, { status: 500 });
   }
+}
+
+function formatString(input: string) {
+  let result = input.toLowerCase();
+
+  result = result.replace(/_/g, "-");
+
+  return result;
 }
