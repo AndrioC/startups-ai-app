@@ -51,7 +51,12 @@ export default function EnterprisePage() {
                 filledPercentages={data?.filledPercentages}
                 isRefetching={isRefetching}
               /> */}
-              <EnterpriseDataCard data={{ ...data?.blocks?.generalData }} />
+              <EnterpriseDataCard
+                data={{
+                  ...data?.blocks?.generalData,
+                  ...data?.blocks?.responsibleData,
+                }}
+              />
             </aside>
             <section className="flex-grow flex flex-col mx-[45px]">
               <div className="w-full h-auto bg-[#F1F3F3] rounded-lg shadow-lg mb-10 relative">

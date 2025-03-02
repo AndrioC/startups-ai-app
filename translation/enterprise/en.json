@@ -12,7 +12,7 @@
     "countryId": "Country",
     "categoryId": "Category",
     "logo": "Logo",
-    "stateCity": "State / City",
+    "stateCity": "City / State",
     "subscriptionNumber": "Tax identification",
     "website": "Website",
     "fullAddress": "Full Address",

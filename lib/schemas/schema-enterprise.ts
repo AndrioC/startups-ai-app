@@ -65,7 +65,7 @@ export const EnterpriseSchema = (t?: any) =>
       .string()
       .nullable()
       .transform((v) => (v === null ? "" : v))
-      .pipe(z.string().min(5, t("validation.required"))),
+      .optional(),
     activityAreas: z.preprocess(
       (val) => (typeof val === "string" ? [Number(val)] : val),
       z.array(z.number()).default([])
