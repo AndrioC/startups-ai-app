@@ -215,8 +215,8 @@
         "statusUpdateSuccess": "Startup {status} successfully!",
         "statusUpdateError": "Error updating status",
         "statusUpdateErrorDescription": "An error occurred while trying to update the startup status.",
-        "approvalSuccess": "Startup approved successfully!",
-        "rejectionSuccess": "Startup rejected successfully!"
+        "approvalSuccess": "Approved successfully!",
+        "rejectionSuccess": "Rejected successfully!"
       },
       "startupTab": {
         "back": "Back",
@@ -476,8 +476,8 @@
         "statusUpdateSuccess": "Startup {status} successfully!",
         "statusUpdateError": "Error updating status",
         "statusUpdateErrorDescription": "An error occurred while trying to update the startup status.",
-        "approvalSuccess": "Startup approved successfully!",
-        "rejectionSuccess": "Startup rejected successfully!",
+        "approvalSuccess": "Approved successfully!",
+        "rejectionSuccess": "Rejected successfully!",
         "name": "Name"
       }
     },
