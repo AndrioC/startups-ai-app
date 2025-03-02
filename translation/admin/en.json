@@ -44,7 +44,11 @@
         "investors": "Investors",
         "mentors": "Mentors",
         "countries": "Countries",
-        "matches": "Matches"
+        "matches": "Matches",
+        "government": "Government",
+        "traditionalCompanies": "Traditional Companies",
+        "innovationEnvironments": "Innovation Environments",
+        "default": "-"
       },
       "matchmaking": {
         "startupsInvestors": "Matchmaking between Startups and Investors",
