@@ -364,26 +364,6 @@ export default function Dashboard() {
           }
         />
         <StatCard
-          icon={IoWalletOutline}
-          title={t("metrics.investors")}
-          value={dashboardData.totalInvestors.toString()}
-          change={`${dashboardData.investorsPercentageChange.toFixed(2)}%`}
-          changeType={
-            dashboardData.investorsPercentageChange >= 0
-              ? "positive"
-              : "negative"
-          }
-        />
-        <StatCard
-          icon={BsPeople}
-          title={t("metrics.mentors")}
-          value={dashboardData.totalMentors.toString()}
-          change={`${dashboardData.mentorsPercentageChange.toFixed(2)}%`}
-          changeType={
-            dashboardData.mentorsPercentageChange >= 0 ? "positive" : "negative"
-          }
-        />
-        <StatCard
           icon={FaLandmark}
           title={t("metrics.government")}
           value={dashboardData.totalGovernment.toString()}
@@ -414,6 +394,26 @@ export default function Dashboard() {
             dashboardData.traditionalCompaniesPercentageChange >= 0
               ? "positive"
               : "negative"
+          }
+        />
+        <StatCard
+          icon={IoWalletOutline}
+          title={t("metrics.investors")}
+          value={dashboardData.totalInvestors.toString()}
+          change={`${dashboardData.investorsPercentageChange.toFixed(2)}%`}
+          changeType={
+            dashboardData.investorsPercentageChange >= 0
+              ? "positive"
+              : "negative"
+          }
+        />
+        <StatCard
+          icon={BsPeople}
+          title={t("metrics.mentors")}
+          value={dashboardData.totalMentors.toString()}
+          change={`${dashboardData.mentorsPercentageChange.toFixed(2)}%`}
+          changeType={
+            dashboardData.mentorsPercentageChange >= 0 ? "positive" : "negative"
           }
         />
         <StatCard

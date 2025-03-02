@@ -12,11 +12,42 @@ const translations = {
     description: "Um novo cadastro foi realizado com os seguintes dados:",
     nameLabel: "Nome:",
     emailLabel: "E-mail:",
+    accountTypeLabel: "Tipo de conta:",
     footer: "Este é um e-mail automático. Por favor, não responda.",
     errors: {
       emailFailed: "Falha ao enviar e-mail de notificação de novo cadastro",
     },
     button: "Acessar o Sistema",
+    accountTypes: {
+      STARTUP: "Startup",
+      TRADITIONAL_COMPANY: "Empresa Tradicional",
+      GOVERNMENT: "Governo",
+      INNOVATION_ENVIRONMENT: "Ambiente de Inovação",
+      INVESTOR: "Investidor",
+      MENTOR: "Mentor",
+    },
+  },
+  en: {
+    subject: "New Registration Completed - StartupsAI",
+    title: "New Registration Completed",
+    description:
+      "A new registration has been completed with the following details:",
+    nameLabel: "Name:",
+    emailLabel: "Email:",
+    accountTypeLabel: "Account type:",
+    footer: "This is an automatic email. Please do not reply.",
+    errors: {
+      emailFailed: "Failed to send new registration notification email",
+    },
+    button: "Access the System",
+    accountTypes: {
+      STARTUP: "Startup",
+      TRADITIONAL_COMPANY: "Traditional Company",
+      GOVERNMENT: "Government",
+      INNOVATION_ENVIRONMENT: "Innovation Environment",
+      INVESTOR: "Investor",
+      MENTOR: "Mentor",
+    },
   },
 };
 
@@ -24,7 +55,8 @@ const generateEmailTemplate = (
   t: typeof translations.pt,
   name: string,
   email: string,
-  mainUrl: string
+  mainUrl: string,
+  accountType: string
 ) => `
 <!DOCTYPE html>
 <html>
@@ -94,6 +126,14 @@ const generateEmailTemplate = (
                   font-weight: 500;
                 ">
                   <strong>${t.emailLabel}</strong> ${email}
+                </p>
+                <p style="
+                  margin: 8px 0 0 0;
+                  color: #111827;
+                  font-size: 16px;
+                  font-weight: 500;
+                ">
+                  <strong>${t.accountTypeLabel}</strong> ${t.accountTypes[accountType as keyof typeof t.accountTypes] || accountType}
                 </p>
 
                 <!-- CTA Button -->
@@ -185,16 +225,27 @@ export async function sendNewRegistrationNotification(
       process.env.NEXT_PUBLIC_PROTOCOL ||
       (process.env.NODE_ENV === "development" ? "http://" : "https://");
 
-
     const adminPath = getAccountRoute(
       accountType as UserType,
       enterpriseCategoryFormatted
     );
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    const mainUrl = `${protocol}${slug}.${appUrl}/management/home`;
+    const mainUrl = `${protocol}${slug}.${appUrl}${adminPath}`;
 
-    const htmlContent = generateEmailTemplate(t, name, email, mainUrl);
+    let displayAccountType = accountType || "UNKNOWN";
+    if (accountType === "ENTERPRISE") {
+      displayAccountType =
+        unformatString(enterpriseCategoryFormatted!) || "UNKNOWN";
+    }
+
+    const htmlContent = generateEmailTemplate(
+      t,
+      name,
+      email,
+      mainUrl,
+      displayAccountType
+    );
 
     for (const recipientEmail of users) {
       await resend.emails.send({
@@ -216,6 +267,12 @@ function formatString(input: string) {
   let result = input.toLowerCase();
 
   result = result.replace(/_/g, "-");
+
+  return result;
+}
+
+function unformatString(input: string): string {
+  const result = input.toUpperCase().replace(/-/g, "_");
 
   return result;
 }
