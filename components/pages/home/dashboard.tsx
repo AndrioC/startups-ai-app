@@ -2,12 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import { BsPeople } from "react-icons/bs";
+import { FaBuilding, FaLandmark, FaLightbulb } from "react-icons/fa";
 import { IoRocketOutline, IoWalletOutline } from "react-icons/io5";
-import {
-  MdOutlineBusiness,
-  MdOutlineBusinessCenter,
-  MdOutlineSchool,
-} from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -388,18 +384,7 @@ export default function Dashboard() {
           }
         />
         <StatCard
-          icon={GlobeIcon}
-          title={t("metrics.countries")}
-          value={dashboardData.totalCountries.toString()}
-          change={`${dashboardData.countriesPercentageChange.toFixed(2)}%`}
-          changeType={
-            dashboardData.countriesPercentageChange >= 0
-              ? "positive"
-              : "negative"
-          }
-        />
-        <StatCard
-          icon={MdOutlineBusiness}
+          icon={FaLandmark}
           title={t("metrics.government")}
           value={dashboardData.totalGovernment.toString()}
           change={`${dashboardData.governmentPercentageChange.toFixed(2)}%`}
@@ -410,7 +395,18 @@ export default function Dashboard() {
           }
         />
         <StatCard
-          icon={MdOutlineBusinessCenter}
+          icon={FaLightbulb}
+          title={t("metrics.innovationEnvironments")}
+          value={dashboardData.totalInnovationEnvironments.toString()}
+          change={`${dashboardData.innovationEnvironmentsPercentageChange.toFixed(2)}%`}
+          changeType={
+            dashboardData.innovationEnvironmentsPercentageChange >= 0
+              ? "positive"
+              : "negative"
+          }
+        />
+        <StatCard
+          icon={FaBuilding}
           title={t("metrics.traditionalCompanies")}
           value={dashboardData.totalTraditionalCompanies.toString()}
           change={`${dashboardData.traditionalCompaniesPercentageChange.toFixed(2)}%`}
@@ -421,12 +417,12 @@ export default function Dashboard() {
           }
         />
         <StatCard
-          icon={MdOutlineSchool}
-          title={t("metrics.innovationEnvironments")}
-          value={dashboardData.totalInnovationEnvironments.toString()}
-          change={`${dashboardData.innovationEnvironmentsPercentageChange.toFixed(2)}%`}
+          icon={GlobeIcon}
+          title={t("metrics.countries")}
+          value={dashboardData.totalCountries.toString()}
+          change={`${dashboardData.countriesPercentageChange.toFixed(2)}%`}
           changeType={
-            dashboardData.innovationEnvironmentsPercentageChange >= 0
+            dashboardData.countriesPercentageChange >= 0
               ? "positive"
               : "negative"
           }
