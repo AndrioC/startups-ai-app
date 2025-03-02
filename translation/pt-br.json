@@ -599,5 +599,12 @@
     "successMessage": "Senha redefinida com sucesso!",
     "errorMessage": "Erro ao redefinir a senha.",
     "tokenMissing": "Token de redefinição não encontrado."
+  },
+
+  "cropImage": {
+    "imageTooBig": "Imagem muito grande - Permitido no máximo 600x600 pixels",
+    "title": "Recortar imagem",
+    "cancelButton": "Cancelar",
+    "saveButton": "Concluir"
   }
 }

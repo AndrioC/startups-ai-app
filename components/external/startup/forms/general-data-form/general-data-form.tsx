@@ -20,7 +20,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useFormStartupDataState } from "@/contexts/FormStartupContext";
 import { GeneralDataSchema } from "@/lib/schemas/schema-startup";
 
-import ImageCropDialog from "../../image-crop-dialog";
+import ImageCropDialog from "../../../image-crop-dialog";
 import { SelectDataProps } from "../../startup-form";
 
 import PitchdeckListModal from "./pitch-deck-list-modal";
