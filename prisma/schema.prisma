@@ -299,7 +299,6 @@ model user {
   user_organizations                              user_organizations[]
   enterprise                                      enterprise?                                       @relation(fields: [enterprise_id], references: [id])
   enterprise_id                                   Int?
-  account                                         account[]
 
   @@unique([email, organization_id])
 }
@@ -1011,23 +1010,4 @@ model enterprise {
   @@index([country_id])
   @@index([enterprise_category_id])
   @@index([college_organization_type_id])
-}
-
-model account {
-  id                String  @id @default(cuid())
-  userId            Int
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
 }
