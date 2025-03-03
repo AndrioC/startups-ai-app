@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import * as z from "zod";
 
@@ -79,6 +80,13 @@ export function LoginForm({ subdomain }: { subdomain: string }) {
     });
   };
 
+  const handleGoogleSignIn = () => {
+    signIn("google", {
+      callbackUrl: `https://${subdomain}.startupsai.com.br`,
+      subdomain: subdomain,
+    });
+  };
+
   return (
     <>
       <form
@@ -146,6 +154,13 @@ export function LoginForm({ subdomain }: { subdomain: string }) {
           </Button>
         </div>
       </form>
+      <Button
+        onClick={handleGoogleSignIn}
+        variant="outline"
+        className="mt-4 w-full"
+      >
+        Sign in with Google
+      </Button>
       <EmailVerificationModal
         open={showVerificationModal}
         onOpenChange={setShowVerificationModal}
