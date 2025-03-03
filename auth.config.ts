@@ -3,7 +3,6 @@ import bcryptjs from "bcryptjs";
 import { cookies } from "next/headers";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
 import { createTranslator } from "next-intl";
 
 import { getUserByEmail } from "@/data/user";
@@ -23,18 +22,6 @@ async function getServerTranslations() {
 
 export default {
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      allowDangerousEmailAccountLinking: true,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
-    }),
     Credentials({
       async authorize(credentials) {
         try {

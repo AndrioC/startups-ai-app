@@ -6,7 +6,6 @@ import type { Adapter } from "next-auth/adapters";
 import authConfig from "@/auth.config";
 import { getUserById } from "@/data/user";
 
-import { getUserByEmailAndSlug } from "./actions/get-user-by-email-and-slug";
 import prisma from "./prisma/client";
 
 const S3_ORGANIZATIONS_IMGS_BUCKET_NAME =
@@ -33,47 +32,7 @@ export const {
     },
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
-    async signIn({ user, account, profile }) {
-      console.log("Sign In Callback - User:", user);
-      console.log("Sign In Callback - Account:", account);
-      console.log("Sign In Callback - Profile:", profile);
-      if (account?.provider === "google") {
-        const subdomain = account.subdomain as string;
-
-        if (!subdomain) {
-          throw new Error("Subdomain not provided");
-        }
-
-        const existingUser = await getUserByEmailAndSlug(
-          profile?.email!,
-          subdomain
-        );
-
-        if (existingUser) {
-          await prisma.account.create({
-            data: {
-              userId: existingUser.id,
-              type: account.type,
-              provider: account.provider,
-              providerAccountId: account.providerAccountId,
-              access_token: account.access_token,
-              expires_at: account.expires_at,
-              token_type: account.token_type,
-              scope: account.scope,
-              id_token: account.id_token,
-              session_state: String(account.session_state),
-            },
-          });
-
-          return true;
-        }
-      }
-
+    async signIn({ user, account }) {
       if (account?.provider !== "credentials") return true;
 
       const existingUser = await getUserById(
