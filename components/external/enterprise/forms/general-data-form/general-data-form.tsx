@@ -182,7 +182,10 @@ export default function GeneralDataForm({ data }: Props) {
     setError,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      logoImage: initialData.logoImageUrl || undefined,
+    },
     resolver: zodResolver(formSchema),
   });
 
